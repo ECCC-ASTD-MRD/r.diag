@@ -48,7 +48,7 @@ FIXES   =
 
 # RMN and Vgrid_Descriptor library names
 
-RMNLIB  = rmn_015
+RMNLIB  = rmn_015.2
 VGDLIB  = descrip
 
 # DDFUN90, NetCDF3 and UdUnits1 library names
@@ -85,6 +85,8 @@ initial:
 	if [[ ! -x $(BINDIR)/r.echo ]]; then cd $(DIAGNOSTIQUE)/src/extras/tools ; $(MAKE) ; fi
 	if [[ ! -f $(LIBDIR)/program_version.o ]]; then cd $(LIBDIR) ;\
 	s.f77 -g -c ../../program_version.f ; fi
+	if [[ ! -f $(LIBDIR)/stubs.o ]]; then cd $(LIBDIR) ;\
+	s.f90 -g -c ../../stubs.f90 ; fi
 
 # RDIAG Diagnostic toolkit recipe
 

@@ -43,7 +43,7 @@ DIAGLIB = diag_sq$(STD)
 GRAFLIB =
 LAPACK  = lapack
 PROGLIB = prog_sq$(STD)
-RMNLIB  = rmn_015
+RMNLIB  = rmn_015.2
 VGDLIB  = descrip
 
 LIBP    = $(LIBDIR)/lib$(PROGLIB).a
