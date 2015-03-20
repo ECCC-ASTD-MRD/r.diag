@@ -15,13 +15,13 @@ case ${1:---help} in
   exit 0
   ;;
 --man )
-  cd ${Location}/man/pdoc
+  cd ${Location}/share/pdoc
   [[ "$2" == topics ]] && ls *.txt | sed 's/[.]txt//' | xargs -l8 printf "%10s %10s %10s %10s %10s %10s %10s %10s\n"  && exit 0
   [[ -f ${2}.txt ]] && ${PAGER:-less} ${2}.txt
   exit $?
   ;;
 --doc )
-  echo ${Location}/man/pdoc
+  echo ${Location}/share/pdoc
   exit 0
   ;;
 --versions )

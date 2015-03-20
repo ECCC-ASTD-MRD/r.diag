@@ -15,12 +15,12 @@ case ${1:-*} in
   exit 0
   ;;
 --man )
-  cd ${Location}/man/pdoc
+  cd ${Location}/share/pdoc
   [[ -f cdf2ccc.txt ]] && ${PAGER:-less} cdf2ccc.txt
   exit $?
   ;;
 --doc )
-  echo ${Location}/man/pdoc
+  echo ${Location}/share/pdoc
   exit 0
   ;;
 --versions )

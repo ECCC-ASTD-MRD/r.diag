@@ -3827,18 +3827,23 @@ CCC           ERROR = .FALSE.
   300 if (k.eq.1)                                              then
           docs = './' // nom(i:j) // '.txt'
       else
-          err = clib_isdir( path(1:k) // '/man/pdoc/' )
+          err = clib_isdir( path(1:k) // '/share/pdoc/' )
           if (err == CLIB_OK ) then
-              docs = path(1:k) // '/man/pdoc/' // nom(i:j) // '.txt'
+              docs = path(1:k) // '/share/pdoc/' // nom(i:j) // '.txt'
           else
-              err = clib_isdir( path(1:k) // '/pdoc/' )
+              err = clib_isdir( path(1:k) // '/man/pdoc/' )
               if (err == CLIB_OK ) then
-                  docs = path(1:k) // '/pdoc/' // nom(i:j) // '.txt'
-              else if (.not.checked_ARMNLIB)                    then
-                  path = ' '
-                  goto 250
+                  docs = path(1:k) // '/man/pdoc/' // nom(i:j) // '.txt'
               else
-                  return
+                  err = clib_isdir( path(1:k) // '/pdoc/' )
+                  if (err == CLIB_OK ) then
+                      docs = path(1:k) // '/pdoc/' // nom(i:j) // '.txt'
+                  else if (.not.checked_ARMNLIB)                    then
+                      path = ' '
+                      goto 250
+                  else
+                      return
+                  end if
               end if
           end if
       end if

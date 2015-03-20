@@ -8,7 +8,7 @@ endif
 SHELL   = /bin/bash
 
 # Location of the development versions of the src, bin/$(BASE_ARCH),
-# lib/$(EC_ARCH) and man/pdoc directory trees
+# lib/$(EC_ARCH) and share/pdoc directory trees
 
 DIAGNOSTIQUE = $(CURDIR)
 MAKE    = make DIAGNOSTIQUE=$(DIAGNOSTIQUE)
@@ -28,7 +28,7 @@ EXTLIB  = $(EXTRAS)/NetcdfUdunits/$(EC_ARCH)/lib
 BINDIR  = $(DIAGNOSTIQUE)/bin/$(BASE_ARCH)
 INCLUDE = $(DIAGNOSTIQUE)/include
 LIBDIR  = $(DIAGNOSTIQUE)/lib/$(EC_ARCH)
-MANDIR  = $(DIAGNOSTIQUE)/man/pdoc
+MANDIR  = $(DIAGNOSTIQUE)/share/pdoc
 MODDIR  = $(INCLUDE)/$(EC_ARCH)
 SUBDIR  = $(DIAGNOSTIQUE)/src/lssub/sources$(STD)/$(EC_ARCH)
 
@@ -72,7 +72,7 @@ export:
 	/bin/mkdir -p $(DESTINATION)/lib $(DESTINATION)/bin ;\
 	rsync -av $(DIAGNOSTIQUE)/lib/$(EC_ARCH) $(DESTINATION)/lib/$(BASE_ARCH) ;\
 	rsync -av $(DIAGNOSTIQUE)/bin/$(BASE_ARCH) $(DESTINATION)/bin ;\
-	rsync -av $(DIAGNOSTIQUE)/man $(DESTINATION)
+	rsync -av $(DIAGNOSTIQUE)/share $(DESTINATION)
 
 # Ensure initial setup is done
 

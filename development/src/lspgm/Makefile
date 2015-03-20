@@ -29,7 +29,7 @@ DIAGS   = $(DIAGNOSTIQUE)
 BINDIR  = $(DIAGS)/bin/$(BASE_ARCH)
 INCLUDE = $(DIAGS)/include
 LIBDIR  = $(DIAGS)/lib/$(EC_ARCH)
-MANDIR  = $(DIAGS)/man/pdoc
+MANDIR  = $(DIAGS)/share/pdoc
 MODDIR  = $(INCLUDE)/$(EC_ARCH)
 
 CODEBETA=
