@@ -42,7 +42,7 @@ default: $(LIBS)
 .PRECIOUS: $(LIBS)
 
 .DEFAULT:
-	$(UNZIP) -Xo $(FICHIZ) $@
+	$(UNZIP) $(FICHIZ) $@
 
 .f.a:
 	$(FCOMP) $<
