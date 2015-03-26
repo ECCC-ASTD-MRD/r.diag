@@ -1,0 +1,288 @@
+#! /bin/ksh
+#
+if [ "${DIAGNOSTIC_EXIT}" ]; then
+  if [ -s ${DIAGNOSTIC_EXIT} ]; then exit 0 ; fi
+fi
+#
+cclargs 0$                            "[Calcule la moyenne et la variance des accumulateurs 2D]"\
+      -exp       ",,,," ",,,,"        "[Prefixe commun aux fichiers de donnees]"\
+      -rep       "."    ",,,,"        "[Repertoire contenant ces donnees]"\
+      -outnam    ""     ",,,,"        "[Prefixe commun au fichiers de resultats]"\
+      -destin    ""     ",,,,"        "[Repertoire ou les resultats seront deposes]"\
+      -deltah     18     6            "[Nombre d'heures entre les echantillons]"\
+      -varscal   "ab"   ",,,,"        "[Variable utilisee pour la mise-a-l'echelle]"\
+      -tri+      "NON"  "OUI"         "[Trier les donnees avec FSTTRI au debut du traitement]"\
+      -graphe+   "OUI"  "NON"         "[Presentation graphique des resultats (metacode)]"\
+      -rlats      120    120          "[Nombre de latitudes dans les coupes zonales de grilles de type Z]"\
+      -debug+    "NON"  "OUI"         "[Activer le mode DEBUG]"\
+      -do_diag+  "OUI"  "NON"         "[On fait les diagnostiques en mode DEBUG]"\
+      -travail   ${BIG_TMPDIR} ",,,," "[Repertoire de travail (BIG_TMPDIR)]"\
+      -gaussian  ""     ""            "[parametre obsolete...]"\
+      -lon       ""     ""            "[parametre obsolete...]"\
+      -lat       ""     ""            "[parametre obsolete...]"\
+      ++ $* > ${BIG_TMPDIR}/cclargs_surfacc_mean.out$$
+#
+. ${BIG_TMPDIR}/cclargs_surfacc_mean.out$$ && /bin/rm -f ${BIG_TMPDIR}/cclargs_surfacc_mean.out$$
+#
+######################################################################
+#
+# Description...
+#    Cette script calcule les moyennes et variances temporelles
+#    des accumulateurs 2D contenus dans une serie de fichiers de
+#    sorties physiques.
+#
+######################################################################
+#
+# Parametres...
+# exp      - prefixe commun aux fichiers de donnees
+# rep      - repertoire contenant ces donnees
+# outnam   - prefixe commun au fichiers de resultats
+# destin   - repertoire ou les resultats seront deposes
+# deltah   - nombre d'heures entre les echantillons
+# graphe   - OUI: presentation graphique des resultats (metacode) 
+# rlats    - nombre de latitudes dans les coupes zonales des grilles de type Z
+# tri      - OUI: trier les donnees avec FSTTRI au debut du traitement
+# debug    - activer le mode DEBUG
+# do_diag  - on fait les diagnostiques en mode DEBUG
+# travail  - repertoire de travail (BIG_TMPDIR)
+#
+######################################################################
+#
+# Auteur...
+#    Bernard Dugas
+#
+######################################################################
+#
+# Revisions...
+#    001 - novembre  1998: version initiale
+#    002 - fevrier   1999: Ajouter les parametres outnam,
+#                          destin, gaussian, lon et lat.
+#    003 - mai       1999: Utiliser le repertoire BIG_TMPDIR.
+#    004 - aout      2000: 1) ne traiter que les accumulateurs,
+#                          2) ajouter un mode de traitement debug,
+#                          3) quitter en cas d'erreur prealable
+#                          et 4) renommer a Climat_surfacc_mean
+#    005 - mai       2001: S'assurer que les plus gros fichiers
+#                          sont produits en mode sequentiel
+#    006 - mars      2002: ajouter la cle do_diag
+#    007 - aout      2002: utiliser r.diag2000 et editfst2000 par defaut
+#    008 - mai       2003: modifier l'appel a cclargs et verifier les codes
+#                          de retour des procedures externes    
+#    009 - novembre  2004: 1) ajouter le parametre "rlats",
+#                          2) ignorer les parametres "gaussian", "lon" et "lat" et
+#                          3) utiliser Climat_get_grtyp pour determiner GRTYP
+#    010 - novembre  2005: 1) modifier les calculs en fonction du nombre de fichiers
+#                          2) ne plus utiliser de fichiers sequentiels sous Linux
+#    011 - fevrier   2006: Utiliser Climat_functions (BD)
+#    012 - septembre 2006: meilleur usage de ${DIAGNOSTIC_EXIT} (BD)
+#
+######################################################################
+#
+# S'occuper des repertoires de travail et de destination
+#
+if [ ! -d ${travail} ]; then
+  mkdir ${travail}
+  nouveau_travail=OUI
+else
+  nouveau_travail=NON
+fi
+#
+if [ ! -d ${rep} ]; then
+  echo "
+  Dans Climat_surfacc_mean: Le repertoire de donnees initiale ${rep} n'existe pas"
+  if [ "${DIAGNOSTIC_EXIT}" ]; then
+    echo "
+    Dans Climat_surfacc_mean: Le repertoire de donnees initiale ${rep} n'existe pas" \
+    > ${DIAGNOSTIC_EXIT}
+  fi
+  exit 1
+fi
+#
+rep=`true_path ${rep}`
+#
+if [ ! "${destin}" ]; then
+  destin=${rep}
+else
+  if [ ! -d ${destin} ]; then mkdir ${destin} ; fi
+  destin=`true_path ${destin}`
+fi
+#
+travail=`true_path ${travail}` ; cd ${travail}
+#
+# Definir certaines variables d'environnement de R.DIAG
+#
+export BIG_TMPDIR=${travail}
+#
+. Climat_functions
+#
+if [ ${rep} = ${travail} ]; then
+  echo "
+  Dans Climat_surfacc_mean: Les repertoires rep et travail doivent etre differents...
+                            rep = travail = ${travail}" | tee ${DIAGNOSTIC_EXIT}
+  exit 2
+fi
+#
+# Conversions de l'anglais au francais
+#
+if [ ${graphe} = YES ]; then
+  graphe=OUI
+elif [ ${graphe} = NO ]; then
+  graphe=NON
+fi
+#
+if [ ${tri} = YES ]; then
+  tri=OUI
+elif [ ${tri} = NO ]; then
+  tri=NON
+fi
+#
+# Determiner le GRTYP des
+# donnees du premier fichier
+#
+cd ${rep}
+set ${exp}*
+nbfiles=`echo $#`
+fichier_source=$1
+if [ ${fichier_source} != ${exp}'*' ]; then
+  . Climat_get_grtyp
+  if [ -s ${DIAGNOSTIC_EXIT} ]; then
+    echo "
+    Dans Climat_surfacc_mean: Arret apres Climat_get_grtyp" |\
+    tee -a ${DIAGNOSTIC_EXIT}
+    exit 99
+  fi
+else
+  if [ ${nouveau_travail} = OUI ]; then rm -rf ${travail} ; fi
+  echo "
+  Dans Climat_surfacc_mean: Pas assez de donnees dans ${rep}" |\
+  tee -a ${DIAGNOSTIC_EXIT}
+  exit 3
+fi
+#
+cd ${travail}
+#
+if [ ${tri} = OUI -a ${grtype} = Z ]; then
+  zdesc="-zdesc"
+else
+  zdesc=" "
+fi
+#
+lats=""
+if [ ${grtype} = Z ]; then lats="-lat ${rlats}" ; fi
+if [ ! "${outnam}" ]; then outnam=d${exp} ; fi
+#
+# Verifier si mode debug est actif
+#
+if [ ${debug} = OUI ]; then
+  echo " "
+  echo "Appel a Climat_surfacc_mean..."
+  echo "  exp      = ${exp}"
+  echo "  rep      = ${rep}"
+  echo "  outnam   = ${outnam}"
+  echo "  destin   = ${destin}"
+  echo "  deltah   = ${deltah}"
+  echo "  varscal  = ${varscal}"
+  echo "  tri      = ${tri}"
+  echo "  graphe   = ${graphe}"
+  echo "  rlats    = ${rlats}"
+  echo "  travail  = ${travail}"
+  echo "  do_diag  = ${do_diag}"
+  echo " "
+else
+  do_diag=OUI
+fi
+#
+make_scale=not_done
+#
+r.echo " "
+r.echo "Climat_surfacc_mean: BIG_TMPDIR=${BIG_TMPDIR}"
+r.echo "Climat_surfacc_mean: RDIAG     =${RDIAG}"
+r.echo "Climat_surfacc_mean: Starting at `date +%r`"
+r.echo " "
+#
+if [ ${debug} = OUI ]; then set -x ; fi
+#
+for ii in ${rep}/${exp}*
+do
+  echo " "
+  echo "Climat_surfacc_mean: Lecture de ${ii}"
+  echo " "
+#
+  if [ ${tri} = OUI ]; then
+    ${RDIAG} fsttri -s ${ii} -d restant ${zdesc} 
+  else
+    r.catf ${ii} restant
+  fi
+#
+  if [ ${make_scale} = not_done ]; then
+#
+#   Calculer le facteur de conversion des accumulateurs
+#
+    deltas=`expr ${deltah} \* 3600 `
+    ${RDIAG} select restant    ${varscal} -name ${varscal}
+    ${RDIAG} xlin   ${varscal} sec        -a 0 -b ${deltas}
+    ${RDIAG} xlin   ${varscal} un         -a 0 -b 1
+    ${RDIAG} div    un         sec scale
+    r.delf -dn ${varscal}
+#
+    make_scale=done
+  fi
+#
+  ${RDIAG} gmlt    restant scale   normal
+#
+  if [ ${nbfiles} -gt 1 ]; then
+    ${RDIAG} repack  normal  dat64                        -npg =-64
+    ${RDIAG} square  dat64   dat2   
+    ${RDIAG} accumul dat64   moyenne
+    ${RDIAG} accumul dat2    moyenne2
+  else
+    ${RDIAG} timavg  normal  ${destin}/${outnam}_moyenne
+    ${RDIAG} stdev   normal  ${destin}/${outnam}_rms      -def
+  fi
+#
+done
+#
+# Sauver les resultats (s'il le faut encore)
+#
+if [ ${nbfiles} -gt 1 ]; then
+  ${RDIAG} square  moyenne   moyenne_square
+  ${RDIAG} sub     moyenne2  moyenne_square   variance
+  ${RDIAG} sqroot  variance  rms
+  #
+  ${RDIAG} repack  moyenne   ${destin}/${outnam}_moyenne  -npg =-32
+  ${RDIAG} repack  rms       ${destin}/${outnam}_rms      -npg =-32
+fi
+#
+if [ ${graphe} = OUI ]; then
+#
+  r.accessf -dn surf_moyenne_gg -pdn ${outnam}_moyenne -own ${destin}
+  r.accessf -dn surf_rms_gg -pdn ${outnam}_rms -own ${destin}
+#
+# Graphiques/statistiques des moyennes
+  ${RDIAG} zonavg  surf_moyenne_gg moyenne_zonal ${lats}
+  ${RDIAG} xplot                   moyenne_zonal -def
+  if [ ${grtype} != Z ]; then ${RDIAG} ggplot surf_moyenne_gg -def ; fi
+  ${RDIAG} globavg moyenne_zonal > moyenne_globale
+  ${RDIAG} txtplot moyenne_globale -kind 7 
+#
+# Graphiques/statistiques des rms
+  ${RDIAG} zonavg  surf_rms_gg rms_zonal ${lats}
+  ${RDIAG} xplot               rms_zonal -def
+  if [ ${grtype} != Z ]; then ${RDIAG} ggplot surf_rms_gg -def ; fi
+#
+  ${RDIAG} globavg rms_zonal > rms_global
+  ${RDIAG} txtplot rms_global -kind 7 
+#
+  r.catf metacod ${destin}/metacod_${outnam} -d
+#
+fi
+#
+# Faire le menage si tout a fonctionne
+if [ ! -s ${DIAGNOSTIC_EXIT} ]; then
+  cd ${destin}
+  if [ ${nouveau_travail} = OUI ]; then rm -rf ${travail} ; fi
+  r.echo "Climat_surfacc_mean: Ending at `date +%r`"
+  exit 0
+fi
+exit 4
+

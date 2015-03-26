@@ -1,0 +1,70 @@
+#
+# Description...
+#    Determiner le type de grilles (GRTYP) dans ${fichier_source}.
+#    Le resultat est place dans ${grtype}. Les grilles E (>>> et ^^)
+#    et X (HY) sont ignorees. Si le resultat n'est pas unique un
+#    message d'erreur est genere
+#
+# Auteur...
+#    Bernard Dugas
+#
+# Revisions...
+#    001 - novembre  2004: version initiale
+#    002 - fevrier   2006: ajouter nom_complet (BD)
+#
+fichier_source=${fichier_source:-fichier_source}
+DIAGNOSTIC_EXIT=${DIAGNOSTIC_EXIT:-DIAGNOSTIC_EXIT}
+nom_complet=`true_path ${fichier_source}`
+#
+if [ -s ${fichier_source} -a ! -s ${DIAGNOSTIC_EXIT} ]; then
+  #
+  grtype=""
+  r.filetype ${fichier_source} 1> /dev/null 2>&1 ; file_type=$?
+  if [ ${file_type} -eq 2 -o ${file_type} -eq 33 ]; then
+    #
+    tous_grtyp=`r.fstliste -izfst ${fichier_source} -col 14`
+    #
+    if [ "${tous_grtyp}" ]; then
+      #
+      previous_set=$@
+      #
+      set ${tous_grtyp}
+      nbtyp=$#
+      #
+      unique_grtyp=""
+      while [ ${nbtyp} -ge 1 ]; do
+        # garder tous les types autres que E (>> ET ^^) et X (HY)
+        if [ $1 != E -a $1 != X ]; then
+          unique_grtyp="${unique_grtyp} ${1}"
+        fi
+        shift
+        nbtyp=$#
+      done
+      #
+      set ${unique_grtyp}
+      nbtyp=$#
+      if [ ${nbtyp} -gt 1 ]; then
+        echo "Dans Climat_get_grtyp: Incapable de determiner un GRTYP unique" | tee ${DIAGNOSTIC_EXIT}
+        echo "                       unique dans ${nom_complet},"
+        echo "                       trouve ${grtyp}"
+      else
+        grtype=$1
+      fi
+      #
+      if [ "${previous_set}" ]; then set ${previous_set} ; fi
+      #
+    else
+      #
+      echo "Dans Climat_get_grtyp: Incapable de determiner un GRTYP" | tee ${DIAGNOSTIC_EXIT}
+      echo "                       dans ${nom_complet}"
+      #
+    fi
+    #
+  else
+    #   
+    echo "Dans Climat_get_grtyp:  ${nom_complet} n'est pas RND" | tee ${DIAGNOSTIC_EXIT}
+    #
+  fi
+  #
+fi
+#

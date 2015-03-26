@@ -1,0 +1,48 @@
+#
+# Description...
+#    Verifier le niveau de revision de ${RDIAG} en le
+#    comparant a la valeur dans ${minimal_rdiag_version}
+#
+# Auteur...
+#    Bernard Dugas
+#
+# Revisions...
+#    001 - novembre  2004: version initiale
+#
+RDIAG=${RDIAG:-r.diag2000}
+minimal_rdiag_version=${minimal_rdiag_version:-5.3.0}
+DIAGNOSTIC_EXIT=${DIAGNOSTIC_EXIT:-DIAGNOSTIC_EXIT}
+#
+if [ ! -s ${DIAGNOSTIC_EXIT} ]; then
+  #
+  previous_set=$@
+  current_version=`echo q | ${RDIAG} lspgm -vers REV`
+  set ${current_version}
+  #
+  if [ $# -eq 1 ]; then
+    current_version=$1
+  elif [ "$1" = "1Available" ]; then
+    current_version=`echo q | ${RDIAG} lspgm -vers`
+    set ${current_version}
+    current_version=$7
+  fi
+  #
+  rev1=`echo ${current_version} | cut -f1 -d. `
+  rev2=`echo ${current_version} | cut -f2 -d. `
+  rev3=`echo ${current_version} | cut -f3 -d. `
+  number_current_version=$(( ${rev1}*10000 + ${rev2}*100 + ${rev3} ))
+  #
+  rev1=`echo ${minimal_rdiag_version} | cut -f1 -d. `
+  rev2=`echo ${minimal_rdiag_version} | cut -f2 -d. `
+  rev3=`echo ${minimal_rdiag_version} | cut -f3 -d. `
+  number_minimal_version=$(( ${rev1}*10000 + ${rev2}*100 + ${rev3} ))
+ #
+  if [ ${number_current_version} -lt ${number_minimal_version} ]; then
+    echo "Dans Climat_check_rdiag: Version courante = ${current_version}" | tee ${DIAGNOSTIC_EXIT}
+    echo "                         Version minimale = ${minimal_rdiag_version}"
+  fi
+  #
+  if [ "${previous_set}" ]; then set ${previous_set} ; fi
+  #
+fi
+#

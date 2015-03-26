@@ -1,0 +1,65 @@
+#
+# Initialize certain variables and functions
+# that may be used by climate-mode scripts.
+
+# Author: B. Dugas, RPN
+
+# Revisions
+# 01 January 2006 - Initial version (BD)
+
+  export USE_BIG_TMPDIR=oui
+  export ECHO_COMMAND_LINE=oui
+  RDIAG=${RDIAG:-r.diag2000}
+  EDITFST=${EDITFST:-editfst2000}
+  FSTCOMPRESS=${FSTCOMPRESS:-fstcompress}
+
+  if [ ! "${DIAGNOSTIC_EXIT}" ]; then
+    export DIAGNOSTIC_EXIT=${BIG_TMPDIR}/DIAGNOSTIC_EXIT
+    if [ -s ${DIAGNOSTIC_EXIT} ]; then rm -f ${DIAGNOSTIC_EXIT} ; fi
+    touch ${DIAGNOSTIC_EXIT}
+  else
+    touch ${DIAGNOSTIC_EXIT}
+    if [ -s ${DIAGNOSTIC_EXIT} ]; then exit 99 ; fi
+  fi
+
+  checktype()
+  {
+  r.filetype ${1} > /dev/null ; type_return=$?
+  #
+  case "${type_return}" in
+    1|2|33|34)
+      ls -al ${1}
+      ;;
+    *)
+      echo "${1} is not supported by this script" | tee -a ${DIAGNOSTIC_EXIT}
+      ;;
+  esac
+  }
+
+  rfstcompress()
+  {
+  if [ ! "${DIAGNOSTIC_EXIT}" ]; then
+    ${FSTCOMPRESS} $@
+  elif [ ! -s ${DIAGNOSTIC_EXIT} ]; then
+    ${FSTCOMPRESS} $@
+    fstcompress_stat=$?
+    if [ ${fstcompress_stat} != 0 ]; then
+      echo "Erreur ${fstcompress_stat} dans ${FSTCOMPRESS}" | tee -a ${DIAGNOSTIC_EXIT}
+    fi
+  fi
+  }
+ 
+  reditfst()
+  {
+  if [ ! "${DIAGNOSTIC_EXIT}" ]; then
+    ${EDITFST} $@
+  elif [ ! -s ${DIAGNOSTIC_EXIT} ]; then
+    ${EDITFST} $@
+    editfst_stat=$?
+    if [ ${editfst_stat} != 0 ]; then
+      echo "Erreur ${editfst_stat} dans ${EDITFST}" | tee -a ${DIAGNOSTIC_EXIT}
+    fi
+  fi
+  }
+
+

@@ -33,7 +33,7 @@ case ${1:-*} in
   exit 0
   ;;
 * )
-  CDF2CCC=${CDF2CCC:-${Location}/bin/${BASE_ARCH}/stable.cdf2ccc}
+  CDF2CCC=${CDF2CCC:-${Location}/bin/${BASE_ARCH}/cdf2ccc}
   if [ `echo ${CDF2CCC} | cut -c1` != "/" ]; then CDF2CCC=${Location}/bin/${BASE_ARCH}/${CDF2CCC} ; fi
   if [[ -x ${CDF2CCC} ]] ; then
     if [ ! "${launched_by_cdf2ccc_script}" ]; then
@@ -48,7 +48,7 @@ case ${1:-*} in
       exit 99
     fi
   else
-    ${Location}/bin/${BASE_ARCH}/stable.cdf2ccc "$@"
+    ${Location}/bin/${BASE_ARCH}/cdf2ccc "$@"
     exit $?
   fi
   ;;

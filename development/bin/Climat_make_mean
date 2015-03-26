@@ -1,0 +1,442 @@
+#! /bin/ksh
+#
+NOMVAR=${NOMVAR:-ALL}
+#
+cclargs 0$                                   "[Calcule la moyenne et la variance]"\
+      -exp     ",,,,"    ",,,,"              "[Prefixe commun aux fichiers de donnees]"\
+      -rep     "."       ",,,,"              "[Repertoire contenant ces donnees]"\
+      -outnam  ""        ",,,,"              "[Output file prefix]"\
+      -destin  ""        ",,,,"              "[Repertoire ou les resultats seront deposes]"\
+      -nomvar+ "$NOMVAR" "UU VV TT GZ WW HU" "[Liste de noms des variables (MAJUSCULES) a traiter]"\
+      -unaun+  "OUI"     "NON"               "[Lorsque nomvar.NE.ALL, on traite les fichiers uns a uns]"\
+      -date+   "NON"     "OUI"               "[Ibuf(2) contient une date et non un pas de temps]"\
+      -tri+    "OUI"     "NON"               "[Trier les fichiers de donnees avec FSTTRI]"\
+      -travail "."       ",,,,"              "[Repertoire ou on cree le repertoire de travail (BIG_TMPDIR)]"\
+      -debug+  "NON"     "OUI"               "[Activer le mode DEBUG]"\
+      -do_diag+ "OUI"    "NON"               "[On fait les diagnostiques en mode DEBUG]"\
+      -rndout   "NON"    "NON"               "[Parametre obsolete...]"\
+      ++ $* > ${BIG_TMPDIR}/cclargs_make_mean.out$$
+#
+. ${BIG_TMPDIR}/cclargs_make_mean.out$$ && /bin/rm -f ${BIG_TMPDIR}/cclargs_make_mean.out$$
+#
+######################################################################
+#
+# Description...
+#    Cette script calcule les moyennes et variances temporelles des
+#    variables contenues dans une serie de fichiers. Ces derniers sont
+#    tous presents dans un meme repertoire. Les variables a etre traitees
+#    sont specifiees en argument.
+#
+######################################################################
+#
+# Auteurs...
+#    Michel Roch et Bernard Dugas
+#
+######################################################################
+#
+# Revisions...
+#    001 - octobre   1997: version initiale
+#    002 - decembre  1997: 1) traiter toutes les variables si nomvar=ALL
+#                          2) ajouter commentaires pour parametres
+#    003 - juillet   1998: ajouter le parametre rep
+#    004 - decembre  1998: ajouter le mode debug
+#    005 - decembre  1998: ajouter le parametre outnam
+#    006 - mai       1999: utiliser BIG_BIG_TMPDIR
+#    007 - octobre   1999: remplacer un "here document" par un "pipe"
+#    008 - fevrier   2000: ajouter le support du parametre DATE
+#    009 - septembre 2000: 1) ajouter le parametre destin, 2) definir et
+#                          utiliser la fonction reditfst et 3) modifier
+#                          le traitement de DIAGNOSTIC_EXIT
+#    010 - decembre  2000: utiliser la variable $EDITFST
+#    011 - mars      2001: Ajouter la cle unaun et la variable $NOMVAR
+#    012 - mai       2001: 1) S'assurer que les plus gros fichiers
+#                             sont produits en mode sequentiel
+#                          2) Ajouter un mode de traitement approprie au
+#                             cas ou il n'y a qu'un seul fichier de donnees
+#    013 - mars      2002: ajouter la cle do_diag
+#    014 - mai       2002: corriger le traitement de l'option "-tri OUI"
+#    015 - aout      2002: utiliser r.diag2000 et editfst2000 par defaut
+#    016 - mai       2003: modifier l'appel a cclargs
+#    017 - septembre 2004: change counting of files (arg list too long) (KW)
+#    018 - novembre  2004: changer la sequence d'appel de tr (BD)
+#    019 - juillet   2005: assume always random files (KW)
+#    020 - janvier   2006: 1) diminuer/rassembler les appels a EDITFST
+#                             dans la section 'unaun' (BD)
+#                          2) utiliser Climat_functions (BD)
+#    021 - fevrier   2006: verifier l'existence de preclimdiagpr (BD)
+#
+# Parametres...
+# exp     - prefixe commun aux fichiers d'entrees
+# rep     - repertoire contenant toutes ces donnees
+# outnam  - prefixe commun aux fichiers de sorties
+# destin  - repertoire ou les resultats seront deposes
+# nomvar  - liste de noms des variables (MAJUSCULES) a traiter
+# unaun   - lorsque nomvar.NE.ALL, on traite les fichiers uns a uns
+# date    - ibuf(2) contient une date et non un pas de temps
+# tri     - Trier les fichiers de donnees avec FSTTRI
+# travail - repertoire ou on cree le repertoire de travail (BIG_TMPDIR)
+# debug   - Activer le mode DEBUG
+# do_diag - On fait les diagnostiques en mode DEBUG
+#
+######################################################################
+#
+if [ "${nomvar}Liste" = Liste ]; then
+  nomvar=ALL
+fi
+#
+if [ ! -d ${travail} ]; then
+  echo "Le repertoire de travail ${travail} doit exister a l'entree..."
+  exit 1
+fi
+#
+travail=`true_path ${travail}` 
+travail=${travail}/$$
+mkdir ${travail}
+#
+# Definir certaines fonctions et variables d'environnement
+#
+export BIG_TMPDIR=${travail}
+#
+. Climat_functions
+#
+if [ ! -d ${rep} ]; then
+  echo "Le repertoire de donnees initiale ${rep} n'existe pas"
+  exit 2
+fi
+#
+rep=`true_path ${rep}`
+#
+if [ ! "${destin}" ]; then
+  destin=${rep}
+else
+  destin=`true_path ${destin}`
+fi
+#
+if [ ${rep} = ${travail} ]; then
+  echo "Les repertoires rep et travail doivent etre differents..."
+  echo "  rep = travail = ${travail}"
+  exit 3
+fi
+#
+# Conversions de l'anglais au francais
+#
+if [ ${date} = NO ]; then
+  date=NON
+elif [ ${date} = YES ]; then
+  date=OUI
+fi
+#
+if [ ${debug} = YES ]; then
+  debug=OUI
+elif [ ${debug} = NO ]; then
+  debug=NON
+fi
+#
+if [ ${do_diag} = YES ]; then
+  do_diag=OUI
+elif [ ${do_diag} = NO ]; then
+  do_diag=NON
+fi
+#
+if [ ${tri} = YES ]; then
+  tri=OUI
+elif [ ${tri} = NO ]; then
+  tri=NON
+fi
+#
+if [ ${unaun} = YES ]; then
+  unaun=OUI
+elif [ ${unaun} = NO ]; then
+  unaun=NON
+fi
+#
+DATE=' '
+if [ ${date} = OUI ]; then DATE="-date" ; fi
+#
+if [ ! "${outnam}" ]; then outnam=d${exp} ; fi
+#
+# Verifier si mode debug est actif
+#
+if [ ${debug} = OUI ]; then
+  echo " "
+  echo "Appel a Climat_make_mean..."
+  echo "  exp      = ${exp}"
+  echo "  rep      = ${rep}"
+  echo "  outnam   = ${outnam}"
+  echo "  destin   = ${destin}"
+  echo "  nomvar   = ${nomvar}"
+  echo "  unaun    = ${unaun}"
+  echo "  date     = ${date}"
+  echo "  tri      = ${tri}"
+  echo "  travail  = ${travail}"
+  echo "  do_diag  = ${do_diag}"
+  echo " "
+  #
+  if [ ${do_diag} = NON ]; then
+    rm -rf ${travail}
+    exit 0
+  fi
+else
+  do_diag=OUI
+fi
+#
+#
+r.echo " "
+r.echo "Climat_make_mean: RDIAG          =${RDIAG}"
+r.echo "Climat_make_mean: BIG_TMPDIR     =${BIG_TMPDIR}"
+r.echo "Climat_make_mean: DIAGNOSTIC_EXIT=${DIAGNOSTIC_EXIT}"
+r.echo "Climat_make_mean: Starting at `date +%r`"
+r.echo " "
+#
+if [ ${debug} = OUI ]; then set -x ; fi
+#
+rm -f list_make
+#
+cd ${rep} ; nombre=`ls -1 ${exp}* | wc -l`
+#
+# Verifier la presence/absence des variables qui
+# se trouvent dans le dernier fichier de donnees
+if [ ${nombre} -gt 1 -a "${nomvar}" != "ALL" ]; then
+  #
+  listexp=`ls -r ${exp}*`
+  set ${listexp}
+  dernier=$1
+  #
+  ALL_VARIABLES=`r.fstliste -izfst ${dernier} -col 1`
+  listvar=""
+  for VARIABLE in ${nomvar} ; do
+    if [ `echo ${ALL_VARIABLES} | grep ${VARIABLE} | wc -l` -ne 0 ]; then
+      listvar="${listvar} ${VARIABLE}"
+    else
+      r.echo " "
+      r.echo "Climat_make_mean: ${VARIABLE} missing from ${dernier}"
+      r.echo " "
+    fi
+  done
+  nomvar="${listvar}"
+  #
+fi
+#
+cd ${travail}
+#
+if [ ${nombre} -eq 0 -a ! -d ${rep}/preclimdiagpr  ]; then 
+  #
+  r.echo " "
+  r.echo "Climat_make_mean: mauvais rep/exp ${rep}/${exp}"
+  r.echo " "
+  exit 4
+  #
+elif [ ${nombre} -eq 1 ]; then
+  #
+  nomvar=ALL
+  #
+  fichier=`ls ${rep}/${exp}* `
+  if [ ! -s ${fichier} ]; then
+    r.echo "Climat_make_mean: ${fichier} est vide"
+    exit 5
+  fi
+  #
+  # Calculer la moyenne et la variance des variables dans ce fichier
+  ${RDIAG} stdev  ${fichier}     stdev.variable           ${DATE} -npg =-64
+  ${RDIAG} timavg ${fichier}     ${rep}/${outnam}_moyenne ${DATE} -npg =-64
+  ${RDIAG} square stdev.variable total2.variable
+  r.delf   -dn    stdev.variable
+  #
+elif [ "${nomvar}" = ALL ]; then
+  #
+  for ii in ${rep}/${exp}*
+  do
+    #
+    rm -f courant
+    #
+    r.echo " "
+    r.echo "Climat_make_mean: Traitement du fichier ${ii}"
+    r.echo " "
+    #
+    if [ "${tri}" = OUI ]; then
+      r.delf -dn variable -f
+      ${RDIAG} fsttri -s ${ii} -d variable -f -nobox -zdesc -e 1> $$_fsttri 2>&1
+      ${RDIAG} repack variable variable64 -npg =-64
+    else
+      ${RDIAG} repack ${ii}    variable64 -npg =-64
+    fi
+    #
+    ${RDIAG} square variable64 variable2
+    #
+    # Accumuler la somme et la somme des carres
+    ${RDIAG} accumul variable64 ${rep}/${outnam}_moyenne ${DATE}
+    ${RDIAG} accumul variable2         total2.variable   ${DATE}
+    #
+  done
+  #
+else
+  #
+  if [ "${unaun}" = OUI ]; then
+    #
+    for ii in ${rep}/${exp}*
+    do
+      #
+      for VARIABLE in ${nomvar} ; do
+        #
+        r.echo " "
+        r.echo "Climat_make_mean: ${VARIABLE} dans ${ii}"
+        r.echo " "
+        #
+        variable=`echo ${VARIABLE} | tr '[:upper:]' '[:lower:]'`
+        r.delf -dn ${variable} -f
+        echo "desire(-1,\"${VARIABLE}\")" | \
+        reditfst -s ${ii} -d ${variable} -nobox -e 
+        #
+        # Accumuler la somme et la somme des carres
+        ${RDIAG} repack  ${variable}         ${variable}64 -npg =-64
+        ${RDIAG} square  ${variable}64       ${variable}2
+        ${RDIAG} accumul ${variable}   total.${variable}  ${DATE}
+        ${RDIAG} accumul ${variable}2 total2.${variable}  ${DATE}
+        #
+        dernier="${ii}"
+        #
+      done
+      #
+    done
+    #
+    for VARIABLE in ${nomvar} ; do
+      #
+      echo "desire(-1,[\">>\",\"^^\"])" | \
+      reditfst -s ${dernier} -d total.${variable} -nobox -e
+      #
+      echo "desire(-1,[\">>\",\"^^\"])" | \
+      reditfst -s ${dernier} -d total2.${variable} -nobox -e
+      #
+    done
+    #
+  elif [ -d ${rep}/preclimdiagpr ]; then
+    #
+    for VARIABLE in ${nomvar} ; do
+      #
+      r.echo " "
+      r.echo "Climat_make_mean: ${VARIABLE} from ${rep}/preclimdiagpr"
+      r.echo " "
+      #
+      variable=`echo ${VARIABLE} | tr '[:upper:]' '[:lower:]'`
+      #
+      for sample in ${rep}/preclimdiagpr/${variable}? ; do
+        #
+        # Calculer la moyenne et la variance de ces echantillons
+        #
+        variablei=${sample##*/}
+        #
+        ${RDIAG} stdev  ${sample} stdev.${variablei} ${DATE} -npg =-64
+        ${RDIAG} timavg ${sample} total.${variablei} ${DATE} -npg =-64
+        ${RDIAG} square stdev.${variablei} total2.${variablei}
+        r.delf   -dn    stdev.${variablei}
+        #
+      done
+      #
+      reditfst -i 0 -d all.total.${variable}  -s total.${variable}? 
+      ${RDIAG} timavg  all.total.${variable}     total.${variable}  -kind SAMPLES
+      r.delf   -dn     all.total.${variable}     total.${variable}? 
+      #
+      reditfst -i 0 -d all.total2.${variable} -s total2.${variable}?
+      ${RDIAG} timavg  all.total2.${variable}    total2.${variable} -kind SAMPLES
+      r.delf   -dn     all.total2.${variable}    total2.${variable}?
+      #
+    done  
+    #
+  else
+    #
+    /bin/rm -f ./directives$$ ; touch directives$$
+    #
+    for VARIABLE in ${nomvar} ; do
+      #
+      variable=`echo ${VARIABLE} | tr '[:upper:]' '[:lower:]'`
+      r.delf -dn ${variable} -f
+      #
+      echo "
+        desire(-1,\"${VARIABLE}\")
+        stdcopi('current','RND',\"${variable}\",'RND')
+        exclure(-1,\"${VARIABLE}\")
+      " >> directives$$ 
+      #
+    done
+    #
+    for ii in ${rep}/${exp}*
+    do
+      #
+      r.echo "Climat_make_mean: lecture de ${ii}"
+      /bin/rm -f ./current ; ln -s ${ii} current
+      reditfst -nobox -i directives$$ 1> /dev/null
+      dernier="${ii}"
+      #
+    done
+    #
+    for VARIABLE in ${nomvar} ; do
+      #
+      r.echo " "
+      r.echo "Climat_make_mean: ${VARIABLE}"
+      r.echo " "
+      #
+      variable=`echo ${VARIABLE} | tr '[:upper:]' '[:lower:]'`
+      #
+      echo "desire(-1,[\">>\",\"^^\"])" | \
+      reditfst -s ${dernier} -d ${variable} -nobox -e 1> /dev/null 2>&1
+      #
+      # Calculer la moyenne et la variance de ${VARIABLE}
+      ${RDIAG} stdev  ${variable} stdev.${variable} ${DATE} -npg =-64
+      ${RDIAG} timavg ${variable} total.${variable} ${DATE} -npg =-64
+      ${RDIAG} square stdev.${variable} total2.${variable}
+      r.delf   -dn    ${variable} stdev.${variable}
+      #
+    done
+    #
+  fi
+  #
+fi
+#
+if [ "${nomvar}" = ALL ]; then
+  #
+  # Calculer la variance
+  ${RDIAG} square ${rep}/${outnam}_moyenne totalsq
+  ${RDIAG} sub    total2.variable totalsq ${rep}/${outnam}_variance
+  r.delf  -dn     total2.variable totalsq
+  #
+else
+  #
+  # Calculer la variance
+  listvar=`echo ${nomvar} | tr '[:upper:]' '[:lower:]'`
+  for variable in ${listvar} ; do 
+    ${RDIAG} square total.${variable}  totalsq
+    ${RDIAG} sub    total2.${variable} totalsq variance.${variable}
+    r.delf  -dn     total2.${variable}
+  done
+  #
+  # Construire les fichiers de la moyenne et de la variance
+  #
+  join_listm=""
+  join_listv=""
+  for variable in ${listvar} ; do
+    join_listm="${join_listm} total.${variable}"
+    join_listv="${join_listv} variance.${variable}"
+  done
+  #
+  ${RDIAG} joinup ${rep}/${outnam}_moyenne ${join_listm}
+  ${RDIAG} joinup ${rep}/${outnam}_variance ${join_listv}
+  #
+fi
+#
+# if [ ${rndout} = OUI ]; then
+#   # Conversion a fichier d'acces direct des resultats 
+#   ${RDIAG} repack ${rep}/${outnam}_variance fichier_temporaire_m -npg =-32
+#   ${RDIAG} repack ${rep}/${outnam}_moyenne  fichier_temporaire_v -npg =-32
+#   reditfst -s fichier_temporaire_m -d ${rep}/${outnam}_variance.rnd -i 0
+#   reditfst -s fichier_temporaire_v -d ${rep}/${outnam}_moyenne.rnd  -i 0
+# fi
+#
+# Faire le menage si tout a fonctionne
+if [ ! -s ${DIAGNOSTIC_EXIT} ]; then
+  cd ${rep}
+  rm -rf ${BIG_TMPDIR}
+  r.echo "Climat_make_mean: Ending at `date +%r`"
+  exit 0
+fi
+#
+exit 6

@@ -1,0 +1,456 @@
+#! /bin/ksh
+#
+# set -x
+#
+if [ "${DIAGNOSTIC_EXIT}" ]; then
+  if [ -s ${DIAGNOSTIC_EXIT} ]; then exit 0 ; fi
+fi
+#
+cclargs 0$                                 "[Calcule la moyenne et la variance]"\
+      -exp       ",,,," ",,,,"             "[Prefixe commun aux fichiers de donnees]"\
+      -rep       "."    ",,,,"             "[Repertoire contenant les donnees]"\
+      -outnam    ""     ",,,,"             "[Prefixe commun au fichiers de resultats]"\
+      -destin    ""     ",,,,"             "[Repertoire ou les resultats seront deposes]"\
+      -debut     "0000" ",,,,"             "[Premier pas de temps considere]" \
+      -fin       "0000" ",,,,"             "[Dernier pas de temps considere]" \
+      -delta     "0000" ",,,,"             "[Interval de pas de temps considere]" \
+      -mean+     "OUI" "NON"               "[Calcul des moyennes et variances (Climat_make_mean)]"\
+      -covar+    "OUI" "NON"               "[Effectuer les calculs de covariance (Climat_make_covar)]"\
+      -nom1+     "UU VV WW"       ",,,,"   "[Premiere liste de noms des variables a traiter (Climat_make_covar)]"\
+      -nom2+     "UU VV TT GZ HU" ",,,,"   "[Seconde liste de noms des variables a traiter (Climat_make_covar)]"\
+      -zoncal+   "OUI" "NON"               "[Calcul des moyennes zonale en sus]"\
+      -tri+      "OUI" "NON"               "[Trier les fichiers de donnees RND avec FSTTRI]"\
+      -rotated   "OUI" "NON"               "[Les composantes vectorielles ont deja subies une rotation]"\
+      -rlats      120   120                "[Nombre de latitudes dans les coupes zonales de grilles de type Z]"\
+      -vents+    "OUI" "NON"               "[Tenir compte des vents dans la conversion de grille]"\
+      -graphe+   "OUI" "NON"               "[Presentation graphique des resultats zonaux (metacode)]"\
+      -date+     "NON" "OUI"               "[Ibuf(2) contient une date et non un pas de temps]"\
+      -rndout+   "NON" "OUI"               "[Conversion optionnelle sqi --> rnd des resultats]"\
+      -travail   "${BIG_TMPDIR}"  ",,,,"   "[Repertoire de travail (BIG_TMPDIR)]"\
+      -debug+    "NON" "OUI"               "[Activer le mode DEBUG]"\
+      -do_diag+  "OUI" "NON"               "[On fait les diagnostiques en mode DEBUG]"\
+      -bnce+     "NON" "OUI"               "[transferer les donnees vers leur destination finale]"\
+      -b_mach    ""    ""                  "[machine de destination finale, si requis]" \
+      -b_addres  ""    ""                  "[repertoire sur b_mach ou les donnees sont deposees]" \
+      -clean+    "NON" "OUI"               "[effacer les donnees apres leur transfert sur b_mach]"\
+      -gaussian  ""    ""                  "[parametre obsolete...]"\
+      ++ $* > ${BIG_TMPDIR}/cclargs_make_diag.out$$
+#
+. ${BIG_TMPDIR}/cclargs_make_diag.out$$ && /bin/rm -f ${BIG_TMPDIR}/cclargs_make_diag.out$$
+#
+  NOM1=${nom1} ; export NOM1
+  NOM2=${nom2} ; export NOM2
+#
+######################################################################
+#
+# Description...
+#    Cette script calcule les moyennes et les variances temporelles
+#    des variables contenues dans une serie de fichiers. Ces derniers
+#    sont tous presents dans un meme repertoire. Les variables a etre
+#    traitees sont specifiees en argument. Les donnees peuvent aussi
+#    etre transferees dans une archive a la fin du travail.
+#
+######################################################################
+#
+# Auteur...
+#    Bernard Dugas
+#
+######################################################################
+#
+# Revisions...
+#    001 - juillet   1998: version initiale
+#    002 - novembre  1998: deplacer le fichier metacod
+#    003 - decembre  1998: ajouter le mode debug
+#    004 - decembre  1998: ajouter le parametre outnam
+#    005 - janvier   1999: calculer les moyennes zonales du fichier
+#                          des variances et ajouter le parametre tri
+#    006 - janvier   1999: dans un deuxieme temps, ajouter les parametres
+#                          covar, destin, bnce, b_mach, b_addres et clean
+#    007 - mai       1999; utiliser BIG_TMPDIR
+#    008 - aout      1999; ajouter le parametre TRI dans l'appel de Climat_make_covar
+#    009 - octobre   1999; modifier la procedure de deplacement des donnees
+#    010 - fevrier   2000; ajouter le support du parametre DATE
+#    011 - aout      2000; ajouter les parametres VENTS et GRAPHE
+#    012 - septembre 2000; quitter en cas d'erreur prealable
+#    013 - mars      2001: enlever les references a NOMVAR/nomvar
+#                          ajouter le parametre "unaun" pour "Climat_make_mean"
+#    014 - avril     2001: placer des liens symboliques aux donnees dans
+#                          le repertoire de travail plutot que d'y deplacer
+#                          les donnees elles-meme
+#    015 - mars      2002: ajouter la cle do_diag
+#    016 - aout      2002: changer les noms des scripts en Climat_xxxxx
+#    017 - mai       2003: modifier l'appel a cclargs et verifier les codes
+#                          de retour des procedures externes
+#    018 - septembre 2004: ajouter la cle mean (KW)
+#    019 - novembre  2004: 1) ajouter les parametres "rotated" et "rlats" et
+#                          2) ignorer "gaussian" et utiliser Climat_get_grtyp (BD)
+#    020 - janvier   2006: utiliser Climat_functions (BD)
+#    021 - septembre 2006: meilleur usage de ${DIAGNOSTIC_EXIT} (BD)
+#
+######################################################################
+#
+if [ ! -d ${rep} ]; then
+  echo "
+  Dans Climat_diag: Le repertoire de donnees initiale ${rep} n'existe pas"
+  if [ "${DIAGNOSTIC_EXIT}" ]; then
+    echo "
+    Dans Climat_diag: Le repertoire de donnees initiale ${rep} n'existe pas" \
+    > ${DIAGNOSTIC_EXIT}
+  fi
+  exit 1
+fi
+#
+rep=`true_path ${rep}`
+#
+# S'occuper des repertoires de destination et de travail
+#
+if [ ! "${destin}" ]; then
+  destin=${rep}
+else
+  if [ ! -d ${destin} ]; then mkdir ${destin} ; fi
+  destin=`true_path ${destin}`
+fi
+#
+if [ ! -d ${travail} ]; then
+  mkdir ${travail}
+  nouveau_travail=OUI
+else
+  nouveau_travail=NON
+fi
+#
+travail=`true_path ${travail}`
+#
+# Definir certaines variables d'environnement de R.DIAG
+#
+. Climat_functions
+#
+if [ ${rep} = ${travail} ]; then
+  echo "
+  Dans Climat_diag: Les repertoires rep et travail doivent etre differents...
+                    rep = travail = ${travail}" | tee ${DIAGNOSTIC_EXIT}
+  exit 2
+fi
+#
+# Aller dans le repertoire ou sont les fichiers de donnees
+#
+cd ${rep}
+#
+# Conversions de l'anglais au francais
+#
+if [ ${bnce} = YES ]; then
+  bnce=OUI
+elif [ ${bnce} = NO ]; then
+  bnce=NON
+fi
+#
+if [ ${clean} = NO ]; then
+  clean=NON
+elif [ ${clean} = YES ]; then
+  clean=OUI
+fi
+#
+if [ ${covar} = YES ]; then
+  covar=OUI
+elif [ ${covar} = NO ]; then
+  covar=NON
+fi
+#
+if [ ${date} = NO ]; then
+  date=NON
+elif [ ${date} = YES ]; then
+  date=OUI
+fi
+#
+if [ ${debug} = YES ]; then
+  debug=OUI
+elif [ ${debug} = NO ]; then
+  debug=NON
+fi
+#
+if [ ${do_diag} = YES ]; then
+  do_diag=OUI
+elif [ ${do_diag} = NO ]; then
+  do_diag=NON
+fi
+#
+if [ ${graphe} = YES ]; then
+  graphe=OUI
+elif [ ${graphe} = NO ]; then
+  graphe=NON
+fi
+#
+if [ ${mean} = YES ]; then
+  mean=OUI
+elif [ ${mean} = NO ]; then
+  mean=NON
+fi
+#
+if [ ${rndout} = NO ]; then
+  rndout=NON
+elif [ ${rndout} = YES ]; then
+  rndout=OUI
+fi
+#
+if [ ${rotated} = YES ]; then
+  rotated=OUI
+elif [ ${rotated} = NO ]; then
+  rotated=NON
+fi
+#
+if [ ${vents} = YES ]; then
+  vents=OUI
+elif [ ${vents} = NO ]; then
+  vents=NON
+fi
+#
+if [ ${zoncal} = YES ]; then
+  zoncal=OUI
+elif [ ${zoncal} = NO ]; then
+  zoncal=NON
+fi
+#
+if [ ! "${outnam}" ]; then outnam=d${exp} ; fi
+#
+# Verifier si mode debug est actif
+#
+if [ ${debug} = OUI ]; then
+  echo " "
+  echo "Appel a Climat_diag..."
+  echo "  exp      = ${exp}"
+  echo "  rep      = ${rep}"
+  echo "  outnam   = ${outnam}"
+  echo "  destin   = ${destin}"
+  echo "  debut    = ${debut}"
+  echo "  fin      = ${fin}"
+  echo "  delta    = ${delta}"
+  echo "  mean     = ${mean}"
+  echo "  covar    = ${covar}"
+  echo "  nom1     = ${NOM1}"
+  echo "  nom2     = ${NOM2}"
+  echo "  zoncal   = ${zoncal}"
+  echo "  tri      = ${tri}"
+  echo "  rotated  = ${rotated}"
+  echo "  rlats    = ${rlats}"
+  echo "  vents    = ${vents}"
+  echo "  graphe   = ${graphe}"
+  echo "  date     = ${date}"
+  echo "  rndout   = ${rndout}"
+  echo "  travail  = ${travail}"
+  echo "  bnce     = ${bnce}"
+  echo "  b_mach   = ${b_mach}"
+  echo "  b_addres = ${b_addres}"
+  echo "  clean    = ${clean}"
+  echo "  do_diag  = ${do_diag}"
+else
+  do_diag=OUI
+fi
+#
+r.echo " "
+r.echo "Climat_diag: Starting at `date +%r`"
+r.echo " "
+#
+if [ ${debug} = OUI ]; then set -x ; fi
+#
+if [ ${debug} = NON -o ${do_diag} = OUI ]; then
+  #
+  # Placer des liens vers les donnees au bon endroit
+  #
+  if [ -d ${rep}/preclimdiagpr ]; then 
+    cd ${travail} ; ln -s ${rep}/preclimdiagpr preclimdiagpr ; cd ${rep}
+    set ${nom1} ; v1=`echo $1 | tr '[:upper:]' '[:lower:]'`
+    fichier=preclimdiagpr/${v1}1
+  elif [ ${debut} -ne ${fin} -a \
+       ${delta} -gt 000000 ]; then
+    pas=${debut}
+    while [ ${pas} -le ${fin} ]; do
+      label=`echo $(( 100000000 + ${pas} )) | cut -c 2- `
+      for fichier in ${exp}${label}* ; do
+        if [ -s ${fichier} ]; then
+          cd ${travail} ; ln -s ${rep}/${fichier} ${fichier}
+          cd ${rep}
+        fi
+      done
+      pas=$(( ${pas} + ${delta} ))
+    done
+  else
+    for fichier in ${exp}* ; do
+      if [ -s ${fichier} ]; then
+        cd ${travail} ; ln -s ${rep}/${fichier} ${fichier}
+        cd ${rep}
+      fi
+    done
+  fi
+fi
+#
+# On fait maintenant le travail
+#
+if [ ${mean} = OUI ] ; then
+  #
+  # Moyennes et variances temporelles
+  #
+  Climat_make_mean \
+             -exp     ${exp} \
+             -rep     ${travail} \
+             -outnam  ${outnam} \
+             -tri     ${tri} \
+             -date    ${date} \
+             -unaun   NON \
+             -rndout  ${rndout} \
+             -debug   ${debug} \
+             -do_diag ${do_diag}
+  #
+  exit_make_mean=$?
+  #
+  if [ -s ${DIAGNOSTIC_EXIT} ]; then
+    echo "
+    Dans Climat_diag: Arret apres Climat_make_mean" |\
+    tee -a ${DIAGNOSTIC_EXIT}
+    exit 99
+  elif [ ${exit_make_mean} -ne 0 ] ; then
+    echo "
+    Dans Climat_diag: exit ${exit_make_mean} de Climat_make_mean" |\
+    tee ${DIAGNOSTIC_EXIT}
+    exit 99
+  fi
+fi
+#
+if [ ${mean} = OUI -a ${zoncal} = OUI ] ; then
+  #
+  # Moyennes zonales: sur les moyennes et variances
+  #
+  Climat_make_zonaux \
+           -moyenne ${outnam}_moyenne \
+           -rep     ${travail} \
+           -rotated ${rotated} \
+           -rlats   ${rlats} \
+           -vents   ${vents} \
+           -graphe  ${graphe} \
+           -rndout  ${rndout} \
+           -debug   ${debug} \
+           -do_diag ${do_diag}
+  #
+  exit_make_zonaux=$?
+  #
+  if [ -s ${DIAGNOSTIC_EXIT} ]; then
+    echo "
+    Dans Climat_diag: Arret apres Climat_make_zonaux (moyenne)" |\
+    tee -a ${DIAGNOSTIC_EXIT}
+    exit 99
+  elif [ ${exit_make_zonaux} -ne 0 ] ; then
+    echo "
+    Dans Climat_diag: exit ${exit_make_zonaux} de Climat_make_zonaux (moyenne)" |\
+    tee ${DIAGNOSTIC_EXIT}
+    exit 99
+  fi
+  #
+  Climat_make_zonaux \
+           -moyenne ${outnam}_variance \
+           -rep     ${travail} \
+           -rotated ${rotated} \
+           -rlats   ${rlats} \
+           -vents   non \
+           -graphe  ${graphe} \
+           -rndout  ${rndout} \
+           -debug   ${debug} \
+           -do_diag ${do_diag}
+  #
+  exit_make_zonaux=$?
+  #
+  if [ -s ${DIAGNOSTIC_EXIT} ]; then
+    echo "
+    Dans Climat_diag: Arret apres Climat_make_zonaux (variance)" |\
+    tee -a ${DIAGNOSTIC_EXIT}
+    exit 99
+  elif [ ${exit_make_zonaux} -ne 0 ] ; then
+    echo "
+    Dans Climat_diag: exit ${exit_make_zonaux} de Climat_make_zonaux (variance)" |\
+    tee ${DIAGNOSTIC_EXIT}
+    exit 99
+  fi
+  #
+fi
+#
+if [ ${covar} = OUI ]; then
+  #
+  # Puisque Climat_make_covar ne peut correctement faire de calculs
+  # zonaux sur une grilles de type Z n'ayant pas ete ajustee ("rotated")
+  #
+  fichier_source=${rep}/${fichier}
+  . Climat_get_grtyp
+  if [ -s ${DIAGNOSTIC_EXIT} ]; then
+    echo "Dans Climat_diag: Arret apres Climat_get_grtyp" |\
+    tee -a ${DIAGNOSTIC_EXIT}
+    exit 99
+  fi
+  #
+  if [ "${zoncal}"  = "OUI"  -a \
+       "${grtype}"  = "Z"    -a \
+       "${rotated}" = "NON" ]; then zoncal=NON ; fi
+  #
+  # Covariances temporelles:
+  #
+  Climat_make_covar \
+           -exp     ${exp} \
+           -rep     ${travail} \
+           -outnam  ${outnam} \
+           -nom1   \$\{NOM1\} \
+           -nom2   \$\{NOM2\} \
+           -moyenne ${outnam}_moyenne \
+           -zoncal  ${zoncal} \
+           -rlats   ${rlats} \
+           -tri     ${tri} \
+           -rndout  ${rndout} \
+           -debug   ${debug} \
+           -do_diag ${do_diag}
+  #
+  exit_make_covar=$?
+  #
+  if [ -s ${DIAGNOSTIC_EXIT} ]; then
+    echo "
+    Dans Climat_diag: Arret apres Climat_make_covar" |\
+    tee -a ${DIAGNOSTIC_EXIT}
+    exit 99
+  elif [ ${exit_make_covar} -ne 0 ] ; then
+    echo "
+    Dans Climat_diag: exit ${exit_make_covar} de Climat_make_covar" |\
+    tee ${DIAGNOSTIC_EXIT}
+    exit 99
+  fi
+  #
+  if [ ${debug} = OUI -a ${do_diag} = NON ]; then exit 0 ; fi
+  r.catf ${travail}/${outnam}_covariance* ${destin} -d
+  #
+fi
+#
+if [ ${debug} = OUI -a ${do_diag} = NON ]; then exit 0 ; fi
+#
+if [ ${mean} = OUI ] ; then
+  r.catf ${travail}/${outnam}_moyenne* ${destin} -d
+  r.catf ${travail}/${outnam}_variance* ${destin} -d
+fi
+#
+if [ ${graphe} = OUI -a ${zoncal} = OUI -a ${mean} = OUI ]; then
+  r.catf ${travail}/metacod_${outnam}_moyenne  ${destin} -d
+  r.catf ${travail}/metacod_${outnam}_variance ${destin} -d
+fi
+#
+# Faire le menage si tout a fonctionne
+if [ ! -s ${DIAGNOSTIC_EXIT} ]; then
+  if [ -d ${rep}/preclimdiagpr ]; then /bin/rm -f ${travail}/preclimdiagpr ; fi
+  if [ ${bnce} = OUI ]; then
+     Climat_mv2cfs -pref ${exp} -rep ${rep} \
+            -arcnam ${b_addres}/${outnam} \
+            -mach ${b_mach} -clean ${clean} \
+            -travail ${travail} -info
+     if [ $? != 0 ]; then
+       echo "Dans Climat_diag: probleme avec mv2cfs..." |\
+       tee ${DIAGNOSTIC_EXIT}
+       exit 3
+     fi
+  fi
+  if [ ${nouveau_travail} = OUI ]; then rm -rf ${travail} ; fi
+  r.echo "Climat_diag: Ending at `date +%r`"
+  exit 0
+fi
+#
+exit 4

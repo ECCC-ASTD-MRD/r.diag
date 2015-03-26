@@ -1,0 +1,179 @@
+#! /bin/ksh
+#
+cclargs 0$                    "[Conversion grille type Z --> grille gaussienne]"\
+      -s        ",,,," ",,,," "[Fichier de donnees]"\
+      -rep      "."    ",,,," "[Repertoire source (donnees) et destination (resultats)]"\
+      -lon       180   ",,,," "[Dimension (longitudes) des grilles gaussiennes intermediaires]"\
+      -lat       90    ",,,," "[Dimension (latitudes) des grilles gaussiennes intermediaires]"\
+      -grtyp+   "G"    "A"    "[Type de la grille de sortie: G(aussien) ou Lat-Lon A ou B]"\
+      -vents+   "OUI"  "NON"  "[Tenir compte des vents dans la conversion de grille]"\
+      -ucomp+   "UU"   "UU"   "[Noms des composantes U a interpoler. Maximum 4]"\
+      -vcomp+   "VV"   "VV"   "[Noms des composantes V a interpoler. Maximum 4]"\
+      -interp    0      1     "[Type d'interpolation. 1 pour lineaire, autrement, cubique]"\
+      -travail  "./$$" ",,,," "[Repertoire de travail (BIG_TMPDIR)]"\
+      -nbits     32     16    "[Nombre de bits de compaction a la sortie]"\
+      -debug+   "NON"  "OUI"  "[Activer le mode DEBUG]"\
+      ++ $* > ${BIG_TMPDIR}/cclargs_make_gaussien.out$$
+#
+. ${BIG_TMPDIR}/cclargs_make_gaussien.out$$ && /bin/rm -f ${BIG_TMPDIR}/cclargs_make_gaussien.out$$
+#
+# Description...
+#    Cette script convertit les grilles de type Z --> grilles gaussiennes.
+#
+# Auteur...
+#    Bernard Dugas
+#
+# Revisions...
+#    001 - janvier   1998: version initiale
+#    002 - juillet   1998: faire en sorte que la cle vents soit supperflue et
+#                          renforcer le traitement de rep et travail 
+#    003 - decembre  1998: ajouter le mode debug et ne plus effacer le
+#                          repertoire travail s'il existait au demarrage
+#    004 - janvier   1999: ajouter le parametre interp
+#    005 - mai       1999: utiliser BIG_TMPDIR
+#    006 - septembre 2000: quitter en cas d'erreur prealable
+#    007 - juin      2002: ajouter les arguments -ucomp et -vcomp
+#    008 - mai       2003: modifier l'appel a cclargs
+#    009 - novembre  2003: ajouter le parametre grtyp
+#
+# Parametres...
+# s       - fichier de donnees. La sortie est alors ${s}_gg
+# rep     - repertoire ou se trouvent les donnees et ou seront
+#           depose les resultats
+# lon,lat - dimensions des grilles gaussiennes intermediaires
+# grtyp   - type de la grille de sortie: G(aussien) ou Lat-Lon A ou B
+# vents   - OUI: tenir compte des vents dans la conversion de grille
+# ucomp   - noms des composantes U a interpoler. Maximum 4
+# vcomp   - noms des composantes V a interpoler. Maximum 4
+# interp  - type d'interpolation. 1 pour lineaire, autrement cubique
+# travail - repertoire de travail (BIG_TMPDIR)
+# nbits   - Nombre de bits de compaction a la sortie
+# debug   - Activer le mode DEBUG
+#
+if [ ! -d ${travail} ]; then
+  mkdir ${travail}
+  nouveau_travail=OUI
+else
+  nouveau_travail=NON
+fi
+#
+travail=`true_path ${travail}` 
+#
+if [ ! -d ${rep} ]; then
+  echo "Le repertoire de donnees initiale ${rep} n'existe pas"
+  exit 1
+fi
+#
+rep=`true_path ${rep}`
+#
+if [ ${rep} = ${travail} ]; then
+  echo "Les repertoires rep et travail doivent etre differents..."
+  echo "rep = travail = ${travail}"
+  exit 2
+fi
+#
+# Conversions de l'anglais au francais
+#
+if [ ${debug} = YES ]; then
+  debug=OUI
+elif [ ${debug} = NO ]; then
+  debug=NON
+fi
+#
+if [ ${vents} = YES ]; then
+  vents=OUI
+elif [ ${vents} = NO ]; then
+  vents=NON
+fi
+#
+# Verifier si mode debug est actif
+#
+if [ ${debug} = OUI ]; then
+  echo " "
+  echo "Appel a Climat_make_gaussien..."
+  echo "  s        = ${s}"
+  echo "  rep      = ${rep}"
+  echo "  lon      = ${lon}"
+  echo "  lat      = ${lat}"
+  echo "  grtyp    = ${grtyp}"
+  echo "  vent     = ${vents}"
+  echo "  ucomp    = ${ucomp}"
+  echo "  vcomp    = ${vcomp}"
+  echo "  interp   = ${interp}"
+  echo "  nbits    = ${nbits}"
+  echo "  travail  = ${travail}"
+  echo " "
+  #
+  if [ "${nouveau_travail}" = "OUI" ]; then rm -rf ${travail} ; fi
+  exit 0
+fi
+#
+# Definir certaines variables d'environnement de R.DIAG
+USE_BIG_TMPDIR=oui ; export USE_BIG_TMPDIR
+BIG_TMPDIR=${travail} ; export BIG_TMPDIR
+ECHO_COMMAND_LINE=on ; export ECHO_COMMAND_LINE
+RDIAG=${RDIAG:-r.diag2000}
+#
+if [ "${DIAGNOSTIC_EXIT}"var = var ]; then
+  DIAGNOSTIC_EXIT=${BIG_TMPDIR}/DIAGNOSTIC_EXIT ; export DIAGNOSTIC_EXIT
+  touch ${DIAGNOSTIC_EXIT}
+elif [ -s ${DIAGNOSTIC_EXIT} ]; then
+  exit 99
+fi
+#
+r.echo " "
+r.echo "Climat_make_gaussien: BIG_TMPDIR=${BIG_TMPDIR}"
+r.echo "Climat_make_gaussien: RDIAG     =${RDIAG}"
+r.echo " "
+#
+cd ${travail}
+#
+if [ ${vents} = OUI ]; then
+  #
+  set ${ucomp}
+  nbr_u=$#
+  set ${vcomp}
+  nbr_v=$#
+  #
+  if [ ${nbr_u} -ne ${nbr_v} ]; then
+    echo "Pas le meme nombre de composantes en U et V"
+    exit 3
+  elif [ ${nbr_u} -lt 1 ]; then
+    echo "Il n'y a pas assez de noms de composantes vectorielles"
+    exit 3
+  elif [ ${nbr_u} -gt 4 ]; then
+    echo "Il y a trop de noms de composantes vectorielles"
+    exit 3
+  fi
+  #
+  UCOMP="${ucomp}"
+  VCOMP="${vcomp}"
+  ucomp=`echo ${ucomp} | tr [A-Z] [a-z] `
+  vcomp=`echo ${vcomp} | tr [A-Z] [a-z] `
+  #
+  ${RDIAG} select ${rep}/${s} ${ucomp} -name ${UCOMP}
+  ${RDIAG} enleve ${rep}/${s} sans_u   -name ${UCOMP}
+  ${RDIAG} select sans_u      ${vcomp} -name ${VCOMP}
+  ${RDIAG} enleve sans_u      restant  -name ${VCOMP}
+  #
+  ${RDIAG} joinup u ${ucomp} ; ${RDIAG} joinup v ${vcomp}
+  ${RDIAG} llvagg u v uu vv -lon ${lon} -lat ${lat} -npg =-${nbits} -kind ${interp} ${grtyp}
+  #
+  ${RDIAG} llagg  restant ${rep}/${s}_gg -lon ${lon} -lat ${lat} -npg =-${nbits} -kind ${interp} ${grtyp}
+  ${RDIAG} joinup ${s}_temp uu vv ${rep}/${s}_gg
+  r.catf   ${s}_temp ${rep}/${s}_gg -d
+  #
+else
+  #
+  ${RDIAG} llagg  ${rep}/${s} ${rep}/${s}_gg -lon ${lon} -lat ${lat} -npg =-${nbits} -kind ${interp} ${grtyp}
+  #
+fi
+#
+cd ${rep}
+#
+# Faire le menage si tout a fonctionne
+if [ ! -s ${DIAGNOSTIC_EXIT} ]; then
+     if [ ${nouveau_travail} = OUI ]; then rm -rf ${BIG_TMPDIR} ; fi
+     exit 0
+fi
+exit 3

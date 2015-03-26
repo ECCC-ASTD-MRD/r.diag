@@ -1,0 +1,335 @@
+#! /bin/ksh
+# set -x
+#
+cclargs   0$                     "[Extrait des series temporelles pour AMIP2]"\
+      -md       ",,,," ",,,,"          "[Partie commune des noms de fichiers en niveaux modeles]"\
+      -pr       ",,,," ",,,,"          "[Partie commune des noms de fichiers en niveaux pression]"\
+      -prefix   ""     ""              "[Prefix to be added to all input filenames]"\
+      -outnam   ""     ",,,,"          "[Prefixe commun au fichiers de resultats]"\
+      -start    "NONE" "1978010100"    "[Date de validite de l'analyse de depart en YYYYMMJJHH]"\
+      -rep      "."    ",,,,"          "[Repertoire contenant les donnees]"\
+      -deltah   "6"    ",,,,"          "[Nombre d'heures entre les echantillons accumules]"\
+      -cccvar+  "NON"  "OUI"           "[Traitement des variables de type CCCma]"]\
+      -mg       "${HOME}/gem/ls_masks" ",,,," "[Path of the land-sea-masks]"\
+      -travail  "${BIG_TMPDIR}" ",,,," "[Repertoire de travail (BIG_TMPDIR)]"\
+      ++ $* > ${BIG_TMPDIR}/cclargs_series_temporelles.out$$
+#
+. ${BIG_TMPDIR}/cclargs_series_temporelles.out$$ && /bin/rm -f ${BIG_TMPDIR}/cclargs_series_temporelles.out$$
+#
+######################################################################
+#
+# Description...
+#    Cette script extrait les series temporelles requises par le
+#    protocole experimental AMIP2, tel que documente dans le lien
+#    suivant:
+#
+#    URL="http://www-pcmdi.llnl.gov/amip/OUTPUT/AMIP2/outlist.html"
+#
+######################################################################
+#
+# Auteur...
+#    Bernard Dugas
+#
+######################################################################
+#
+# Revisions...
+#    001 - fevrier   2001: version initiale
+#    002 - aout      2002: utiliser r.diag2000 et editfst2000 par defaut
+#    003 - septembre 2002: ajouter le parametre "prefix" et corriger
+#                          la fin du calcul des moyenne globales
+#    004 - janvier   2003: ajouter gz500 dans ${outnam}_ts_2d
+#    005 - janvier   2003: ajouter egalement uu, vv, tt et hu (tous a
+#                          eta=1.0) dans ${outnam}_ts_2d, de meme que
+#                          les integrales verticales des moyennes globales
+#                          du moment angulaire relatif, de la temperature
+#                          et de l'energie cinetique dans ${outnam}_ts_0d.txt
+#    006 - mai       2003: parameter mg added and calculation of sst (KW)
+#                          modifier l'appel a cclargs
+#    007 - novembre  2003: ajouter la cle "start" for modified creation of 'nombre_xx' (KW)
+#    008 - novembre  2004: try using 'MG' from the md-file (KW)
+#    009 - aout      2005: change field names: TEMP->TTPM, KE->KEPM, ANGM->AMPM and
+#                          add TTHM, KEHM, ANHM to 0-D time series (KW)
+#    010 - octobre   2005: assurer la compatibilite arriere p/r a la revision 009 (BD)
+#    011 - janvier   2006: Utiliser Climat_functions (BD)
+#    012 - fevrier   2007: Ajouter support des variables dynamiques MKS du CCCma (BD)
+#
+######################################################################
+#
+# Notes...
+#    On suppose que ${md} et ${pr} sont construits de la meme facon
+#    et que seul les deux premiers caracteres y sont differents.
+#    Typiquement ces derniers seront md et pr, respectivement.
+#
+######################################################################
+#
+if [ ! -d ${rep} ]; then
+  echo "Le repertoire de donnees initiale ${rep} n'existe pas"
+  exit 1
+fi
+#
+rep=`true_path ${rep}` ; cd ${rep}
+#
+# S'occuper des repertoires de destination et de travail
+#
+if [ ! "${destin}" ]; then
+  destin=${rep}
+else
+  if [ ! -d ${destin} ]; then mkdir ${destin} ; fi
+  destin=`true_path ${destin}`
+fi
+#
+if [ ! -d ${travail} ]; then
+  mkdir ${travail}
+  nouveau_travail=OUI
+else
+  nouveau_travail=NON
+fi
+#
+travail=`true_path ${travail}`
+#
+if [ ${rep} = ${travail} ]; then
+  echo "Les repertoires rep et travail doivent etre differents..."
+  echo "rep = travail = ${travail}"
+  exit 2
+fi
+#
+if [ ${cccvar} = YES ]; then
+  cccvar=OUI
+elif [ ${cccvar} = NO ]; then
+  cccvar=NON
+fi
+#
+# Definir certaines variables d'environnement de R.DIAG
+#
+export BIG_TMPDIR=${travail}
+#
+. Climat_functions
+#
+secondes=$(( ${deltah} * 3600 ))
+#
+r.echo " "
+r.echo "Climat_series_temporelles: RDIAG          =${RDIAG}"
+r.echo "Climat_series_temporelles: BIG_TMPDIR     =${BIG_TMPDIR}"
+r.echo "Climat_series_temporelles: DIAGNOSTIC_EXIT=${DIAGNOSTIC_EXIT}"
+r.echo "Climat_series_temporelles: Starting at `date +%r`"
+r.echo " "
+#
+prefixe_md=`echo ${md} | cut -c1-2 `
+prefixe_pr=`echo ${pr} | cut -c1-2 `
+commun=`echo ${pr} | cut -c3- `
+#
+if [ "${md}" != "${prefixe_md}${commun}" ]; then
+  echo "md and pr should be such that md=xx{common} and pr=yy{common}"
+  echo "where {common} is a character string shared by both argiments..."
+  echo "instead, md=${md} and pr=${pr} --> ABORTING"
+  exit 3
+fi
+#
+c1=`echo ${prefix}${prefixe_pr} | wc -c`
+#
+# verifier qu'il y a autant de pr* que de md*
+#
+if [ ${start} = NONE ]; then
+  set `ls ${prefix}md* `
+  indice=$#
+  dernier=pas_encore_trouve
+  while [ ${dernier} = pas_encore_trouve ]; do
+    courant=$1
+    if [ `echo ${courant} | grep 00 | wc -w ` -eq 1 ]; then
+      dernier=${courant}
+    elif [ ${indice} -gt 1 ]; then
+      shift
+      indice=$(( ${indice} - 1 ))
+    else
+      echo ${ECHOARG} "\n Argument start indisponible"
+      exit 3
+    fi
+  done
+  start=`echo ${dernier} | cut -d_ -f 1 | cut -c${c1}-${c2} `
+fi
+#
+liste_pr=`ls ${prefix}pr${start}_[0-9]*p`
+nombre_pr=`echo ${liste_pr} | wc -w `
+liste_md=`ls ${prefix}md${start}_[0-9]*p`
+nombre_md=`echo ${liste_md} | wc -w `
+#
+if [ ${nombre_md}  = 0 -o \
+     ${nombre_pr}  = 0 -o \
+     ${nombre_md} != ${nombre_pr} ]; then
+  echo "Probleme avec les fichiers de donnees..."
+  echo "Trouve ${nombre_md} fichiers ${md}* et"
+  echo "       ${nombre_pr} fichiers ${pr}*"
+  echo "dans ${rep}"
+  exit 4
+fi
+#
+/bin/rm -f ${outnam}_ts_0d.txt
+touch ${outnam}_ts_0d.txt
+#
+# faire le travail
+#
+suffix=${outnam##*_}
+exp=`echo $outnam | cut -c3-`
+exp=${exp%%_*}
+#
+# Check for land-sea mask availability (KW)
+#
+set ${liste_md}
+first_md=${1}
+var_mg=`r.fstliste -izfst ${first_md} -nomvar MG -col 1`
+if [ "${var_mg}" = "MG" ] ; then
+  ${RDIAG} select ${first_md} mg          -name MG
+else
+  /bin/rm -f mg
+  if [ ${suffix} = "lo" -o ${suffix} = "hi" ] ; then
+    if [ ! -s ${mg}/mg_${exp}_${suffix} ] ; then
+      echo "ERROR: Land-sea-mask not found!"
+      echo "       Neither in md-files nor in ${mg}/mg_${exp}_${suffix}"
+      exit 5
+    fi
+    ln -s ${mg}/mg_${exp}_${suffix} mg
+  else
+    if [ ! -s ${mg}/mg_${exp} ] ; then
+      echo "ERROR: Land-sea-mask not found!"
+      echo "       Neither in md-files nor in ${mg}/mg_${exp}"
+      exit 5
+    fi
+    ln -s ${mg}/mg_${exp} mg
+  fi
+fi
+#
+# Check that any one of then TTHM, KEHM or AMHM hybrid-mean variables are available
+var_tthm=`r.fstliste -izfst ${first_md} -nomvar TTHM -col 1`
+var_kehm=`r.fstliste -izfst ${first_md} -nomvar KEHM -col 1`
+var_amhm=`r.fstliste -izfst ${first_md} -nomvar AMHM -col 1`
+if [ "${var_tthm}" -o "${var_amhm}" -o "${var_kehm}" ]; then
+  varhm="${var_tthm} ${var_kehm} ${var_amhm}"
+fi
+#
+# Variable names and conversion constants
+#   0.514444   = 1.852e3   / 3600.
+#   3.277635e6 = 6.37122e6 * 0.514444
+#   10.197671  = 100.      / 9.80616
+if [ ${cccvar} = OUI ]; then
+  GZ=PHI
+  HU=SHUM
+  PN=PMSL
+  TT=TEMP
+  UU=U
+  VV=V
+  var1=0.0
+  var2=6.37122e6
+else
+  GZ=GZ
+  HU=HU
+  PN=PN
+  TT=TT
+  UU=UU
+  VV=VV
+  var1=273.15
+  var2=3.277635e6
+fi
+var3=10.197671
+  #
+compteur=0
+for fichier_md in ${liste_md}; do
+#
+  compteur=$(( ${compteur} + 1 ))
+  commun=`echo ${fichier_md} | cut -c${c1}- `
+  fichier_pr=${prefix}${prefixe_pr}${commun}
+#
+  ${RDIAG} select ${fichier_md} p0 pn pr ab -name  P0 $PN  PR  AB
+  ${RDIAG} select ${fichier_md} gs tm ar    -name  GS  TM  AR
+  ${RDIAG} select ${fichier_md} t5 t9 sd av -name  T5  T9  SD  AV
+  ${RDIAG} select ${fichier_md} ad as au ag -name  AD  AS  AU  AG
+#
+  ${RDIAG} select ${fichier_md} tt hu uu vv -name $TT $HU $UU $VV
+#
+  ${RDIAG} select ${fichier_md} s7 usgw gl  -name  S7 USGW GL
+  ${RDIAG} select ${fichier_md} sd          -name  SD -lv1 1 -kind ARBITRAIRE
+#
+  ${RDIAG} select ${fichier_pr} ub vb       -name $UU $VV -lv1 850
+  ${RDIAG} select ${fichier_pr} uh vh       -name $UU $VV -lv1 200
+  ${RDIAG} select ${fichier_pr} gz          -name $GZ     -lv1 500
+#
+  if [ ${compteur} = 1 ]; then ${RDIAG} xlin pr deltas -a 0 -b ${secondes} ; fi
+#
+  ${RDIAG} gdiv   pr deltas prs
+  ${RDIAG} gdiv   ab deltas abs
+  ${RDIAG} gdiv   ar deltas ars
+  ${RDIAG} gdiv   av deltas avs
+  ${RDIAG} gdiv   ad deltas ads
+  ${RDIAG} gdiv   as deltas ass
+  ${RDIAG} gdiv   au deltas aus
+  ${RDIAG} gdiv   ag deltas ags
+#
+  ${RDIAG} gdiv   s7 deltas s7s
+#
+  ${RDIAG} joinup samples p0 pn t5 t9 ars prs uh ub vh vb gz tt hu uu vv
+  reditfst -s ${BIG_TMPDIR}/samples -d ${outnam}_ts_2d -e -i 0
+#
+# effectuer certains calculs sur toute l'atmosphere
+# a partir de donnees disponibles en pression
+#
+  ${RDIAG} loge   p0  lp 
+  ${RDIAG} newnam lp  lnsp               -name LNSP
+#
+  ${RDIAG} xlin   p0  povg               -a ${var3}
+#
+  ${RDIAG} select ${fichier_pr} tt uu vv -name $TT $UU $VV
+  ${RDIAG} xlin   tt  ttk                -a 1 -b ${var1} -name TTPM
+  ${RDIAG} vpintv ttk ttv  lnsp          -kind 1
+  ${RDIAG} div    ttv povg ttpm          -name 1
+#
+  ${RDIAG} ke     uu  vv   ke
+  ${RDIAG} vpintv ke  kev  lnsp          -kind 1
+  ${RDIAG} newnam kev kepm               -name KEPM
+#
+  ${RDIAG} ggtrig uu  ur                 -a ${var2} -kind COS
+  ${RDIAG} vpintv ur  urv  lnsp          -kind 1
+  ${RDIAG} newnam urv ampm               -name AMPM
+#
+if [ "${varhm}" ]; then
+  # extract equivalent variables from md-file
+  ${RDIAG} select ${fichier_md} ${varhm} -name ${varhm}
+fi
+#
+# calcul de l'evaporation et du budget radiatif au toit
+#
+  ${RDIAG} xlin   avs evap               -a 4e-7     -name EVAP
+  ${RDIAG} add    ars aus rupt
+  ${RDIAG} xylin  abs rupt radt          -a 1 -b =-1 -name RADT
+#
+# calculate SST over open ocean (KW)
+#
+  ${RDIAG} gadd   gl  mg  gl+mg
+  ${RDIAG} fmask  gl+mg   mask           -kind lt    -a 0.5
+  ${RDIAG} mltf   tm  mask tm_masked
+#
+  ${RDIAG} globavg tm_masked tm_gavg
+  ${RDIAG} globavg mask mask_gavg
+  ${RDIAG} divf    tm_gavg mask_gavg tso_gavg
+  ${RDIAG} newnam tso_gavg tso            -name TSO
+#
+#  mask_gavg=`${RDIAG} globavg mask | awk '$2 == "GRID" {printf $10}'`
+#  tm_gavg=`${RDIAG} globavg tm_masked | awk '$2 == "GRID" {printf $10}'`
+#  tso=`echo "${tm_gavg} ${mask_gavg}" | awk '{printf $1 / $2}'`
+#
+# calcul de la moyenne globale de tout cela
+#
+  ${RDIAG} joinup ts${commun} evap radt ags abs ars aus ads ass p0 prs \
+                              ${varhm} ttpm kepm ampm s7s usgw tso sd
+  ${RDIAG} globavg ts${commun} >> ${outnam}_ts_0d.txt
+  r.delf -dn ts${commun} -na
+#
+done
+#
+# Faire le menage si tout a fonctionne
+#
+if [ ! -s ${DIAGNOSTIC_EXIT} ]; then
+  if [ ${nouveau_travail} = OUI ]; then rm -rf ${travail} ; fi
+  r.echo "Climat_series_temporelles: Ending at `date +%r`"
+  exit 0
+fi
+# 
+exit 6
