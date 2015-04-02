@@ -11,7 +11,12 @@ SHELL   = /bin/bash
 
 AR      = s.ar
 CPPT    = r.gppf -chop_bang -gpp -F
-ZIP     = `which zip`
+
+ifeq "$(BASE_ARCH)" "AIX-powerpc7"
+    ZIP     = `which gtar` -zcf
+else
+    ZIP     = `which zip`
+endif
 
 DIAGNOSTIQUE = $(CURDIR)/../..
 MAKE    = make DIAGNOSTIQUE=$(DIAGNOSTIQUE)
@@ -37,7 +42,12 @@ CODEBETA=
 #OBJ    = $(LIBDIR)/stubs.o
 OBJ     =
 
-BLAS    = blas
+ifeq "$(BASE_ARCH)" "AIX-powerpc7"
+    BLAS    = essl
+else
+    BLAS    = blas
+endif
+
 DDFUN90 = ddfun90
 DIAGLIB = diag_sq$(STD)
 GRAFLIB =
@@ -440,7 +450,7 @@ AIX: #Section appropriee pour les fichiers STD saveur 1998 sur IBM AIX
 
 AIX-powerpc7: #Section appropriee pour les fichiers STD saveur 1998 sur AIX-powerpc7
 	$(MAKE) driver OBJ="$(OBJ)" RMNLIB=$(RMNLIB) DDFUN90=" " \
-	NOPLOT=$(NOPLOT) GRAFLIB=$(GRAFLIB) LAPACK=lapack_340 \
+	NOPLOT=$(NOPLOT) GRAFLIB=$(GRAFLIB) LAPACK=lapack-3.4.0 \
 	VGDLIB=$(VGDLIB) MANDIR=$(MANDIR)
 
 Linux:

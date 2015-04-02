@@ -10,8 +10,14 @@ endif
 SHELL = /bin/sh
 
 AR      = s.ar
-ZIP     = `which zip`
-UNZIP   = `which unzip`
+
+ifeq "$(BASE_ARCH)" "AIX-powerpc7"
+    ZIP     = `which gtar` -zcf
+    UNZIP   = `which gtar` -zxf
+else
+    ZIP     = `which zip`
+    UNZIP   = `which unzip`
+endif
 
 MPCPP   = 
 MPF90   = 
