@@ -1,0 +1,78 @@
+ 
+      CALL SEQUENCE...
+       zonavg  GGIN ZMOUT OUTPUT       [ -lat VAL1 ]
+       zonvavg UIN VIN ZU ZV OUTPUT    [ -lat VAL1 ]
+       rzonavg GGIN D ZMOUT OUTPUT     [ -lat VAL1 ]
+       rzonvavg UIN VIN D ZU ZV OUTPUT [ -lat VAL1 ]
+ 
+      DESCRIPTION...
+       zonavg   - COMPUTES MULTI-LEVEL ZONAL AVERAGE OF A SET OF GRIDS 
+       zonvavg  - COMPUTES MULTI-LEVEL ZONAL AVERAGE OF A SET OF WINDS
+       rzonavg  - COMPUTES MULTI-LEVEL representative ZONAL AVERAGE OF A SET OF GRIDS 
+       rzonvavg - COMPUTES MULTI-LEVEL representative ZONAL AVERAGE OF A SET OF WINDS
+  
+ 
+      AUTHOR  - J.D.Henderson, FEB 18/80.
+      LAST REVISION: $Header: /home/cvs/RMNLIB/utils/rdiag/lspgm/zonavg.ptn,v 4.17 2014/09/25 20:20:56 dugas Exp $
+ 
+  
+      PURPOSE - COMPUTES A VECTOR OF ZONAL MEANS FOR EACH GRID AND SAVES 
+                THEM ON FILE ZMOUT. 
+ 
+      NOTES:  1) EACH ZMOUT RECORD IS A VECTOR OF LATITUDINAL AVERAGES 
+                 RUNNING SOUTH TO NORTH. MAXIMUM NUMBER OF LEVELS IS 999.
+              2) zonvavg PERFORMS WIND ROTATIONS AS NEEDED. IF NO SUCH
+                 OPERATION IS REQUIRED, ZONAVG CAN BE USED INSTEAD.
+              3) FURTHERMORE, IF ggvecz HAS ALLREADY BEEN APPLIED TO THE
+                 VECTOR COMPONENTS, zonvavg SHOULD **NOT** BE USED, AS
+                 THE RESULT WILL BE IN ERROR. PLEASE USE zonavg IN
+                 THOSE CIRCUMSTANCES.
+              4) The representative zonavg RZ(X) of X is defined as
+                 RZ(X) = Z(D*X) / Z(D),  IF Z(D).NE.0.,
+                       = Z(X)         ,  IF Z(D).EQ.0.
+                 where Z(X) is the usual zonal average.
+ 
+  
+      INPUT FILE (zonavg and rzonavg) ... 
+       GGIN  = (REAL OR COMPLEX) GRIDS TO BE ZONALLY AVERAGED. 
+ 
+      INPUT FILES (zonvavg and rzonvavg) ... 
+       UIN   = REAL U WIND COMPONENT TO BE ZONALLY AVERAGED. 
+       VIN   = REAL V WIND COMPONENT TO BE ZONALLY AVERAGED. 
+  
+      OUTPUT FILE (zonavg and rzonavg) ... 
+       ZMOUT = ZONAL AVERAGES OF EACH GRID IN GGIN. 
+ 
+      OUTPUT FILES (zonvavg and rzonvavg) ... 
+       ZU    = ZONAL AVERAGES OF THE ZONAL WIND COMPONENTS.
+       ZV    = ZONAL AVERAGES OF THE MERIDIONAL WIND COMPONENTS.
+ 
+      AND (rzonavg and rzonvavg)...
+       D     = REAL topographic MASK (FROM 0 BELOW GROUND TO 1 ABOVE)
+ 
+ 
+      MISSING VALUE TREATMENT IS SUPPORTED VIA EITHER THE "MISSING_VALUE"
+      ENVIRONMENT VARIABLE OR THE "-mvalue" COMMAND-LINE ARGUMENT. PLEASE
+      SEE THE R.DIAG WEB DOCUMENTAION FOR MORE DETAILS. This option is
+      exclusive to the representative zonal averages option.
+ 
+ 
+      (OPTIONAL) PARAMETRE (ONLY WITH GEM Z-TYPE INPUT GRIDS) ...
+ 
+       LAT  = NUMBER OF LATITUDES IN THE OUTPUT ZONAL CROSS-SECTIONS.
+              DEFAULTS TO THE MINIMUM OF THE TWO HORIZONTAL DIMENSIONS
+              OF THE INPUT FIELDS.
+ 
+ 
+      EXIT CONDITIONS...
+        0 NO PROBLEMS
+        1 PROBLEMS READING GGIN OR UIN
+        2 FOUND INPUT TYPE OTHER THAN 'GRID','SUBA' OR 'CMPL'
+        3 PREMATURE EOF ON FILE GGIN
+        4 MORE THAN ONE SIZE IN INPUT FILE
+        5 ERROR READING INPUT PARAMETRE
+        6 PROBLEMS READING VIN
+        7 UIN AND VIN NOT THE SAME SIZE
+        8 OPERATING/INPUT MODE MITMATCH
+        9 PROBLEM READING DELTA FILE
+       10 NO D "mask"PROCESSING WITH -mvalue

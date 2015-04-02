@@ -1,0 +1,50 @@
+ 
+      CALL SEQUENCE...
+       timdev  SERA AVGA DEVA OUTPUT [ -mvalue VAL1 ]
+ 
+ 
+      DESCRIPTION...
+       timdev - COMPUTES TIME DEVIATION FROM THE TIME AVERAGE
+ 
+ 
+      AUTHOR  - J.D.Henderson, MAY 07/80.
+      LAST REVISION: $Header: /home/cvs/RMNLIB/utils/rdiag/lspgm/timdev.ptn,v 4.17 2014/09/25 20:20:54 dugas Exp $
+ 
+ 
+      PURPOSE - COMPUTES THE 2-D TIME DEVIATION  FROM THE TIME AVERAGE FOR EACH 
+                LEVEL OF A SERIES OF (MULTI-LEVEL) SETS OF DATA HAVING THE SAME
+                SIZE AND TYPE. MAXIMUM LEVELS IS 999.
+ 
+ 
+      INPUT FILE...
+       SERA = SERIES OF  MULTI-VARIABLE MULTI-LEVEL SETS, 
+              WHERE THE DATA MAY BE REAL OR COMPLEX.
+       AVGA = CONTAINS ONE SET WHICH IS THE MEAN OF ALL
+              THE SETS IN FILE SERA.
+       NOTES: 1) THE INPUT FILES SHOULD HAVE THE SAME STRUCTURE,
+                 I.E. THE SAME VERTICAL LEVELS AND VARIABLES.
+              2) THESE FILES ARE SUPPOSED TO BE SORTED ACCORDING
+                 TO A TIMESTEP/NAME/LEVEL RULE, FROM MOST TO
+                 LEAST SIGNIFICANT
+              
+      OUTPUT FILE...
+       DEVA = DEVIATIONS FROM THE MEAN 
+ 
+ 
+      Command-line arguments...
+       mvalue = Real number used to identify missing values (DEF = none)
+ 
+      Missing value mode...
+       Missing value treatment is activated by providing a real number to be
+       used as a missing value flag with the "-mvalue" command-line argument.
+       Data that has this value will be disregarded by the program.
+ 
+ 
+      EXIT CONDITIONS...
+        0 NO PROBLEMS
+        1 PROBLEMS READING INPUT FILES
+        2 AVGA AND SERA RECORDS NOT THE SAME SIZE
+        3 PREMATURE EOF ON FILE AVGA
+        4 PREMATURE EOF ON FILE SERA
+        5 UNABLE TO ALLOCATE ENOUGH WORKING MEMORY
+        6 BAD ARGUMENT VALUE WITH A COMMAND-LINE PARAMETRE

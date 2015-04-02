@@ -1,0 +1,96 @@
+ 
+      CALL SEQUENCE...
+       xplot  xin input output [-t1 VAL1 -name VAL2 -lv1 VAL3 \ 
+                                -a VAL4 -b VAL5 -c VAL6 \ 
+                                -kind VAL7 [VAL8] -label VAL9]
+ 
+ 
+      DESCRIPTION...
+       PLOTS SINGLE LEVEL ZONAL/MERIDIONAL CROSS SECTION CURVE
+ 
+ 
+      AUTHOR  - N.E.SARGENT
+      LAST REVISION: $Header: /home/cvs/RMNLIB/utils/rdiag/lspgm/xplot.ptn,v 4.15 2014/09/25 20:20:56 dugas Exp $
+ 
+ 
+      PURPOSE - PLOTS GLOBAL ZONALLY/MERIDIONALLY AVERAGED SINGLE LEVEL FIELD
+                VERSUS LATITUDE/LONGITUDE.
+ 
+ 
+      INPUT FILE...
+       XIN = FILE CONTAINING CURVES TO BE PLOTTED. NOTE THAT MULTI-LEVEL
+             ZONAL RECORDS WILL NOT BE TREATED BY XPLOT. CONVERSION USING
+             THE -SINGLZ KEYWORD SHOULD BE DONE AS A PRELIMINARY STEP.
+ 
+ 
+      INPUT PARAMETERS (FIRST LINE)
+       NSTEP   (t1)   = TIMESTEP NUMBER (BLANK INPUT DEFAULTS TO -1)
+       NAME           = NAME OF VARIABLE TO BE PLOTTED
+                        THE NAMES 'NEXT' AND 'SKIP' ARE RECOGNIZED BUT FILE XIN
+                        IS REWOUND BEFORE EACH SEARCH. THIS ALLOWS FIELDS TO BE
+                        IN ANY ORDER ON THE FILE, BUT 'NEXT' ALWAYS SELECTS THE
+                        FIRST FIELD AND 'SKIP' IS A NULL OPERATION. THE DEFAULT
+                        IS 'ALL', WHICH IMPLIES PLOTTING ALL RECORDS.
+       LEVEL   (lv1)  = LEVEL NUMBER (BLANK INPUT DEFAULTS TO -1)
+       YLO,YHI (a,b)  = LOWER,UPPER LIMITS OF VERTICAL AXIS.
+                        TICK MARKS DIVIDE THE AXIS INTO 10 DIVISIONS BETWEEN
+                        YLO AND YHI. A SOLID LINE IS DRAWN AT Y=0 IF YLO.LT.0.
+                        AND YHI.GT.0.,  BUT AT YLO OTHERWISE. IF YLO=YHI, THE
+                        PROGRAMS USES AUTOMATICALLY DETERMINED VALUES.
+       MS             = PRINTER PLOT PARAMETER (NOW IGNORED).
+       FMISS   (c)    = LOWER BOUND FOR VALUES TO BE PLOTTED.  IF VALUES ARE
+                        MISSING AT SOME LATITUDE,  CODE THEM AS LESS THAN FMISS
+                        AND NO POINT WILL BE PLOTTED FOR THAT LATITUDE, (VALUES
+                        LESS THAN FMISS ARE NOT PLOTTED).
+                        FMISS=0 OR BLANK DEFAULTS TO FMISS=-36.E36 .
+       NZMS   (kind1) = 0/1 FOR ZONAL/MERIDIONAL PLOT.
+       VKIND  (kind2) = VERTICAL LEVEL TYPE. IT CAN ONLY BE USED WITH CMC/RPN STD
+                        FILES AND THEN LV1 AND LV2 ARE ASSUMED TO CONTAIN DECODED
+                        VALUES. FURTHERMORE, THIS PARAMETRE CAN ONLY BE SPECIFIED
+                        IN COMMAND-LINE MODE. THE CURRENTLY SUPPORTED VALUES ARE:
+                        'HAUTEUR'   , heights (m) with respect to sea level
+                        'SIGMA'     , classical terrain following (0.0 -> 1.0)
+                        'ETA'       , first version of the GEM ETA coordinate
+                        'PRESSION'  , pressure (mb)
+                        'ARBITRAIRE', arbitrary level (no units apply)
+                        'HAUTEURS'  , heights (M) with respect to the surface
+                        'HYBRIDE'   , hybrid GEM coordinate
+                        'THETA'     , potential temperature coordinate
+                        'GALCHEN'   , GalChen generalized coordinate
+ 
+      INPUT PARAMETERS (SECOND LINE)
+       LABEL          = 80 CHARACTER LABEL PRINTED ABOVE PLOT.
+                        THE DEFAULT IS 'AUTOMATIC', WHICH IS
+                        APPROPRIATE WHEN NAME='ALL'.
+ 
+       FURTHERMORE, WHEN NAME='ALL', THE ACTUAL PRINTED LABEL WILL
+       BE THE SUPPLIED LABEL PLUS (IF THIS LAST IS SHORT ENOUGH)
+       THE RECORD ORDINAL, THE VARIABLE NAME, LEVEL AND TIMESTEP
+       (THESE REQUIRE 38 CHARACTERS TO BE PRINTED IN THE LABEL).
+ 
+      READ(5,5010) NSTEP,NAME,LEVEL,YLO,YHI,MS,FMISS,NZMS
+      READ(5,5012,END=902) LABEL
+ 5010 FORMAT(10X,I10,1X,A4,I5,2E10.0,I5,E10.0,I5)
+ 5012 FORMAT(A80)
+ 
+ 
+      EXAMPLE OF INPUT CARDS...
+ 
+   XPLOT         182  SUB    1   -5.0E-5    5.0E-5    1   -1.0E-4    0
+   JUL ZONALLY AVERAGED E-P (KG M-2 S-1), SHUTZ AND GATES.
+ 
+         0123456789012345678901234567890123456789012345678901234567890
+         1         2         3         4         5         6         7
+ 
+ 
+      EXIT CONDITIONS...
+        0 NO PROBLEMS
+ 
+      FATAL CONDITIONS...
+        1 UNABLE TO READ DIRECTIVES CARD
+        2 UNABLE TO READ LABEL CARD
+        3 FOUND MULTI-LEVEL ZONAL RECORD
+ 
+      NON-FATAL CONDITION...
+      101 FINISHED READING XIN
+ 

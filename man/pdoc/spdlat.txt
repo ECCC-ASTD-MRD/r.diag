@@ -1,0 +1,48 @@
+ 
+      CALL SEQUENCE...
+      spdlat  SPFILE LATDER OUTPUT
+ 
+ 
+      DESCRIPTION...
+      spdlat  - SPECTRAL LATITUDE DERIVATIVE OF A SPECTRAL ARRAY
+ 
+ 
+      AUTHOR  - B.Dugas, RPN, FEB 09/94.
+      LAST REVISION: $Header: /home/cvs/RMNLIB/utils/rdiag/lspgm/spdlat.ptn,v 4.8 2014/09/25 20:20:53 dugas Exp $
+ 
+ 
+      PURPOSE - READS A FILE OF SPECTRAL COEFFICIENTS (SPFILE),
+                CONVERTS THEM TO THE LATITUDE DERIVATIVE BY
+                APPLYING THE ANALYTIC FORMULA...
+ 
+                        D P(N,M)
+               COS(LAT) ------- = - N    B(N+1,M) P(N+1,M) +
+                         D LAT     (N+1) B(N,  M) P(N-1,M)
+ 
+                                    /  N**2 - M**2 \
+                WHERE B(N,M) = SQRT( -------------- ) .
+                                    \   4N**2 - 1  /  
+ 
+                (AFTER S.KUBOTA, 1960)
+ 
+      NOTES   - 1) THE RESULTING ARRAYS HAVE ONE EXTRA DEGREES OF FREEDOM
+                   IN THE N DIRECTION WHEN THIS FORMULA IS USED. THE ARRAYS
+                   ARE THUS LARGER BY ONE ROW (N ==> N+1).
+                2) LATDER WILL ACTUALLY BE THE LATITUDE DERIVATIVE 
+                   MULTIPLIED BY COS(LAT)
+ 
+ 
+      INPUT FILE...
+       SPFILE = INPUT FILE OF SPECTRAL COEFFICIENTS
+ 
+      OUTPUT FILE...
+       LATDER = OUTPUT FILE OF SPECTRAL LATITUDINALLY DERIVED ARRAYS
+ 
+ 
+ 
+      EXIT CONDITIONS...
+        0 NO PROBLEMS
+        1 PREMATURE EOF ON SPFILE
+        2 INTERNAL SPECTRAL REPRESENTATION ERROR
+        3 LM GREATER THAN MAXM (999)
+        4 ERROR READING SPFILE. CHANGING SIZE

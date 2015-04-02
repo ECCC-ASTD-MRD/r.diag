@@ -1,0 +1,73 @@
+ 
+      CALL SEQUENCE...
+       delhat  PSFIL DHFIL INPUT OUTPUT [ -plv VAL1 -def ]
+ 
+ 
+      DESCRIPTION...
+       delhat - COMPUTES THE FUNCION DELTA-HAT FOR ALL PRESSURE LEVELS
+ 
+ 
+      AUTHOR  - J.D.Henderson, JUL 08/80.
+      LAST REVISION: $Header: /home/cvs/RMNLIB/utils/rdiag/lspgm/delhat.ptn,v 4.9 2014/09/25 20:20:46 dugas Exp $
+ 
+ 
+      PURPOSE - COMPUTES THE FUNCTION DELTA-HAT FOR A FILE OF SURFACE 
+                PRESSURE GRIDS (ONE SET FOR EACH PRESSURE GRID)
+ 
+      NOTES   - 1) PRESSURE VALUES ARE READ FROM STDIN
+                2) DELTA-HAT IS 1.0 ABOVE THE SURFACE AND 0.0 BELOW IT
+                3) THE MAXIMUM NUMBER OF LEVELS IS SET TO 999
+ 
+ 
+      INPUT FILE...
+       PSFIL = INPUT SERIES OF SURFACE PRESSURE GRIDS (MB).
+ 
+      OUTPUT FILE...
+       DHFIL = DELTA-HAT AT REQUESTED PRESSURE LEVELS FOR EACH
+               PRESSURE GRID IN PSFIL.
+ 
+ 
+      INPUT PARAMETERS...
+ 
+       NLEV (plv) = NUMBER OF PRESSURE LEVELS (DEF=16, MAX=999).
+                    IF NLEV IS NEGATIVE, EACH -NLEV LEVP VALUES ARE
+                    READ WITH A I10 FORMAT OR AN E10.0 IF ITS VALUE
+                    CONTAINS A DECIMAL POINT.
+ 
+       LEV        = VALUES OF THE PRESSURE IN MILLIBARS AS CODED 
+                    BY ROUTINE LVCODE. THE DEFAULTS ARE SPECIFIED
+                    IN THE EXAMPLE BELOW.
+ 
+       Notes: 1) The first input line is NOT read if any command-line
+                 parameters are passed.
+              2) Furthermore, the second line will not be read either
+                 if the "-def" defaults processing mode is requested.
+ 
+       READ( 5,5010 )  NLEV
+       IF (NLEV.GT.0)
+       READ( 5,5020 ) (LEV(I),I=1,NLEV)
+       IF (NLEV.LT.0)
+       READ( 5,5030 ) (LEV(I),I=1,-NLEV)
+ 5010  FORMAT(10X,I5)
+ 5020  FORMAT(16I5)
+ 5030  FORMAT(8E10.0)
+ 
+ 
+      EXAMPLE OF INPUT CARDS...
+ 
+    DELHAT   16
+   10   20   30   50   70  100  150  200  250  300  400  500  700  850  925 1000
+ 
+         01234567890123456789012345678901234567890123456789012345678901234567890
+         1         2         3         4         5         6         7
+ 
+ 
+      EXIT CONDITIONS...
+        0 NO PROBLEMS
+        1 TOO MANY OR NOT ENOUGH REQUIRED LEVELS
+        2 PRESSURE LEVELS DO NOT VARY MONOTONICALLY
+        3 PREMATURE EOF ON FILE PSFC
+        4 ERROR READING FIRST LINE INPUT PARAMETERS
+        5 ERROR READING SECOND LINE INPUT PARAMETERS
+        6 LEV DOES NOT CONTAIN PRESSURE DATA
+ 

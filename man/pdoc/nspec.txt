@@ -1,0 +1,6 @@
+ 
+ ** This is an extensively modified version of BVE, a barotropic
+ ** spectral model programmed by J. Tribbia, NCAR and originaly
+ ** found in "An introduction to three-dimensional Climate
+ ** modelinf" by W.M. Washington and C.L. Pakinson, 1986.
+ 

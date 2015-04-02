@@ -1,0 +1,73 @@
+ 
+      CALL SEQUENCE...
+       lagcor  TS1 TS2 COREL INPUT OUTPUT [ -m    VAL1 -n   VAL2 \ 
+                                            -name VAL3 -lv1 VAL4 \ 
+                                            -kind VAL5 ]
+ 
+ 
+      AUTHOR  - B.Dugas, DECEMBRE 21/85.
+      LAST REVISION: $Header: /home/cvs/RMNLIB/utils/rdiag/lspgm/lagcor.ptn,v 4.9 2014/09/25 20:20:50 dugas Exp $
+ 
+ 
+      DESCRIPTION...
+       CE PROGRAMME CALCULE LES COEFFICIENTS DE CORRELATIONS ENTRE 
+       LES VALEURS DE TS1 A UN POINT (DONC A PARTIR D'UNE SERIE DE 
+       TS1) ET TOUTES LES SERIES TEMPORELLES CONTENUES DANS TS2. 
+ 
+       LA CORRELATION PEUT ETRE DEPHASEE OU NON. LE PROGRAMME LIT LA
+       POSITION DU POINT QUE L'ON VEUT CORRELER ET LE DEPHASAGE DESIRE.
+ 
+       LES FICHIERS TS1 ET TS2 CONTIENNENT DES ENREGISTRTEMENTS DE
+       SERIES TEMPORELLES DONT LES MOYENNES SONT TOUTES SUPPOSEES
+       NULLES PAR DEFAUT.
+ 
+ 
+      PARAMETRES...
+       BASE (m)   = POSITION HORIZONTALE DU POINT CENTRAL.
+       LAG  (n)   = DEPHASAGE TEMPOREL A APPLIQUER.
+       NAME       = NOM DE LA VALRIABLE AU POINT CENTRAL.
+       KIND       = VERTICAL LEVEL TYPE. IT CAN ONLY BE USED WITH CMC/RPN STD
+                    FILES AND THEN LV1 AND LV2 ARE ASSUMED TO CONTAIN DECODED
+                    VALUES. FURTHERMORE, THIS PARAMETRE CAN ONLY BE SPECIFIED
+                    IN COMMAND-LINE MODE. THE CURRENTLY SUPPORTED VALUES ARE:
+                    'HAUTEUR'   , heights (m) with respect to sea level
+                    'SIGMA'     , classical terrain following (0.0 -> 1.0)
+                    'ETA'       , first version of the GEM ETA coordinate
+                    'PRESSION'  , pressure (mb)
+                    'ARBITRAIRE', arbitrary level (no units apply)
+                    'HAUTEURS'  , heights (M) with respect to the surface
+                    'HYBRIDE'   , hybrid GEM coordinate
+                    'THETA'     , potential temperature coordinate
+                    'GALCHEN'   , GalChen generalized coordinate
+       LEV  (lv1) = POSITION VERTICALE DU POINT CENTRAL.
+ 
+      NOTES: 1) GIVEN AN ORIGINAL ARRAY OF SIZE X*Y AND A CENTRAL
+                POINT AT POSITION (I,J), BASE IS THEN ASSUMED TO BE
+                (J-1)*X+I, I.E. IT IS THE ACTUAL (FORTRAN) STORAGE
+                LOCATION.
+             2) THE DEFAULT LAG IS ZERO
+             3) THE DEFAULT VALUES FOR THE NAME AND LEV PARAMETRES
+                ARE THOSE FOUND IN THE FIRST TIME SERIES IN TS1.
+ 
+       READ( 5,5000 ) BASE,LAG,NAME,LEV
+ 5000  FORMAT(10X,I10,I5,1X,A4,I5)
+ 
+ 
+      EXAMPLE OF INPUT CARD...
+ 
+  LAGCOR      155075   10
+ 
+         0123456789012345678901234567890123456789012345678901234567890
+         1         2         3         4         5         6         7
+ 
+ 
+      EXIT CONDITIONS...
+       0 NO PROBLEMS
+       1 UNSUPPORTED DATA TYPE
+       3 INPUT PARAMETRES INCONSISTENT WITH DATA
+       4 UNABLE TO FIND BASE TIME SERIES IN TS1
+       5 UNABLE TO READ TS2
+       6 TS2: MORE THAN ONE SIZE OR NOT IN TIME SERIES FORMAT
+       7 PREMATURE END OF FILE ON TS1
+       8 PREMATURE END OF FILE ON INPUT
+       9 MEMORY ALLOCATION PROBLEM

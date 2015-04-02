@@ -1,0 +1,46 @@
+ 
+      CALL SEQUENCE...
+       eofrot  EOF ROEF VAL RMAT INPUT OUTPUT [ -m VAL1 -n VAL2 ]
+ 
+ 
+      AUTHOR - B.Dugas, AVRIL 20/87.
+      LAST REVISION: $Header: /home/cvs/RMNLIB/utils/rdiag/lspgm/eofrot.ptn,v 4.8 2014/10/10 19:52:03 dugas Exp $
+ 
+ 
+      DESCRIPTION...
+        Calcul des eofs transformees par la methode varimax de rotation.
+        La methode de rotation promax (oblique) n'est plus supportee.
+        Le fichier eof contient les  elements de la  matrice des facteurs
+        des facteurs. La dimension maximale de cette matrice est :
+ 
+        NWDS( dans un enregistrement du fichier EOF ) X #( rec dans EOF )
+ 
+ 
+      PARAMETRES...
+       M           = NOMBRE DE FACTEURS QU'IL FAUDRA LIRE DE L'UNITE 1.
+                  .EQ. 0 ==> IL EST DETERMINE PAR LE NOMBRE D'INTERVAL
+                         TEMPORELS DIFFERENTS DANS LE FICHIER EOF.
+       MATRIC (n) .NE. 0 ==> ON IMPRIME LA MATRICE DES ROTATION.
+ 
+       READ( 5,5000 ) M,MATRIC
+ 5000  FORMAT(10X,2I5)
+ 
+ 
+      EXAMPLE OF INPUT CARD...
+ 
+  EOFROT      0    1
+ 
+         0123456789012345678901234567890123456789012345678901234567890
+         1         2         3         4         5         6         7
+ 
+ 
+      EXIT CONDITIONS...
+        0 NO PROBLEMS
+        1 BAD NUMBER OF EOFS SPECIFIED
+        2 NO ENOUGH RECORDS ON FILE EOF
+        3 PREMATURE END OF FILE ON EOF
+        4 DATA TYPE IS COMPLEX
+        5 UNABLE TO ALLOCATE MEMORY
+        6 INCOMPLETE VECTOR SET
+        7 PROBLEM DETERMINING M FROM EOF FILE
+        8 ERROR READING INPUT PARAMETERS

@@ -1,0 +1,458 @@
+ 
+      * LSPGM contient l'historique des revisions a la version UNIX
+      * (32 bits) de LSPGM. Cette version a d'abord ete codee pour
+      * des ordinateurs de type MIPS, mais fonctionne egalement sur
+      * des ordinateurs HP9000. Certaines extensions MP de Silicon
+      * Graphics sont aussi supportees. Dans ce dernier cas, la
+      * variable CPP "nombre_de_taches" peut determiner le nombre
+      * maximal de processeurs allouables.
+ 
+      $Log: driver.ptn,v $
+      Revision 4.111  2014/09/26 20:40:05  dugas
+      Passer a la version 6.3.0
+ 
+      Revision 4.110  2014/09/25 19:25:09  dugas
+      Inserer le texte de la licence LPGPL 2.1 pour R.DIAG et ajouter l'option FIT3D au module FIT.
+ 
+      Revision 4.109  2014/02/05 21:17:58  dugas
+      Enlever une ligne redondante pour l'appel a ZXDEVP.
+ 
+      Revision 4.108  2014/01/28 18:26:33  dugas
+      Ajouter les alias MAKEYY et MAKEYYV au module MAKEZG.
+ 
+      Revision 4.107  2014/01/09 19:32:54  dugas
+      Ajouter le point d'entree MAKEZGV a MAKEZG pour le traitement des donnees vectorielles.
+ 
+      Revision 4.106  2013/11/28 22:20:22  dugas
+      Passer a la version 6.2.4.
+ 
+      Revision 4.105  2013/02/07 22:07:49  bernard
+      - Correction pour GFORTRAN (declaration EXTERNAL GETARG enlevee).
+      - Correction a la declaration de la variable UNIT5 dans LSPGM.
+ 
+      Revision 4.104  2012/09/07 20:56:51  dugas
+      Passer a la version 6.2.3.
+ 
+      Revision 4.103  2012/07/26 17:29:44  dugas
+      Passer a la version 6.2.2.
+ 
+      Revision 4.102  2012/07/02 21:20:42  dugas
+      Passer a 6.2.1.
+ 
+      Revision 4.101  2012/05/29 21:18:29  dugas
+      Passer a la version 6.2.0.
+ 
+      Revision 4.100  2012/02/13 18:16:02  dugas
+      Passer a la version 6.1.11
+ 
+      Revision 4.99  2011/09/19 17:15:05  dugas
+      Passons a la version 6.1.10
+ 
+      Revision 4.98  2011/08/04 19:22:22  dugas
+      Ajouter le module FSTMDIAG.
+ 
+      Revision 4.97  2011/07/18 20:39:52  dugas
+      Passer a la version 6.1.9
+ 
+      Revision 4.96  2011/07/15 21:11:55  dugas
+      Ajouter la doc pour RZONVAVG et utiliser QUIT plutot que XIT a la sortie de LSPGM.
+ 
+      Revision 4.95  2011/06/15 19:35:02  dugas
+      Passer a la version 6.1.8.
+ 
+      Revision 4.94  2011/03/25 13:40:49  dugas
+      Passer a la version 6.1.7
+ 
+      Revision 4.93  2011/01/13 19:17:08  dugas
+      Passer a la version 6.1.5.
+ 
+      Revision 4.92  2010/12/01 17:41:08  dugas
+      Passer a la version 6.1.4.
+ 
+      Revision 4.91  2010/10/23 17:01:22  dugas
+      Fermer la version 6.1.2, ouvrir la 6.1.3
+ 
+      Revision 4.90  2010/07/21 17:37:34  dugas
+      Passer a la version 6.1.1 utilisant rmn_012.
+ 
+      Revision 4.89  2010/07/06 15:44:12  dugas
+      Passer a la version 6.1.0.
+ 
+      Revision 4.88  2009/09/08 20:41:01  dugas
+      Passer a 6.0.5 et rmn_010 le 25 aout 2009.
+ 
+      Revision 4.87  2009/01/23 22:40:06  dugas
+      Passer a la version 6.0.4.
+ 
+      Revision 4.86  2008/11/24 22:00:39  dugas
+      Passer a la version 6.0.3 et ajouter une description de MSFACT.
+ 
+      Revision 4.85  2008/07/24 20:00:32  dugas
+      Passer a la version 6.0.2.
+ 
+      Revision 4.84  2008/05/03 21:06:30  dugas
+      Modification generale pour r.gppf.
+ 
+      Revision 4.83  2008/04/25 22:02:42  dugas
+      Passer a la version 6.0.1.
+ 
+      Revision 4.82  2008/01/14 17:58:18  dugas
+      Passer a la v_6.0.0.
+ 
+      Revision 4.81  2007/12/21 00:31:45  dugas
+      Ajouter le module ZXAGLB.
+ 
+      Revision 4.80  2007/09/06 17:25:36  dugas
+      Passer a la version 5.5.5
+ 
+      Revision 4.79  2007/08/29 19:28:39  dugas
+      RDIAG_VERSION devient PROGRAM_VERSION pour la v_5.5.4.
+ 
+      Revision 4.78  2006/12/18 15:42:28  dugas
+      Passer a la version 5.5.3 et utiliser rmnbeta.
+ 
+      Revision 4.77  2006/09/21 01:36:28  dugas
+      Fermer la version 5.5.1 et ouvrir la 5.5.2.
+ 
+      Revision 4.76  2006/07/19 19:21:48  dugas
+      Passer a la version 5.5.0.
+ 
+      Revision 4.75  2006/06/19 16:36:26  dugas
+      Passer a la version 5.4.6.
+ 
+      Revision 4.74  2006/04/26 16:27:12  dugas
+      Passer a la version 5.4.5.
+ 
+      Revision 4.73  2006/02/09 17:08:44  dugas
+      - Utiliser la librairie rmn_rc008.
+      - Ajouter le module MERIAVG (calcul de moyennes meridionales).
+      - Passer a la version 5.4.3.
+ 
+      Revision 4.72  2005/12/12 23:01:28  dugas
+      Modification to the info.lspgm documentation:
+      - Add ADDLEV, STDEV lines to section C
+      - Modify the TIMCOV entry in section C
+      - Add PSAGG, PSVAG lines to section D
+      - Remove the STDEV entry from section D
+ 
+      Revision 4.71  2005/07/28 17:48:29  dugas
+      Passer a la la version 5.4.2
+ 
+      Revision 4.70  2005/07/07 17:30:59  dugas
+      Version 5.4.0.
+ 
+      Revision 4.69  2005/04/14 18:49:38  dugas
+      Passer a la version 5.3.5
+ 
+      Revision 4.68  2005/01/17 19:48:52  dugas
+      Passer a la version 5.3.4.
+ 
+      Revision 4.67  2004/12/10 00:38:13  dugas
+      Passer a la version 5.3.3.
+ 
+      Revision 4.66  2004/11/26 15:54:55  dugas
+      Corriger la section info.lspgm de la documentation.
+ 
+      Revision 4.65  2004/11/12 19:40:37  dugas
+      - Ajouter les valeurs REVxxx et DATyyy au parametre de ligne
+        de commande "-vers" lors de l'appel au module LSPGM. Modifier
+        la routine RDIAG_VERSION en consequence.
+      - Ajouter les points d'entrees GGVECZ, ZONVAR, ZONVAVG et ZONVDEV.
+      - Ajouter le module YTOX.
+ 
+      Revision 4.64  2004/09/13 16:50:57  dugas
+      Ajouter le module ADDTEXT
+ 
+      Revision 4.62  2004/04/30 17:28:39  dugas
+      Ajouter les alias PSAGG et PSVAGG a LLAGG
+ 
+      Revision 4.61  2003/12/10 23:16:52  dugas
+      Ajouter MAKEZG a la section D de LSPGM
+ 
+      Revision 4.59  2003/09/15 15:54:40  dugas
+      Version 5.1.4
+ 
+      Revision 4.58  2003/01/21 15:10:01  dugas
+      Version 5.1.0 pour pollux=O3000
+ 
+      Revision 4.57  2002/09/17 18:57:17  dugas
+      Passer a la version 5.0.1
+ 
+      Revision 4.56  2002/08/26 18:13:02  dugas
+      Version 4.11.12
+ 
+      Revision 4.55  2002/04/22 15:54:29  dugas
+      Ajouter le modeule MAKEZG
+ 
+      Revision 4.54  2002/01/14 16:10:30  dugas
+      Version 4.11.5 fermee pour transfert vers CVS.
+ 
+      Revision 4.53  2001/11/21 16:18:43  armnrbd
+      Version 4.11.4 fermee pour transfert vers CVS.
+ 
+      Revision 4.52  2001/11/01 14:21:31  armnrbd
+      Deuxieme tentative de livraison de le 4.11.1
+ 
+      Revision 4.51  2001/10/29 14:52:37  armnrbd
+      Fermer la version officielle 4.11.1
+ 
+      Revision 4.50  2001/05/01 15:47:59  armnrbd
+      Ajouter les modules FLAT et SMSPEC.
+ 
+      Revision 4.49  2001/03/27 15:52:10  armnrbd
+      Modifier legerement le traitement de VERY_NICE_DIAG.
+ 
+      Revision 4.48  2001/03/24 00:51:03  armnrbd
+      Ajouter le traitement de la variable VERY_NICE_DIAG.
+ 
+      Revision 4.47  2000/07/21 16:49:49  armnrbd
+      Ajouter le point d'entree GSASG de GPASG.
+      Amalgamer GMLT et GDIV dans GADD.
+ 
+      Revision 4.46  2000/05/30 20:27:32  armnrbd
+      Ajouter le module VARSPEC dans la v4.9.4.
+ 
+      Revision 4.45  20/0./4.  0.:5.:0.  0.:5.:0.  armnrbd (Bernard Dugas)
+      Fermer la version officielle 4.9.1
+      
+      Revision 4.44  1999/09/27 15:44:45  armnrbd
+      Fermer la version 4.8.1
+ 
+      Revision 4.43  1999/08/25 17:09:41  armnrbd
+      Enlever l'appel au module GGDEV.
+      Enlever le macro NOIMSL pour EOFROT.
+ 
+      Revision 4.42  1999/07/15 15:53:18  armnrbd
+      Ajouter le point d'entree ZXRHUM au module GPHUM.
+ 
+      Revision 4.41  1999/05/19 17:24:34  armnrbd
+      Version corrigee du 17 mai 1999 (4.7.2).
+ 
+      Revision 4.40  1999/05/06 18:43:19  armnrbd
+      Fermer version officielle de mai 1999.
+ 
+      Revision 4.39  1999/04/08 22:12:13  armnrbd
+      Premiere version LINUX.
+ 
+      Revision 4.38  1999/03/22 20:43:33  armnrbd
+      Ajouter le module GPVTAT et le point d'entree GPTAVT.
+ 
+      Revision 4.37  1998/11/10  15:41:49  armnrbd
+      Ajouter la routine RDIAG_VERSION.
+ 
+      Revision 4.36  1998/09/22  21:03:03  armnrbd
+      Ajouter le programme GPASG.
+ 
+      Revision 4.35  1998/09/15  00:49:26  armnrbd
+      Ajouter XAPPEND,RMIN,RMAX,TIMMIN,TIMMAX.
+      Modifier la documentation concernant TIMCOV.
+ 
+      Revision 4.34  1998/07/03  01:13:09  armnrbd
+      Ajouter le point d'entree ADDLEV pour les grilles horizontales.
+ 
+      Revision 4.33  1998/06/09  20:34:03  armnrbd
+      Ajouter le module TSCHECK.
+ 
+      Revision 4.32  1998/05/29  01:08:14  armnrbd
+      Ajouter le programme ZDHDIV.
+ 
+      Revision 4.31  1998/05/06  17:42:25  armnrbd
+      Ajouter le module gsathlt.
+ 
+      Revision 4.30  1998/02/19  19:04:38  armnrbd
+      Remplacer MODULE par MODULUS.
+ 
+      Revision 4.29  1998/02/19  17:25:54  armnrbd
+      Ajouter le programme MODULE.
+ 
+      Revision 4.28  1998/01/16  19:35:23  armnrbd
+      Corriger la documentation.
+ 
+      Revision 4.27  1997/09/23  15:29:32  armnrbd
+      Re-diriger les appels a CDIV,CMLT,CONJMLT,DIVF,MLTF et SUBF
+      vers le module ADDF qui par la-meme devient un module multi-
+      fonctions.
+ 
+      Revision 4.26  1997/09/11  18:26:18  armnrbd
+      Ajouter le module SPSLOPE.
+ 
+      Revision 4.25  1997/09/09  15:57:28  armnrbd
+      Forcer la minimisation de nomprg.
+ 
+      Revision 4.24  1997/09/09  15:48:03  armnrbd
+      Ajouter l'appel a LSSUB (a de fins de documentations).
+ 
+      Revision 4.23  1997/06/02  20:40:50  armnrbd
+      Ajouter le module GSOMEGA.
+ 
+      Revision 4.22  1997/05/30  18:21:07  armnrbd
+      Ajouter le module GSOMGAH.
+ 
+      Revision 4.21  1997/04/09  20:41:41  armnrbd
+      Ajouter le point d'entree LLVAGG.
+ 
+      Revision 4.20  1997/02/17  03:35:47  armnrbd
+      Ajouter le point d'entree ACCUMUL.
+ 
+      Revision 4.19  1996/12/10  18:18:37  armnrbd
+      Remplacer IOPEN par ZZZOPEN.
+ 
+      Revision 4.18  1996/01/19  14:41:33  armnrbd
+      Ajouter les programmes PSGRID et XPAND.
+ 
+      Revision 4.17  1996/01/04  19:15:39  armnrbd
+      Ajouter les programmes CRITT, FTEST, T2TEST, TTESTA et TTESTE.
+ 
+      Revision 4.16  1995/12/06  18:59:52  armnrbd
+      Ajouter les programmes TSTEP et VBASD.
+ 
+      Revision 4.15  1995/11/30  16:14:09  armnrbd
+      Ajouter le programme SOLFLUX.
+ 
+      Revision 4.14  1995/11/22  21:08:42  armnrbd
+      Ajouter le programme LLAGG.
+ 
+      Revision 4.13  1995/11/20  19:36:56  armnrbd
+      Ajouter les programmes BINS, GSHUMH et VEINT.
+ 
+      Revision 4.12  1995/11/16  18:53:27  armnrbd
+      Ajouter les programmes BARX,BARY,DELX,DELY,CALMAP,CALPRES,
+      GADD,PLAGALC et le point d'entree STDEV dans TIMCOV.
+ 
+      Revision 4.11  1995/11/04  02:10:47  armnrbd
+      Ajouter les programmes GSMSLP et GSMSLPH.
+ 
+      Revision 4.10  1995/10/24  15:32:53  armnrbd
+      Activer les commandes ADD,MLT,SUB,DIV,SORT,WINDOW et KE.
+ 
+      Revision 4.9  1995/10/16  14:35:53  armnrbd
+      Ajouter le programme CTEMPS.
+ 
+      Revision 4.8  1995/10/03  15:56:12  armnrbd
+      Ajouter le programme SHIFTF.
+ 
+      Revision 4.7  1995/08/28  01:14:01  armnrbd
+      Ajouter le programme VPINTV.
+ 
+      Revision 4.6  1995/08/01  17:43:09  armnrbd
+      Ajouter le programme SORTF.
+ 
+      Revision 4.5  1995/07/10  16:03:48  armnrbd
+      Mettre a jor certaines sections d'informations automatiques.
+ 
+      Revision 4.4  1995/07/07  02:29:46  armnrbd
+      Equivalencer les modules INTTIM et TIMSUM.
+ 
+      Revision 4.3  1995/07/06  02:56:25  armnrbd
+      Ajouter les programmes FIT et TFILTER.
+ 
+      Revision 4.2  1995/02/13  19:47:34  armnrbd
+      Ajouter le programme GSATHL.
+ 
+      Revision 4.1  94/11/18  13:59:33  armnrbd
+      Ajouter la description du programme COMPLEX.
+      
+      Revision 4.0  94/11/17  14:19:51  armnrbd
+      Messages informatifs quand au passage de la version 3.x a 4.0...
+      1) Les espaces en debut des noms de variables de sont plus pertinents.
+      2) Les grilles complexes de type CMPL sont maintenant supportees.
+      3) Les fichiers SQI sont reconnus, lus et ecrit directements.
+      4) Plusieurs nouvelles cles sont disponibles au demarrage.
+      
+      Revision 3.10  94/07/14  14:13:57  armnrbd
+      Ajouter les programmes MEMCOEF et MEMPRED.
+      
+      Revision 3.9  94/05/23  16:35:49  armnrbd
+      Ajouter le programme LININT.
+      
+      Revision 3.8  94/05/20  22:52:47  armnrbd
+      Ajouter le programme VERTINC.
+      
+      Revision 3.7  94/05/20  14:38:56  armnrbd
+      Ajouter les programmes SINF et COSF.
+      
+      Revision 3.6  94/04/04  22:02:11  armnrbd
+      Remplacer EOF25 par MEOFVEC.
+      Ajouter le programme TMMULT.
+      
+      Revision 3.5  94/03/17  16:27:06  armnrbd
+      Ajouter le programme MINVERS.
+      
+      Revision 3.4  94/02/14  09:18:51  armnrbd
+      Ajouter les programmes SPDLAT et SPDLON.
+      Ajouter le define cpp NOIMSL.
+      
+      Revision 3.3  94/01/18  16:40:52  armnrbd
+      Implanter le support de la variable cpp VERY_NICE.
+      
+      Revision 3.2  94/01/05  17:21:16  17:21:16  armnrbd (Bernard Dugas)
+      Ajouter le programme GSAPTP
+      
+      Revision 3.1  93/10/24  01:40:51  armnrbd
+      Ajouter les programmes ENLEVE et ZXMAV.
+      Isoler les programmes xxxPLOT par la variable CPP "NOPLOT".
+      
+      Revision 3.0  93/10/13  13:55:52  armnrbd
+      Premiere version compatible HP-UX.
+      
+      Revision 1.18  93/10/03  16:42:16  armnrbd
+      Separer la section PLOT du reste des routines.
+      Enlever l'appel a la routine NSPEC.
+      
+      Revision 1.17  93/08/04  16:09:20  armnrbd
+      Ajouter les programmes GGALL et VSINTH.
+      
+      Revision 1.16  93/06/25  14:41:00  armnrbd
+      Ajouter le programme COFAPS.
+      
+      Revision 1.15  93/06/23  11:22:11  armnrbd
+      Ajouter les programmes SPLDISS et XMPLOT.
+      
+      Revision 1.14  93/06/09  12:15:34  armnrbd
+      Ajouter le programme XPLOT.
+      
+      Revision 1.13  93/04/28  16:23:45  armnrbd
+      Correction a la mod precedente: vraiment ajouter gaussw (et legendre).
+      
+      Revision 1.12  93/02/24  16:07:23  armnrbd
+      Ajouter les programmes de la famille de series temporelles
+       et les programmes ADJUST,GAUSSW,SMOOTH et SPECTR.
+      
+      Revision 1.11  92/12/10  15:55:11  armnrbd
+      Utiliser le nouveau CCARD et tenir compte que le premier
+      parametre est generalement le nom du programme a executer.
+      
+      Revision 1.10  92/11/26  17:09:38  armnrbd
+      Ajouter le programme SUBAREA.
+      
+      Revision 1.9  92/11/25  21:17:07  armnrbd
+      Ajouter les programmes DERTIM,INTTIM et TRANSPOS.
+      
+      Revision 1.8  92/11/21  13:05:46  armnrbd
+      Ajouter les programmes EOF25 et EOFROT.
+      
+      Revision 1.7  92/08/28  13:47:40  armnrbd
+      Corriger un bogue dans le traitement des prefixes.
+      
+      Revision 1.6  92/08/26  10:41:11  armnrbd
+      Ajouter GDIV et GMLT.
+      
+      Revision 1.5  92/08/26  08:47:33  armnrbd
+      Corriger la ligne macro/cpp de RGOPR.
+      
+      Revision 1.4  92/08/25  16:09:26  armnrbd
+      Ajouter la fonction RGOPR.
+      
+      Revision 1.3  92/06/03  11:51:06  armnrbd
+      Enlever tout prefixe au nom du programme.
+      
+      Revision 1.2  92/06/01  14:46:17  armnrbd
+      Ajouter la fonction HOVPLOT.
+      
+      Revision 1.1  92/05/01  10:12:10  armnrbd
+      Ajouter un enonce EXTERNAL.
+      Ajouter la fonction LPPRINT (oubliee).
+      
+      Revision 1.0  92/04/30  21:40:02  armnrbd
+      Initial revision
+      

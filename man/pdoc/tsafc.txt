@@ -1,0 +1,71 @@
+ 
+      CALL SEQUENCE...
+       tsafc  TSER FCOEFS INPUT OUTPUT [-lon VAL1]
+ 
+  
+      AUTHORS  - F. ZWIERS AND B. DUGAS, AUG 15/85.
+      LAST REVISION: $Header: /home/cvs/RMNLIB/utils/rdiag/lspgm/tsafc.ptn,v 4.10 2014/09/25 20:20:55 dugas Exp $
+ 
+  
+      PURPOSE  - COMPUTE FINITE FFT'S OF TIME SERIES. 
+ 
+      NOTE     - THE LONGEST TIME SERIES THAT CAN BE PROCESSED HAS 
+                 200000 POINTS.
+  
+ 
+      INPUT FILE... 
+       TSER   = FILE OF TIME SERIES WITH PROPER TIME SERIES LABELS. 
+  
+      OUTPUT FILE... 
+       FCOEFS = CONTAINS THE TSER TIME SERIES FINITE FOURIER TRANSFORMS. 
+                THE RECORDS IN FCOEFS FILE HAVE LABEL: 
+  
+                  IBUF(1) = 'FOUR' IF INPUT = 'ZONL' OR 'GRID', 'SPEC'
+                            IF INPUT = 'COEF'. 'CMPL' IS NOT CHANGED
+                  IBUF(2) = ORDINAL OF LOCATION OF REAL OR COMPLEX
+                            POINT IN ORIGINAL LATLON ARRAY IF 
+                            KIND = 'ZONL', 'CMPL' OR 'GRID', 
+                          = LOCATION OF COEFFICIENT IN THE REAL LA*2 
+                            LENGTH VECTOR IF KIND = 'COEF' . 
+                  IBUF(3) = NAME 
+                  IBUF(4) = LEVEL 
+                  IBUF(5) = FOR ALL EXCEPT 'CMPL', LENGTH/2 + 1 WHERE
+                            LENGTH IS THE LENGTH OF THE TRANSFORMED TIME
+                            SERIES. 
+                          = FOR THE COMPLEX 'CMPL', LENGTH ITSELF.
+                  IBUF(6) = 1 
+                  IBUF(7) = DIMENSIONS OF ARRAY KHEM (IN FORMAT CCCRRRK,
+                            WHERE CCC IS THE NUMBER OF LONGITUDES AND RRR
+                            IS THE NUMBER OF LATITUDES,  OR  LRLMT)
+                  IBUF(8) = PACKING DENSITY 
+  
+ 
+      INPUT PARAMETER... 
+  
+       LENGTH = THE ACTUAL LENGTH USED IN THE TRANSFORM. THIS NUMBER 
+       (lon)    IS EVEN. THE REST (IF ANY) OF THE SERIES IS DISCARDED... 
+  
+  
+       READ(5,5000) LENGTH
+ 5000  FORMAT(10X,I5)
+ 
+ 
+      EXAMPLE OF INPUT CARD... 
+  
+  TSAFC    9732 
+ 
+         0123456789012345678901234567890123456789012345678901234567890
+         1         2         3         4         5         6         7
+ 
+ 
+      EXIT CONDITIONS...
+       0 NO PROBLEMS
+       1 ILLEGAL (NEGATIVE) LENGTH SPECIFIED
+       2 ILLEGAL DATA TYPE FOUND AT START OF TSER
+       3 TSER TIME SERIES TOO LONG
+       4 ILLEGAL DATA TYPE FOUND IN TSER
+       5 MORE THAN ONE SIZE IN TSER
+       6 PREMATURE END OF FILER ON INPUT
+       7 PREMATURE END OF FILER ON TSER
+       8 UNABLE TO ALLOCATE WORKING MEMORY
+ 

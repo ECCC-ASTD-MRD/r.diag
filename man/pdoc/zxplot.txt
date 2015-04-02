@@ -1,0 +1,381 @@
+ 
+      CALL SEQUENCE...
+       zxplot  ZXIN ZXV ZXW ZXIN2 INPUT OUTPUT   -i VAL4 [VAL14 [VAL14]] \ 
+              [-def -name  VAL1  [VAL11 [VAL21]] -j VAL5 [VAL15 [VAL15]] \ 
+                    -kind  VAL2  [VAL12 [VAL22}] -k VAL6 [VAL16 [VAL16]] \ 
+                    -label VAL3  [VAL13 [VAL23]] -l VAL7 [VAL17 [VAL17]] \ 
+                                                 -m VAL8      -n VAL9    \ 
+                                                                         \ 
+                    -LV1   VAL20 [VAL21]         -a VAL23     -c VAL25   \ 
+                    -LV2   VAL22                 -b VAL24] 
+ 
+ 
+      DESCRIPTION...
+       zxplot - CREATES NCAR PLOT VECTORS FOR ONE ZONAL CROSS-SECTION
+ 
+ 
+      AUTHOR  - J.D.Henderson, MAR 31/81.
+      LAST REVISION: $Header: /home/cvs/RMNLIB/utils/rdiag/lspgm/zxplot.ptn,v 4.30 2014/12/22 19:24:53 dugas Exp $
+ 
+ 
+      PURPOSE - PLOTS CROSS-SECTIONS FROM FILE ZXIN, AND POSSIBLY ZXIN2,
+                AND/OR ZONALLY AVERAGED VECTOR COMPONENTS ZXV AND ZXW.
+ 
+ 
+      INPUT FILES...
+       ZXIN  = FILE CONTAINING CROSS-SECTIONS TO BE PLOTTED.
+       ZXV   = MERIDIONNAL COMPONENT OF VECTOR FIELD.
+       ZXW   = VERTICAL COMPONENT OF VECTOR FIELD.
+       ZXIN2 = OPTIONAL FILE CONTAINING A SECOND CROSS-SECTIONS SCALAR
+               FIELD TO BE PLOTTED.
+ 
+ 
+      COMMAND-LINE ONLY INPUT PARAMETRES (used when COORD .ne. 'PRES')...
+ 
+       COORD  (lv1 1) = INPUT VERTICAL COORDINATE: POSSIBLE OPTIONS ARE
+                        'SIG'/'ETA' FOR SIGMA/ETA AND 'GEM'/'GEM2'/'GEM3'
+                        FOR ONE OF THREE VERSIONS OF THE GEM COORDINATE.
+                        THE ASSUMED DEFAULT IS PRESSURE 'PRES'. NOTE THAT
+                        IN THIS CASE, THE OTHER PATAMETRES IN THIS
+                        SECTION ARE IGNORED.
+       LEVTYP (lv1 2) = 'FULL' FOR MOMENTUM VARIABLE, AND
+                        'HALF' FOR THERMODYNAMIC ONE.
+ 
+       LAY    (lv2)   = DEFINES THE POSITION OF LAYER INTERFACES IN RELATION
+                        TO LAYER CENTRES, IN THE FOLLOWING FASHION:
+                        - ('SIG' OR 'ETA' OPTIONS), SEE BASCAL:
+                           DEFAULTS TO THE FORMER STAGGERING CONVENTION.
+                        - ('GEMx' OPTIONS), LAY=1 IMPLIES THAT THE LAYER
+                           CENTRES ARE POSITIONNED USING THE ARITHMETIC MEANS
+                           OF THE DATA LEVELS. A VALUE OF 2 IMPLIES GEOMETRIC
+                           MEANS. NOTE THAT THE LATTER IS ALSO THE DEFAULT.
+ 
+       PTOIT  (a)     = PRESSURE (PA) AT THE MODEL LID (DEF 1000 PA).
+       PREF   (b)     = REF PRESSURE USED WHEN COORD='GEM2' OR 'GEM3' (DEF 80000 PA).
+       R      (c)     = EXPONENT USED ONLY WHEN COORD='GEM2' OR 'GEM3' (DEF 1.0).
+ 
+       Notes:   1) When COORD(1:3)='GEM', LEVTYP and SIGTOP are ignored.
+                2) When COORD(1:3)='GEM', top and bottom boundary conditions
+                   are provided by the levels found in the file XIN.
+                3) When COORD='ETA'/'SIG', LAY and LEVTYP define the type
+                   of levelling for the variable.
+                4) 'GEM' is the original gem coordinate, while GEM2 is the
+                   original hybrid coordinate as implemented by Edouard &
+                   Gravel in GEM/DM v2.2.0. GEM3 is the normalized version
+                   that was implemented in the v2.3.1 GEM/DM.
+                5) The default value of COORD is determined by the file type
+                   and the program will also try to determine it by the
+                   (internal) coding used for the coordinate itself.
+                6) For terrain following coordinates, the surface pressure
+                   is assumed constant (= 1000 HPa).
+ 
+      COMMAND-LINE OR STDIN INPUT PARAMETRES...
+ 
+      CARDS READ...
+ 
+       2 TO 11 CARDS ARE READ-IN.
+ 
+       FOR CROSS-SECTION MAP...
+       =====================
+       CARD 1-
+       ------
+   150 READ(5,5010,END=900)NAME,MOD,ICOSH1,ICOSH2,MS,NULB,LX,SCAL,
+      1                    FLO,HI,FINC,KAX,IOVRLY,KIND
+  5010 FORMAT(10X,1X,A4,I5,2I1,I3,I1,I4,4E10.0,I5,1X,2I2)
+ 
+       NAME       NAME OF THE VARIABLE TO BE CONTOURED.
+                  ='NEXT', TO CONTOUR NEXT FIELD,
+                  ='ALL',  TO CONTOUR ALL FIELDS. THE CARD SET IS ONLY
+                           READ ONCE AND APPLIED EVERYWHERE.
+       ABS(MOD)   =0, ONLY CONTOUR MAP (2 CARDS PER PLOT).
+                  =1, ONLY VECTOR PLOT (CARD 1 USED ONLY TO DEFINE MOD,
+                      AND LX, CARD 2 IS IGNORED, AND CARDS 3 AND 4 USED
+                      FOR VECTOR PLOT DIRECTIVES).
+                  =2, BOTH FUNCTIONS ARE PERFORMED (4 CARDS PER PLOT).
+                  =3, ONLY CONTOUR MAP (HIGHS/LOWS LABELLED).
+                  =4, TWO SCALAR FIELDS.
+                  =5, TWO SCALAR FIELDS AND A VECTOR FIELD.
+       MOD.GE.0   HIGHS/LOWS NOT LABELLED
+           LT.0   HIGHS/LOWS     LABELLED
+       ICOSH1     CONTOUR/SHADING CONTROL FOR FIRST  SCALAR FIELD
+       ICOSH2     CONTOUR/SHADING CONTROL FOR SECOND SCALAR FIELD
+                  =0, CONTOUR LINES
+                  =1, CONTOUR LINES, NO ZERO LINE
+                  =2, CONTOUR LINES AND SHADING
+                  =3, CONTOUR LINE AND SHADING, NO ZERO LINE
+                  =4, SHADING ONLY
+                  NOTE : FOR THE NO ZERO LINE OPTION IT IS ASSUMED THAT
+                         (0.-FLO)/FINC RESULTS IN AN INTEGER DIVISIBLE BY
+                         TWO, I.E. THE ZERO LINE WOULD HAVE BEEN CONTOURED
+                         AS A THICK, LABELLED LINE. ALSO, NEITHER HI OR
+                         FLO = 0.
+       MS         LINE PRINTER MAP SCALE FACTOR (NO MAP IF MS=0,-1)
+                  IF MS < 0 THEN MS=ABS(MS+1) AND THE PUBLICATION
+                  QUALITY OPTION IS SET.
+       NULB       NUMBER OF INTERVALS BETWEEN MAJOR (LABELLED) LINES.
+                  THE DEFAULT IS SET AT ONE.
+       ABS(LX)    <= 3 FINE GRID INTERPOLATION IS INDICATED WITH THE
+                       NUMBER OF LEVELS IN THE DISPLAY PLOT = 2*NLAT/3.
+                       (NLAT IS THE NUMBER OF LATIDUNAL POINTS).
+                  OTHERWISE, A COARSE GRID INTERPOLATION IS INDICATED
+                             WITH ABS(LX) LEVELS IN THE DISPLAY PLOT.
+                  LX < 0, SUBAREA INDICATED WITH COORDINATES GIVEN ON CARD
+       SCAL  (i1) SCALING FACTOR
+                  = 0, FOR AUTOMATIC SCAL,FLO,HI AND FINC SELECTION.
+       FLO   (j1) LOWEST  VALUE TO BE CONTOURED
+       HI    (k1) HIGHEST VALUE TO BE CONTOURED
+       FINC  (l1) CONTOUR INTERVAL (A MAX. OF 40 CONTOURS IS PERMITTED)
+       KAX   (m)  =0, FOR VERTICAL AXIS OF PRESSURE.
+                  =1, FOR VERTICAL AXIS OF LOG(PRESSURE).
+       OVRLY (n)  THIS FIELD IS IGNORED IF LX < 0; (SUBAREA INDICATED).
+                  =-1,PLOTTED AREA IS DEFINED BY THE FILE RANGE AND PLOT
+                      ON THE STANDARD LEVEL (1000,10) AND STANDARD LATITUDE
+                      (90,-90) SCALES. SCREEN IS FILLED.
+                  = 0,PLOTTED AREA IS DEFINED BY THE FILE RANGE AND PLOT
+                      ON THE STANDARD LATITUDE SCALE (90,-90) AND ON A LAT
+                      SCALE WHOSE RANGE IS THAT OF THE FILE LEVELS RANGE
+                      SCREEN IS FILLED.
+                  = 1,PLOTTED AREA IS DEFINED BY THE FILE RANGE AND PLOT
+                      ON THE STANDARD LEVEL (1000,10) AND STANDARD LATIT
+                      (90,-90) SCALES. WHAT APPEARS ON THE SCREEN IS JUS
+                      PLOT HAVING THE SAME SIZE AS THAT SPANNED BY THE F
+                      RANGES ON THE STANDARD PLOT SCALE. SCREEN MAY OR M
+                      NOT BE FILLED.
+       KIND       <  0 DATA IS ON A LAT-LON  GRID;
+                   &  <  -4 LATITUDINAL RANGE DOES NOT INCLUDE THE POLE(
+                   &  >= -4 LATITUDINAL RANGE DOES     INCLUDE THE POLE(
+                            (DEFAULT).
+                  >= 0 DATA IS ON A GAUSSIAN GRID, (DEFAULT).
+                  ABS(KIND)=1, FOR LINEAR VERTICAL INTERPOLATION FROM DA
+                               TO DISPLAY,
+                  OTHERWISE    CUBIC (DISABLED).
+                  (A LINE DEFAULTING KIND TO 1 IS INSERTED IN THE CODE J
+                  AFTER KIND IS READ, THIS FORCES THE PROGRAM TO PERFORM
+                  LINEAR VERTICAL INTERPOLATION ONLY. THE USER MUST MODI
+                  THAT LINE TO SPECIFY A VALUE OF 3 IF HE/SHE WISHES TO
+                  APPLY CUBIC VERTICAL INTERPOLATION).
+ 
+ 
+       CARD 2-
+       ------
+       READ(5,5012,END=902) LABEL
+  5012 FORMAT(A80)
+ 
+       LABEL IS AN 80 CHARACTER LABEL FOR CONTOUR MAP.
+                  IT IS ABSENT IF NAME='SKIP'.
+ 
+ 
+       SUBAREA SPECIFICATION CARD
+       ==========================
+       CARD 3-
+       -------
+       READ(5,5018,END=903) DLAT1,DLAT2,DPR1,DPR2,IFLAG
+  5018 FORMAT(10X,4E10.0,I5)
+ 
+       DLAT1      LEFT HAND LATITUDE OF SUBAREA (+90 TO -90 FOR GLOBAL
+                  FIELDS, +90 TO 0 FOR NORTHERN HEMISPHERE FIELDS).
+       DLAT2      RIGHT HAND LATITUDE OF SUBAREA.
+       DPR1       TOP PRESSURE LEVEL OF SUBAREA (LOWEST PRESSURE).
+       DPR2       BOTTOM PRESSURE LEVEL OF SUBAREA (HIGHEST PRESSURE)
+       IFLAG      =0,1,SUBAREA IS PLOTTED INSIDE A FRAME DEFINED
+                       BY THE SUBAREA COORDINATES, ON STANDARD PLOT SCAL
+                       SCREEN IS FILLED.
+                  = 2, SUBAREA IS PLOTTED INSIDE A FRAME DEFINED BY
+                       THE SUBAREA COORDINATES, TO FILL THE SCREEN.
+                  = 3, THE SUBAREA IS PLOTTED INSIDE A FRAME DEFINED BY
+                       THE SUBAREA COORDINATES, THE PLOT LOOKS EXACTLY
+                       THE SAME AS IF IT WAS PLOTTED ON THE STANDARD PLO
+                       SCALE. SCREEN MAY OR MAY NOT BE FILLED.
+ 
+ 
+       SHADING CONTROL CARDS FOR FIRST SCALAR FIELD
+       ============================================
+       CARD 4-
+       -------
+       READ(5,5014,END=904) NPAT,(IPAT(I),I=1,NPAT)
+  5014 FORMAT(10X,10I5)
+ 
+       NPAT       NUMBER OF DIFFERENT RANGES TO SHADE
+                  = 0, IMPLIES 10.
+       IPAT       NPAT SHADING PATTERN CODES 
+                  (IRRELEVANT IF NPAT=0)
+ 
+ 
+       CARD 5-
+       -------
+       READ(5,5016,END=905) (ZLEV(I),I=1,NPAT)
+  5016 FORMAT(10X,7E10.0)
+ 
+       ZLEV       NPAT SCALAR FIELD VALUES TO DEFINE THE SHADED RANGES.
+                  (IRRELEVANT IF NPAT=0)
+ 
+ 
+       CARDS FOR SECOND SCALAR FIELD
+       =============================
+       CARD 6-
+       ------
+       READ(5,5010,END=906) NAME,II,JJ,KK,NULB,MS,N,SCAL,
+      +                     FLO,HI,FINC,NN,III,KI
+  5010 FORMAT(10X,1X,A4,I5,2I1,I3,I1,I4,4E10.0,I5,1X,2I2)
+ 
+       VARIABLES IN () ARE NOT USED BUT MERELY KEEP PLACE.
+       NAME (2)    NAME OF THE VARIABLE TO BE CONTOURED.
+                  ='NEXT', TO CONTOUR NEXT FIELD,
+  II - MOD        = 0,  HIGHS,LOWS NOT LABELLED.
+                  =-1,  HIGHS,LOWS     LABELLED.
+  JJ - (ICOSH1)   NOT USED, READ FROM CARD 1.
+  KK - (ICOSH2)   NOT USED, READ FROM CARD 1.
+       MS         LINE PRINTER MAP SCALE FACTOR (NO MAP IF MS=0,-1)
+       NULB       NUMBER OF INTERVALS BETWEEN MAJOR (LABELLED) LINES.
+                  THE DEFAULT IS SET AT ONE.
+  N  - (LX)       NOT USED, READ FROM CARD 1.
+       SCAL (i2)  SCALING FACTOR
+                  = 0, FOR AUTOMATIC SCAL,FLO,HI AND FINC SELECTION.
+       FLO  (j2)  LOWEST  VALUE TO BE CONTOURED
+       HI   (k2)  HIGHEST VALUE TO BE CONTOURED
+       FINC (l2)  CONTOUR INTERVAL (A MAX. OF 40 CONTOURS IS PERMITTED)
+  NN - (KAX)      NOT USED, READ FROM CARD 1.
+  III- (OVRLY)    NOT USED, READ FROM CARD 1.
+       KIND       <  0 DATA IS ON A LAT-LON  GRID;
+                   &  <  -4 LATITUDINAL RANGE DOES NOT INCLUDE THE POLE(
+                   &  >= -4 LATITUDINAL RANGE DOES     INCLUDE THE POLE(
+                            (DEFAULT).
+                  >= 0 DATA IS ON A GAUSSIAN GRID, (DEFAULT).
+                  ABS(KIND)=1, FOR LINEAR VERTICAL INTERPOLATION FROM DA
+                               TO DISPLAY,
+                  OTHERWISE    CUBIC (DISABLED).
+                  (A LINE DEFAULTING KIND TO 1 IS INSERTED IN THE CODE J
+                  AFTER KIND IS READ, THIS FORCES THE PROGRAM TO PERFORM
+                  LINEAR VERTICAL INTERPOLATION ONLY. THE USER MUST MODI
+                  THAT LINE TO SPECIFY A VALUE OF 3 IF HE/SHE WISHES TO
+                  APPLY CUBIC VERTICAL INTERPOLATION).
+ 
+ 
+       CARD 7-
+       ------
+       READ(5,5012,END=907) LABEL2
+  5012 FORMAT(A80)
+ 
+       LABEL2 IS AN 80 CHARACTER LABEL.
+ 
+ 
+       SHADING CONTROL CARDS FOR SECOND SCALAR FIELD
+       ============================================
+       CARD 8-
+       -------
+       READ(5,5014,END=904) NPAT,(IPAT(I),I=1,NPAT)
+  5014 FORMAT(10X,10I5)
+ 
+       NPAT       NUMBER OF DIFFERENT RANGES TO SHADE
+                  = 0, IMPLIES 10
+       IPAT       NPAT SHADING PATTERN CODES
+                  (IRRELEVANT IF NPAT=0)
+ 
+ 
+       CARD 9-
+       -------
+       READ(5,5016,END=905) (ZLEV(I),I=1,NPAT)
+  5016 FORMAT(10X,7E10.0)
+ 
+       ZLEV       NPAT SCALAR FIELD VALUES TO DEFINE THE SHADED RANGES.
+ 
+ 
+       FOR VECTOR PLOT...
+       ===============
+       CARD 10-
+       --------
+   310 READ(5,5020,END=908) VSCAL,VLO,VI,INCY,INCZ
+  5020 FORMAT(10X,3E10.0,2I5)
+ 
+       VSCAL (i3) SCALING FACTOR FOR VECTOR MAGNITUDE
+                  = 0, FOR AUTOMATIC VSCAL,VLO AND VI SELECTION.
+       VLO   (j3) LOWEST VECTOR MAGNITUDE TO BE PLOTTED
+       VI    (k3) VECTOR MAGNITUDE TO BE DRAWN AS ARROW OF LENGTH  DX
+       INCY  (l3) EVERY INCY GRID POINT VECTOR IS PLOTTED ALONG Y AXIS
+       INCZ       EVERY INCZ GRID POINT VECTOR IS PLOTTED ALONG Z AXIS
+ 
+ 
+       CARD 11-
+       --------
+       READ(5,5012,END=909) LABEL3
+  5012 FORMAT(A80)
+ 
+       LABEL3 IS AN 80 CHARACTER LABEL FOR VECTOR PLOT.
+ 
+ 
+      EXAMPLE OF (A RATHER FULL SET OF) INPUT CARDS...
+ 
+    ZXPLOT TEMP    544 22   -1     1.E-1      1.E1      4.E1      1.E0
+   JUNE 12-1       FIRST SCALAR FIELD TEMPERATURE CROSS-SECTION (DEG K)/
+                 90.      -90.       10.     1000.    0
+              7   52    0   48    0   48    0   52
+                  0.       10.       15.       20.       25.       30.
+    ZXPLOT TEMP    0   22   -1     1.E-1      1.E1      4.E1      1.E0
+   JUNE 12-1       SECOND SCALAR FIELD TEMPERATURE CROSS-SECTION (DEG K)
+              7   16    0   15    0    9    0   63
+                  0.       10.       15.       20.       25.       30.
+    ZXPLOT        1.     1.E-1      5.E0    2    2
+     MERIDIONAL MASS STREAM FUNCTION VECTOR PLOT
+ 
+         0123456789012345678901234567890123456789012345678901234567890
+         1         2         3         4         5         6         7
+ 
+ 
+      NOTES   - 1) CROSS-SECTIONS CAN BE GLOBAL OR NORTHERN HEMISPHERE.
+                   ONE LEVEL CROSS-SECTIONS ARE ILLEGAL - PROGRAM STOPS:
+                   CRVPLOT,XPLOT OR XMPLOT SHOULD THEN BE USED.
+                2) 2 OR 3 LEVEL PLOTS USE LINEAR INTERPOLATION.
+                   4 OR MORE LEVELS ALLOWS OPTION OF CUBIC INTERPOLATION.
+                3) IF TWO SCALAR FIELDS ARE PLOTTED, THE SECOND FIELD WILL
+                   BE  CONTOURED WITH A DASHED LINE, AND A '+' WILL MARK
+                   THE HIGHS AND LOWS. THE PLOT EXTENDS FROM PR(NLEV) TO
+                   PR(1) AT THE TOP, OR FROM DPR1 TO DPR2 IF PLOTTING A
+                   SUBAREA, (SEE DOCUMENTATION BELOW). 
+                4) THE VERTICAL AXIS CAN BE PRESSURE OR LOG(PRESSURE).
+                5) IF THE '-def' KEY IS SPECIFIED, THE PROGRAM ENTERS AN
+                   AUTOMATIC PLOTTING MODE IN WHICH EVERY RECORD IN FILE
+                   ZXIN WILL BE PLOTTED, EITHER USING DEFAULT PARAMETRES
+                   VALUES -OR- INFORMATION FOUND ON THE FILE ITSELF -OR-
+                   OPTIONAL VALUES SPECIFIED ON THE COMMAND LINE.
+                6) WHEN USING RPN STD FILES, THE LABEL,LABEL2 AND LABEL3
+                   INPUT FIELDS CAN CONTAIN THE %NOMVAR% AND/OR %ETIKET%
+                   SPECIAL VALUES. THESE WILL THEN BE REPLACED AT RUN
+                   TIME BY THE ACTUAL VALUES OF NOMVAR AND ETIKET FOR
+                   THE CURRENT FIELDS BEING PLOTTED.
+                  
+ 
+      EXIT CONDITIONS...
+        0 NO PROBLEMS, END OF DIRECTIVES
+ 
+      FATAL CONDITIONS...
+        1 ZIN2 SCALAR FIELD HAS DIFFERENT SIZE THAN THAT IN ZXIN
+        2 ZXW VECTOR FIELD HAS DIFFERENT SIZE THAN THAT IN ZXV
+        3 ZXV VECTOR FIELD HAS DIFFERENT SIZE THAN THAT IN ZXIN
+        4 VERTICAL LEVELS DO NOT VARY MONOTONICALLY
+        5 INCONSISTANT GLOBAL GAUSSIAN GRID
+        6 INCONSISTANT VERTICAL LEVELING OPTIONS
+ 
+       10 UNKNOWN (AND UNSUPPORTED) LEVEL TYPE
+       11 PTOIT GREATER THAN TOP MODEL LEVEL (=ETA(TOP)*PREF) 
+ 
+      NON-FATAL CONDITIONS...
+      101 FOR SUBAREA SPECIFICATION: DPR1.GE.DPR2 OR DLAT1.LE.DLAT2
+      102 UNABLE TO FIND REQUESTED SCALAR ARRAY ZXIN
+      103 SCALAR ARRAY ZXIN ONLY HAS ONE VERTICAL LEVEL
+      105 UNABLE TO VERTICALLY FIT THE SCALAR PLOT 
+      106 UNABLE TO FIND REQUESTED VECTOR ARRAY ZXV
+      107 VECTOR ARRAY ZXV ONLY HAS ONE VERTICAL LEVEL
+      108 UNABLE TO READ ARRAY ZXW
+      109 VECTOR ARRAY ZXW ONLY HAS ONE VERTICAL LEVEL
+      110 UNABLE TO VERTICALLY FIT THE VECTOR PLOT
+      111 UNABLE TO DRAW THE FRAME AROUND THE PLOT
+      112 PREMATURE EOF ON FILE ZXIN
+      113 UNABLE TO READ INPUT CARD 2
+      114 UNABLE TO READ INPUT CARD 3
+      115 UNABLE TO READ INPUT CARD 4,8
+      116 UNABLE TO READ INPUT CARD 5,9
+      117 UNABLE TO READ INPUT CARD 6
+      118 UNABLE TO READ INPUT CARD 7
+      119 UNABLE TO READ INPUT CARD 10
+      120 UNABLE TO READ INPUT CARD 11
+ 

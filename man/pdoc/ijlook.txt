@@ -1,0 +1,82 @@
+ 
+      CALL SEQUENCE...
+       ijlook  GFILE INPUT OUTPUT [ -t1   VAL1 -t2  VAL2 -t3   VAL3 \ 
+                                    -lv1  VAL4 -lv2 VAL5 -name VAL6 \ 
+                                    -i    VAL7   VAL8  \ 
+                                    -j    VAL9   VAL10 \ 
+                                    -kind VAL11 [VAL12] ]
+ 
+ 
+      DESCRIPTION...
+       ijlook  - PRINTS TIME SERIES OF A WINDOW IN A GRID FILE
+ 
+ 
+      AUTHOR  - J-Francois Fortin ET R.Laprise, FEB 14/84.
+      LAST REVISION: $Header: /home/cvs/RMNLIB/utils/rdiag/lspgm/ijlook.ptn,v 4.19 2014/09/25 20:20:50 dugas Exp $
+ 
+ 
+      PURPOSE - PRINTS ALL THE INFORMATION CONTAINED IN GFILE PERTAINING TO
+                VARIABLE NAME, IN THE WINDOW FROM I1 TO I2 AND FROM J1 TO J2
+                BETWEEN TIMESTEPS NT1 AND NT2 BY INCREMENT OF INT, AT ALL
+                LEVELS BETWEEN LV1 AND LV2.
+ 
+ 
+      INPUT FILE...
+       GFILE = FILE CONTAINING A TIME SERIES OF GRIDS.
+ 
+ 
+      INPUT PARAMETERS...
+ 
+       NT1,NT2     = FIRST AND LAST TIMESTEP NUMBERS TO BE PRINTED.
+       (t1,t2)       VALUES OF- 1 DEFAULT TO ALL TIMESTEPS.
+       INT         = TIMESTEP INTERVAL TO BE PRINTED.
+       (t3)          A VALUE LESS OR EQUAL TO ZERO DEFAULTS TO 1.
+       LV1,LV2     = UPPER AND LOWER LEVELS TO BE PRINTED
+                     IN COMMAND-LINE MODE, LV1 AND LV2 MAY ALSO BE THE REAL
+                     DECODED LEVEL VALUES. IN THAT CASE, THE LEVEL TYPE
+                     PARAMETER *** ABSOLUTELY HAS TO BE SPECIFIED ***.
+       NAME        = VARIABLE TO BE PRINTED (BLANK, 'ALL' or '-1' PRINTS ALL)
+       I1,I2,J1,J2 = VALUES DEFINING WINDOW TO BE PRINTED
+       KIND-1 (RES)= OUTPUT RESOLUTION 'HI' FOR 5 NUMBER PER LINE AND 'LO'
+                     FOR 12 NUMBERS PER LINE (THE DEFAULT IS 'LO')
+       KIND-2      = VERTICAL LEVEL TYPE. ONLY USE THIS WITH IN RPN STD FILES
+                     AND WHEN LV1 AND LV2 CONTAIN DECODED VALUES. FURTHERMORE,
+                     THIS PARAMETRE CAN ONLY BE SPECIFIED IN COMMAND-LINE MODE.
+                     THE CURRENTLY SUPPORTED VALUES ARE:
+                     'HAUTEUR'   , heights (m) with respect to sea level
+                     'SIGMA'     , classical terrain following (0.0 -> 1.0)
+                     'ETA'       , first version of the GEM ETA coordinate
+                     'PRESSION'  , pressure (mb)
+                     'ARBITRAIRE', arbitrary level (no units apply)
+                     'HAUTEURS'  , heights (M) with respect to the surface
+                     'HYBRIDE'   , hybrid GEM coordinate
+                     'THETA'     , potential temperature coordinate
+                     'GALCHEN'   , GalChen generalized coordinate
+ 
+       NOTE: 1) -1,0 FOR  NT,LV,I OR J,  IJLOOK WILL PRINT EVERYTHING.
+             2) IF NT1,NT2 = 0, IJLOOK WILL PAUSE BETWEEN EACH RECORD.
+ 
+       READ( 5,5010 ) NT1,NT2,INT,LV1,LV2,NAME
+       READ( 5,5020 ) I1,J1,I2,J2,RES
+ 5010  FORMAT(15X,2I10,I5,5X,2I5,5X,1X,A4)
+ 5020  FORMAT(4I5,1X,A2)
+ 
+ 
+      EXAMPLE OF INPUT CARDS...
+ 
+    IJLOOK             24        48    1       100  850      VORT
+   24   30   24   32 HI
+ 
+         0123456789012345678901234567890123456789012345678901234567890
+         1         2         3         4         5         6         7
+ 
+ 
+      EXIT CONDITIONS...
+        0 NO PROBLEMS
+        1 ILLEGAL LOWER-LEFT POSITION SUPPLIED
+        2 ILLEGAL RESOLUTION REQUESTED
+        3 ILLEGAL UPPER-RIGHT POSITION SUPPLIED
+        4 ERROR ABORT READING INPUT PARAMETRES
+        5 REAL (DECODED) VERTICAL LEVELS, KIND NOT DEFINED
+        6 INCONSISTENT VALUES IN INPUT PARAMETERS
+        7 UNABLE TO OPEN GFILE

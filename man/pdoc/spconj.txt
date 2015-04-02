@@ -1,0 +1,20 @@
+ 
+      CALL SEQUENCE...
+        spconj  XIN XOUT OUTPUT
+ 
+ 
+      AUTHOR - J.D.Henderson @ CCRN,  JAN 1981.
+      LAST REVISION: $Header: /home/cvs/RMNLIB/utils/rdiag/lspgm/spconj.ptn,v 4.8 2014/09/25 20:20:53 dugas Exp $
+ 
+ 
+      DESCRIPTION...
+       A CCC FILE COMPUTATION PROGRAM WHICH...
+ 
+       ... PRODUCES FILE XOUT = CONJ( XIN ), WHERE XIN CONTAINS COMPLEX DATA.
+ 
+ 
+      EXIT CONDITIONS...
+        0 NO PROBLEMS
+        1 MORE THAN ONE SIZE ARRAY IN FILE XIN
+        2 DATA NOT COMPLEX
+        3 UNABLE TO READ FILE XIN

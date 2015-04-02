@@ -1,0 +1,48 @@
+ 
+      CALL SEQUENCE...
+       bins  X XB INPUT OUTPUT [-a VAL1]
+ 
+ 
+      DESCRIPTION...
+       bins   - SIMPLE BINNING PROGRAM
+ 
+ 
+      AUTHOR  - G.J.Boer, November 1985
+      LAST REVISION: $Header: /home/cvs/RMNLIB/utils/rdiag/lspgm/bins.ptn,v 4.8 2014/09/25 20:20:45 dugas Exp $
+ 
+ 
+      PURPOSE - SIMPLE TIMESTEP BINNING PROGRAM.
+      NOTE    - X  MAY BE REAL OR COMPLEX, AS WELL
+                AS MULTI-LEVEL.
+ 
+ 
+      INPUT FILES...
+       X  = FILE OF REAL OR COMPLEX FIELDS
+ 
+      OUTPUT FILES...
+       XB = AVERAGE OF "NBIN" CONSEQUTIVE INPUT VALUES
+ 
+ 
+      INPUT PARAMETER...
+ 
+       NBIN (a) = NUMBER OF VALUES PER BIN (MINIMUM OF 2)
+ 
+       READ(5,5010) NBIN
+ 5010  FORMAT(10X,I5)
+ 
+ 
+      EXAMPLE OF INPUT CARD...
+ 
+   BINS       3
+ 
+         0123456789012345678901234567890123456789012345678901234567890
+         1         2         3         4         5         6         7
+ 
+ 
+      EXIT CONDITIONS...
+       0 NO PROBLEMS
+       1 PROBLEM READING FIRST SET
+       2 MORE THAN ONE SIZE IN FILE X
+       3 PROBLEMS READING DIRECTIVE CARD
+       4 NBIN TOO SMALL
+ 

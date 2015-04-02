@@ -1,0 +1,51 @@
+ 
+      CALL SEQUENCE...
+       memcoef  SERI COEFF INPUT OUTPUT [ -a VAL0 -kind VAL1 ]
+ 
+ 
+      DESCRIPTION...
+       memcoef  - Power Spectrum Estimation by the Maximum Entropy Method
+ 
+ 
+      AUTHOR  - G. Brunet,  07/94.
+      LAST REVISION: $Header: /home/cvs/RMNLIB/utils/rdiag/lspgm/memcoef.ptn,v 4.7 2014/09/25 20:20:50 dugas Exp $
+ 
+ 
+      PURPOSE - READS A TIME-SERIES AND CALCULATES THE COEFFICIENTS OF 
+                THE MAXIMUM ENTROPY METHOD OR ITS POWER SPECTRUM.
+               
+ 
+ 
+      INPUT FILE...
+       ZXIN  = CROSS-SECTIONS WITH ONE LEVEL
+ 
+      OUTPUT FILE...
+       ZXOUT = CROSS-SECTIONS WITH ONE LEVEL
+ 
+      PARAMETERS...
+ 
+      ORDER (a)    =   ORDER OF THE MODEL (defaults to the length-1 of SERI).
+      KIND  (kind) = 0 INPUT IS A TIME SERIES. OUTPUT ARE THE MEM COEFFICIENTS.
+                   > 0 INPUT ARE THE MEM COEFFICIENTS. OUTPUT IS THE POWER 
+                       SPECTRUM BETWEEN THE NYQUIST FREQUENCY AND 0. KIND
+                       IS THEN THE NF NUMBER OF REQUESTED FREQUENCIES.
+ 
+       READ( 5,5010 ) ORDER,KIND
+ 5010  FORMAT(10X,2I5)
+ 
+ 
+      EXAMPLE OF INPUT CARD...
+ 
+  MEMCOF     10    0
+ 
+         0123456789012345678901234567890123456789012345678901234567890
+         1         2         3         4         5         6         7
+ 
+ 
+      EXIT CONDITIONS...
+        0 NO PROBLEMS
+        1 PROBLEMS READING SERI
+        2 FOUND DATA TYPE NOT ZONAL
+        3 ABORT ERROR READING SERI
+        4 MORE THAN ONE SIZE IN SERI
+        5 ABORT ERROR READING INPUT

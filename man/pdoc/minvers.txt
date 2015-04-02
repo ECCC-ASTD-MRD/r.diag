@@ -1,0 +1,48 @@
+ 
+      CALL SEQUENCE...
+       minvers  A AINV INPUT OUTPUT [-kind VAL1]
+ 
+ 
+      AUTHOR - B.Dugas, mars 17/94.
+      LAST REVISION: $Header: /home/cvs/RMNLIB/utils/rdiag/lspgm/minvers.ptn,v 4.8 2014/09/25 20:20:51 dugas Exp $
+ 
+ 
+      DESCRIPTION...
+       MINVERS calcule l'inverse multiplicatif de la matrice
+       que contient le fichier A. Les enregistrements des matrices
+       correspondents aux colonnes des matrices. Il doit donc y
+       avoir autant d'echantillons que de variables.
+ 
+ 
+      PARAMETRES...
+        KIND = 0,1 SI LA MATRICE A EST GENERALE (DEFAUT)
+               2,     "     "     "    SYMMETRIQUE
+               3,     "     "     "    SYMMETRIQUE DEFINIE POSITIVE
+ 
+        SI KIND EST NEGATIF LE PROGRAMME EVALUERA LA 
+        PRECISION DU CALCUL ET TENTERA DE L'AMELIORER.
+ 
+        READ(5,5000) KIND
+ 5000   FORMAT(10X,I5)
+ 
+ 
+      EXEMPLE DE CARTE DE DIRECTIVE...
+ 
+  MINVERS     0
+ 
+         0123456789012345678901234567890123456789012345678901234567890
+         1         2         3         4         5         6         7
+ 
+ 
+     EXIT CONDITIONS...
+        0 NO PROBLEMS
+        1 UNABLE TO READ FIRST SET IN FILE A
+        2 NUMBER OF VARIABLES AND NUMBER OF SETS DIFFER IN A
+        3 MEMORY ALLOCATION PROBLEMS
+        4 UNABLE TO READ A COLUMN FROM A
+        5 MORE THAN ONE SIZE IN FILE
+        6 UNABLE TO PERFORM FACTORIZATION
+        7 UNABLE TO PERFORM INVERSION
+        8 ERROR DURING OPTIMIZATION
+        9 ERROR READING ACCROSS FILE A
+       10 ERROR READING DIRECTIVES

@@ -1,0 +1,52 @@
+ 
+      CALL SEQUENCE...
+       ggsign  GGIN INPUT OUTPUT [ -t1 VAL1 -name VAL2 -lv1 VAL3 -label VAL4 ]
+ 
+ 
+      DESCRIPTION...
+       ggsign - MAPS THE SIGN (-,0,+) OF EACH POINT IN A GRID
+ 
+ 
+      AUTHOR  - J.D.Henderson, NOV 24/80.
+      LAST REVISION: $Header: /home/cvs/RMNLIB/utils/rdiag/lspgm/ggsign.ptn,v 4.6 2014/09/25 20:20:48 dugas Exp $
+ 
+ 
+      PURPOSE - DRAWS A COMPACT MAP OF THE SIGN OF EACH GRID POINT FOR EACH
+                GRID IN A GCM DIAGNOSTIC OUTPUT FILE AS REQUESTED ON CARDS.
+                GRIDS MUST BE REQUESTED IN THE SAME ORDER AS THEY OCCUR IN
+                THE FILE SINCE THE FILE IS SCANNED ONLY ONCE.
+ 
+ 
+      INPUT FILE...
+       GGIN = FILE CONTAINING GRIDS TO BE MAPPED
+ 
+ 
+      INPUT PARAMETERS...
+ 
+       NSTEP (t1)  = Selected timestep.
+       NAME        = Name of the variable to look for. If name='NEXT'
+                     or blank, the next grid on the file is mapped.
+       LEVEL (lv1) = Selected level.
+ 
+       LABEL       = Label (80 CHARACTERS MAXIMUM).
+ 
+       READ( 5,5010 ) NSTEP,NAME,LEVEL
+       READ( 5,5012 ) LABEL
+ 5010  FORMAT(10X,I10,1X,A4,I5)
+ 5012  FORMAT(20A4)
+ 
+ 
+      EXAMPLE OF INPUT LINES...
+ 
+    GGSIGN         6  PHI  500
+          500 MB GEOPOTENTIAL
+ 
+         0123456789012345678901234567890123456789012345678901234567890
+         1         2         3         4         5         6         7
+ 
+ 
+      EXIT CONDITIONS...
+        0 NO PROBLEMS
+        1 MISSING ARRAY ON FILE GGIN
+        2 MISSING LABEL INFORMATION
+        3 PREMATURE EOF ON GGIN

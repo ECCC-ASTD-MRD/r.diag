@@ -1,0 +1,76 @@
+ 
+      CALL SEQUENCE...
+       ggtrig  GGIN GGOUT INPUT OUTPUT [-a VAL1 -kind VAL2 [VAL3] -b VAL4 [-lon]]
+ 
+ 
+      DESCRIPTION...
+       ggtrig - GRID SET MULTIPLIED BY CONST*TRIG(LAT)**N OR CONST*TRIG(N*LON)
+ 
+ 
+      AUTHOR  - J.D.Henderson, MAY 25/81.
+      LAST REVISION: $Header: /home/cvs/RMNLIB/utils/rdiag/lspgm/ggtrig.ptn,v 4.15 2015/01/22 21:44:36 dugas Exp $
+ 
+ 
+      PURPOSE - MULTIPLIES ANY 'A','B','G' 'L','N','S' OR 'Z' GRID
+                FILE BY CONST*TRIG(LAT)**N OR CONST*TRIG(N*LON),
+                WHERE TRIG CAN BE EITHER OF THE FOLLOWING:
+                1) ANY OF THE USUAL SINUS, COSINUS
+                   OR TANGENT FUNCTIONS.
+                2) THE IDENTITY FUNCTION.
+ 
+ 
+      INPUT FILE...
+       GGIN  = 'A','B','G','L','N','S' OR 'Z' GRIDS
+ 
+      OUTPUT FILE...
+       GGOUT = GGIN MULTIPLIED AS REQUESTED.
+ 
+ 
+      INPUT PARAMETERS...
+ 
+       CONST (a)    = MULTIPLYING CONSTANT. BLANK INPUT DEFAULT IS 1.0
+       KTR   (kind) = 'SIN', 'COS', 'TAN' OR 'IDF'. THE DEFAULT IS 'COS'
+                      AND 'IDF' STANDS FOR IDENTITY FUNCTION
+       GEOGR (kind2)= 'ROT' or 'GEO' (the default is 'GEO')
+                      Stands for GEOGraphical frame of Reference.
+                      This option can only applied to 'Z' grids.
+       N     (b)    = INTEGER POWER TO WHICH TRIG FUNCTION IS RAISED
+                      IF LON IS NULL. OTHERWISE, LONGITUDE WAVE NUMBER.
+                      THE BLANK INPUT DEFAULT IS SET TO 1
+       LON          = 0 (DEFAULT) ==> APPLIES TRIG(LAT)**N
+                    = ANYTHING ELSE ==> APPLIES TRIG(N*LON)
+ 
+      NOTES:  1) 'G' GRIDS ARE CLASSICAL GAUSSIAN GRIDS; 'A' GRIDS ARE
+                 GLOBAL OR HEMISPHERIC LAT-LON GRIDS THAT INCLUDE NEITHER
+                 THE POLES OR THE EQUATOR. THEIR FIRST LATITUDE POINT STARTS
+                 HALF AN INTERVAL FROM THE POLE. 'B' GRIDS ARE AS A GRIDS,
+                 EXCEPT THAT THEY INCLUDE POLES AND MAY ALSO INCLUDE THE
+                 EQUATOR WHEN THERE IS AN UNEVEN NUMBER OF LATITUDES.
+                 THE 'Z' GRID FORMAT IS USED BY THE RPN/CMC GEM MODEL.
+              2) For rotated 'Z' grids, it is possible to use the
+                 latitudes and longitudes in the rotated or non-rotated
+                 geographical frame of reference.
+              3) NEGATIVE EXPONENT OPERATIONS ON 'B' OR 'Z' GRIDS ARE
+                 NOT SUPPORTED, AS THEY MAY IMPLY DIVISION BY ZERO
+                 AT THE EQUATOR AND THE POLES. FOR THE SAME REASON,
+                 TAN(LAT) OPERATIONS ARE NOT SUPPORTED FOR 'B' GRIDS.
+ 
+       READ( 5,5010 ) CONST,KTR,N,LON
+ 5010  FORMAT(10X,E10.0,2X,A3,2I5)
+ 
+ 
+      EXAMPLE OF INPUT CARD...
+ 
+    GGTRIG      1.E0  COS    2    0
+ 
+         0123456789012345678901234567890123456789012345678901234567890
+         1         2         3         4         5         6         7
+ 
+ 
+      EXIT CONDITIONS...
+        0 NO PROBLEMS
+        1 KTR IS NEITHER SIN,COS OR TAN
+        2 ABORT ERROR READING GGIN
+        3 ABORT ERROR READIND INPUT DIRECTIVES
+        4 UNSUPPORTED GRID TYPE
+        5 UNSUPPORTED OPERATION/"GRID TYPE" COMBINATION

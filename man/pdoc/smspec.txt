@@ -1,0 +1,75 @@
+ 
+      SEQUENCE D'APPEL...
+       smspec  IN OUT [ FILTER ] INPUT OUTPUT [ -a VAL1 -b VAL2 -b VAL3 -d VAL4 ]
+ 
+ 
+      AUTHOR  - B.DENIS, DECEMBER 1999.
+      LAST REVISION: $Header: /home/cvs/RMNLIB/utils/rdiag/lspgm/smspec.ptn,v 4.6 2014/10/16 11:37:06 dugas Exp $
+ 
+ 
+      DESCRIPTION...
+       smspec - SPECTRAL FILTERING USING DISCREET SIN AND COS TRANSFORMS.
+ 
+ 
+      INPUT FILE...
+       IN     = INPUT ARRAY FILE
+ 
+      OUTPUT FILES...
+       OUT    = FILTERED ARRAY FILE
+       FILTER = THE ACTUAL FILTER ARRAY (OPTIONAL)
+ 
+ 
+      PARAMETERS...
+       CAS (a) = TYPE OF (SUPPORTED) TRANSFORMS.
+                 3 => SIN SHIFTED ONLY.
+                 4 => COS SHIFTED ONLY.
+                 5 => REGULAR SIN & COS (DEFAULT)
+       WXL (b) = LONG WAVELENGTH CUTOFF (DEFAULT=1.E-20)
+                 INFORMATION WITH WAVELENGTH LONGER OR EQUAL TO WXL WILL
+                 BE PRESERVE.
+       WXS (c) = SHORT WAVELENGTH CUTOFF (DEFAULT=1.E-20)
+                 INFORMATION WITH WAVELENGTH SMALLER OR EQUAL THAN WXL WILL
+                 BE REMOVED.
+       DX  (d) = GRID SPACING IN KILOMETERS (DEFAULT=1)
+ 
+ 
+       Notes: 1) If WXL = WXS, then wavelength smaller (not equal) than WXL
+                 will be removed. WXL must always be .GE. than WXS.
+              2) The filter function is equal to "1" at WXL and to "0" at WXS.
+                 In between it follows a "COS(WAVENUMBER)**2" function.
+              3) As of now, grids have to be of even-sized dimensions.
+ 
+                ^    FILTER FUNCTION (RESPONSE)
+                |
+             1 -| ----
+                |     \
+                |      \
+                |       \
+                |        \
+                |         \
+                |          \
+             0 -|-----|-----|------ SHORTEST-WAVES -->
+                     WXL   WXS
+ 
+ 
+       READ(5,5000) CAS,WXL,WXS,DX
+ 5000  FORMAT(10X,I5,3E10.0)
+ 
+ 
+      EXAMPLE OF INPUT CARD...
+ 
+  SMSPEC      4      1000       500        45
+ 
+         0123456789012345678901234567890123456789012345678901234567890
+         1         2         3         4         5         6         7
+ 
+ 
+      EXIT CONDITIONS...
+        0 NO PROBLEMS
+        1 CAS PARAMETRE NOT VALID
+        2 WXS AND/OR WXL INCORRECT
+        3 DX IS SMALLER THAN 0
+        4 PROBLEMS READING FILE IN
+        5 FOUND UN-EVEN GRID SIZES
+        6 PROBLEMS READING INPUT PARAMETRES
+        7 MORE THAN ONE ARRAY SIZE

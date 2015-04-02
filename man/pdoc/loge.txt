@@ -1,0 +1,24 @@
+ 
+      CALL SEQUENCE...
+       loge  XIN XOUT OUTPUT
+ 
+ 
+      AUTHOR - J.D.Henderson,  01 JAN 1981.
+      LAST REVISION: $Header: /home/cvs/RMNLIB/utils/rdiag/lspgm/loge.ptn,v 4.12 2014/09/25 20:20:50 dugas Exp $
+ 
+ 
+      DESCRIPTION...
+       A CCC FILE ARITHMETIC PROGRAM WHICH...
+ 
+       PRODUCES FILE  XOUT = LN(XIN). 
+ 
+      NOTES - 1) XIN IS REAL AND XIN =< 0.  THEN   LN(XIN) = 0.0 
+              2) XIN IS COMPLEX AND XIN = (0,0) THEN LN(XIN) = (0,0)
+              3) XIN FILE VALUES MUST NOT BE SPECTRAL OR FOURIER
+ 
+ 
+      EXIT CONDITIONS...
+        0 NO PROBLEMS
+        1 MORE THAN ONE SIZE IN FILE XIN
+        2 FOUND SPECTRAL OR FOURIER DATA TYPES
+        3 UNABLE TO READ FILE X

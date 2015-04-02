@@ -1,0 +1,32 @@
+ 
+      CALL SEQUENCE...
+      rgopr   GGIN GGOUT OUTPUT
+ 
+ 
+      DESCRIPTION...
+      rgopr   - MULTIPLIES PRESSURE GRID SETS BY RGAS/PRESSURE
+ 
+ 
+      AUTHORS - R.Laprise AND J.D.Henderson, MAY 13 1983.
+      LAST REVISION: $Header: /home/cvs/RMNLIB/utils/rdiag/lspgm/rgopr.ptn,v 4.9 2014/09/25 20:20:52 dugas Exp $
+ 
+ 
+      PURPOSE - MULTIPLIES A MULTI-LEVEL PRESSURE FILE BY (RGAS/PRESSURE).
+                IF THE FILE CONTAINS TEMPERATURE THE RESULT WILL BE
+                SPECIFIC VOLUME (RT/P).
+           
+ 
+      INPUT FILE...
+       GGIN  = FILE OF PRESSURE LEVEL SETS (REAL OR COMPLEX).
+ 
+ 
+      OUTPUT FILE...
+       GGOUT = COPY OF FILE GGIN MULTIPLIED BY (RGAS/PRESSURE).
+            
+ 
+      EXIT CONDITIONS...
+        0 NO PROBLEMS
+        1 MORE THAN ONE SIZE IN GGIN
+        2 PREMATURE EOF IN GGIN
+        3 GGIN DOES NOT CONTAIN PRESSURE LEVELS
+ 

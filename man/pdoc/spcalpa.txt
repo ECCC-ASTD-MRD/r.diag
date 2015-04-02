@@ -1,0 +1,32 @@
+ 
+      CALL SEQUENCE...
+       spcalpa  IN OUT OUTPUT
+ 
+ 
+      DESCRIPTION...
+       spcalpa - MAKES FILE OF CMPLX(N*(N+1),0.)
+  
+ 
+      AUTHORS  - J.D.Henderson AND T.Shepherd, JUN 01/79.
+      LAST REVISION: $Header: /home/cvs/RMNLIB/utils/rdiag/lspgm/spcalpa.ptn,v 4.7 2014/09/25 20:20:53 dugas Exp $
+  
+ 
+      PURPOSE  - PRODUCES A COMPLEX FILE (OUT) OF THE FACTOR C-ALPHA=N(N+1);
+                (CMPLX(N*(N+1),0.)), WHERE N IS THE LEGENDRE POLYNOMIAL
+                 COEFFICIENT.
+ 
+      NOTE     - ONE RECORD IS PRODUCED FOR EACH RECORD IN THE INPUT
+                 FILE (IN).
+ 
+ 
+      INPUT FILE...
+       IN = FILE OF COMPLEX COEFFICIENTS.
+ 
+      OUTPUT FILE...
+       OUT = COMPLEX FILE CONTAINING THE REQUIRED VALUES FOR EACH
+             RECORD OF THE INPUT FILE (IN).
+ 
+ 
+      EXIT CONDITIONS...
+        0 NO PROBLEMS
+        1 NO SPECTRAL DATA FOUND ON IN

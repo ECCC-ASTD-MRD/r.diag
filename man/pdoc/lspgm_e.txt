@@ -1,0 +1,32 @@
+   
+   E) SPHERICAL HARMONIC PROGRAMS
+   ------------------------------
+     
+   cofagg   - CONVERTS SPECTRAL FILE TO GAUSSIAN GRIDS                   1 1 C
+   cofaps   - CONVERTS SPECTRAL FILE TO POLAR STEREOGRAPHIC GRIDS        1 1 C G
+   ctemps   - CONVERTS SPECTRAL PHI FILE TO SPECTRAL TEMPERATURES        2 1
+   cwinds   - CONVERTS SPECTRAL Q,D FILES TO SPECTRAL U,V                2 2
+   gsomgah  - CONVERTS ETA (SIGMA/HYBRID) Q,D FILES TO VERTICAL MOTION   4 1 C G
+   gsomega  - CONVERTS Q,D FILES TO VERTICAL MOTION                      3 1 C G
+   spamp    - PRODUCES AMPLITUDE OF COMPLEX ARRAY                        1 1
+   spblow   - HEMISPHERIC TO/FROM GLOBAL SPECTRAL ARRAYS                 1 2 C
+   spcalpa  - MAKES FILE OF CMPLX(N*(N+1),0.)                            1 1   G
+   spcdns   - CONTRIBUTION OF SP COEFF TO GLOBAL MEAN OF PRODUCT         2 1   G
+   spcsum   - PRINTS SPECTRAL SUMS OVER M OR N                           1 0 C G
+   spdlat   - COMPUTES SPECTRAL LATITUDE DERIVATIVE                      1 1   G
+   spdlon   - COMPUTES SPECTRAL LONGITUDE DERIVATIVE                     1 1   G
+   spdlsq   - COMPUTES SPECTRAL LAPLACIAN                                1 1   G
+   spflux   - COMPUTE AND PRINT SPECTRAL M OR N FLUX                     1 0 C G
+   spgdev   - SETS SPECTRAL MEANS TO ZERO                                1 1
+   splapl   - COMPUTES SPECTRAL LAPLACIAN                                1 1   G
+   spldiss  - COMPUTES LEITH SPECTRAL DISSIPATION FUNCTION               1 1   G
+   splinv   - MULTIPLY SPECTRAL FILE BY A**2/(N*(N+1))                   1 1   G
+   spnegm   - PRODUCES SPECTRAL HARMONIC "-M CONJUGATE"                  1 1
+   spreim   - SEPARATES REAL AND IMAGINARY PARTS OF A COMPLEX ARRAY      1 2
+   spresol  - EXTRACTS LOWER RESOLUTION SUB-SET FROM SPECTRAL FILE       1 1 C G
+   spsmoo   - SPECTRAL SMOOTHING "a la" Sardeshmukh & Hoskins            1 1 C  
+   spvdgx   - SPECTRAL V DOT GRAD X                                      3 1   G
+   spzdev   - COMPUTES SPECTRAL DEVIATION FROM ZONAL MEAN                1 1   G
+   spzxmlt  - MULTIPLY SPECTRAL FILE BY CROSS-SECTION FILE               2 1
+   zxwave   - MAKES CROSS-SECTION OF SPECTRAL AMPLITUDE AND PHASE        1 2 C
+   

@@ -1,0 +1,56 @@
+ 
+  Sequence d'appel...
+   fstmdiag -s source [-d destination] \ 
+           [-info [valeur]] [-e] [-f]  \ 
+           [-nobox] [-help] [-stats]   \ 
+           [-novar]
+         
+ 
+ 
+  Auteur: B.Dugas, RPN - juillet 2011.
+  Derniere revision: $Header: /home/cvs/RMNLIB/utils/rdiag/lspgm/fstmdiag.ptn90,v 1.04 2014/09/25 20:20:57 dugas Exp $
+ 
+ 
+  Objet:
+  -----
+   FSTMDIAG  Calcule les moyennes simples et variances des
+             variables contenues dans un fichier. Aucune
+             contrainte commune n'est imposee, et ce 
+             meme sur les grilles horizontales.
+ 
+             Les variables 1) ayant les memes noms, 2) valides
+             au meme niveau (i.e. IP1 identiques), 3) ayant les
+             memes dimensions en x,y,z et 4) ayant la meme
+             configuration geographique sont
+             considerees ensemble.
+ 
+ 
+  Parametres d'appel:
+  ------------------
+   s         Fichier source
+   d         Entete commune des fichiers destinations. Ces deux
+             fichiers (*_moyenne et *_variance) ne doivent pas
+             exister a l'entree, sauf si la cle f est egalement
+             specifiee. Par defaut, d = s.
+   novar     Ne pas calculer les variances, seulement les moyennes
+   info      Niveau des messages retournes (ERRORS/INFORM/DEBUG).
+   nobox     Ne pas imprimer de boites d'informations.
+   stats     Imprimer des statistiques sur les resultats
+   help      Afficher ce texte sur stdout et quitter.
+   f         Forcer la re-ecriture du fichier de sortie. 
+ 
+ 
+  Codes de sortie:
+  ----------------
+        0 Pas d'erreur
+        1 Nom de fichier d'entree requis a l'entree
+        2 Impossible d'associer un nom a une unite d'E/S
+        3 Le fichier source doit exister au depart
+        4 Un des fichiers destinations existe deja
+        5 Erreur durant ecriture (fstecr)
+        7 Erreur durant la lecture (fstluk)
+        8 Erreur durant la lecture (fstprm)
+        9 Erreur d'allocation de memoire
+       10 TMPDIR ou BIG_TMPDIR non definis
+       11 Probleme avec deet,npas en sortie
+ 

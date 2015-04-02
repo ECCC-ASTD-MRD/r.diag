@@ -1,0 +1,52 @@
+ 
+      CALL SEQUENCE...
+       rcopy  XIN XOUT INPUT OUTPUT [ -a VAL1 -b VAL2 -name VAL3 ]
+ 
+ 
+      AUTHOR - G.J.Boer (following XLIN), January 1993.
+      LAST REVISION: $Header: /home/cvs/RMNLIB/utils/rdiag/lspgm/rcopy.ptn,v 4.12 2014/09/25 20:20:52 dugas Exp $
+ 
+ 
+      DESCRIPTION...
+       COPY LOGICAL RECORDS FROM RECORD NUMBERS N1 TO N2 INCLUSIVE
+ 
+       Note: A logical record is here understood to be the storage
+             unit holding a single variable at a single level.
+             As such, a physical record can include several
+             such logical records. Multi-level zonal
+             records are examples of this.
+ 
+ 
+      INPUT FILE...
+       XIN  = INPUT FILE (REAL OR COMPLEX)
+ 
+      OUTPUT FILE...
+       XOUT = RECORDS FROM RECORD NUMBERS N1 TO N2
+ 
+ 
+      PARAMETERS...
+ 
+       N1     (a)    = FIRST LOGICAL RECORD TO BE COPIED
+       N2     (b)    = LAST LOGICAL RECORD TO BE COPIED ( N1 <= N2 )
+       NEWNAM (name) = NEW NAME FOR OUTPUT LABEL. BLANK KEEPS OLD NAME
+                
+       Note: N1 AND N2 BOTH NEED BE GREATER THAN ZERO SINCE
+             THE ORDINAL OF THE FIRST RECORD IN XIN IS 1.
+ 
+       READ(5,5010) N1,N2,NEWNAM
+ 5010  FORMAT(10X,2I10,1X,A4)
+ 
+ 
+      EXAMPLE OF INPUT CARD...
+ 
+  RCOPY           10        23 NAME
+ 
+         0123456789012345678901234567890123456789012345678901234567890
+         1         2         3         4         5         6         7
+ 
+ 
+      EXIT CONDITIONS...
+        0 NO PROBLEMS
+        1 TOO MANY LEVELS IN ZONAL ARRAY
+        2 ERROR READING/CHECKING INPUT PARAMETERS
+        3 PREMATURE EOF ON XIN

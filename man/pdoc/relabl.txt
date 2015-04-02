@@ -1,0 +1,94 @@
+ 
+      CALL SEQUENCE...
+       relabl  OLD NEW INPUT OUTPUT [ -kind JBUF1 KBUF1 -t1  JBUF2 KBUF2
+                                      -name JBUF3 KBUF3 -lv1 JBUF4 KBUF4
+                                      -lon  JBUF5 KBUF5 -lat JBUF6 KBUF6 
+                                      -nhem JBUF7 KBUF7 -npg JBUF8 KBUF8
+                                    [ -plv  InVertLevType [OutVertLevType] ] ]
+ 
+ 
+      DESCRIPTION...
+       relabl - CHANGES COMPLETE LABELS IN A FILE
+ 
+ 
+      AUTHOR  - N.Sargent, JUN 06/81.
+      LAST REVISION: $Header: /home/cvs/RMNLIB/utils/rdiag/lspgm/relabl.ptn,v 4.16 2014/09/25 20:20:52 dugas Exp $
+ 
+ 
+      PURPOSE - COPIES A FILE CHANGING LABELS WHERE INDICATED.
+      NOTE    - ANY PART OF THE LABEL CAN BE CHANGED AND CHANGING
+                  THE PACKING DENSITY CAUSES THE FIELD TO BE REPACKED.
+ 
+ 
+      INPUT FILE...
+       OLD = INPUT FILE TO BE CHANGED.
+ 
+      OUTPUT FILE...
+       NEW = COPY OF FILE OLD WITH SOME OF THE LABELS CHANGED.
+ 
+ 
+      INPUT PARAMETERS...
+ 
+       JBUF = LABEL TYPE(S) TO BE CHANGED. BLANK SUBFIELDS ARE IGNORED
+              AND A BLANK CARD CAUSES ALL THE RECORD LABELS IN THE INPUT
+              FILE TO BE CHANGED ACCORDING TO KBUF CARD SUBFIELD VALUES,
+             (PROVIDED THE KBUF CARD IS NOT BLANK).
+       KBUF = VALUES TO WHICH LABELS ARE TO BE CHANGED.
+              NOTE THAT BLANK SUBFIELDS ARE NOT CHANGED.
+ 
+       PLV  = VERTICAL LEVEL TYPE. ONLY USE THIS WITH RPN STD FILES AND
+              WHEN JBUF4 AND KBUF4 CONTAIN DECODED VALUES. FURTHERMORE,
+              THIS PARAMETRE CAN ONLY BE SPECIFIED IN COMMAND-LINE MODE.
+              THE CURRENTLY SUPPORTED VALUES ARE:
+ 
+               'HAUTEUR'   , heights (m) with respect to sea level
+               'SIGMA'     , classical terrain following (0.0 -> 1.0)
+               'ETA'       , first version of the GEM ETA coordinate
+               'PRESSION'  , pressure (mb)
+               'ARBITRAIRE', arbitrary level (no units apply)
+               'HAUTEURS'  , heights (M) with respect to the surface
+               'HYBRIDE'   , hybrid GEM coordinate
+               'THETA'     , potential temperature coordinate
+               'GALCHEN'   , GalChen generalized coordinate
+ 
+              ONE OR TWO VALUES CAN BE SPECIFIED HERE. WHEN ONLY ONE IS
+              DEFINED, IT SPECIFIES THE VERTICAL LEVEL TYPE OF THE FOURTH
+              ELEMENTS OF JBUF AND KBUF VECTORS. WHEN TWO VALUES ARE GIVEN,
+              THE FIRST IS APPLIED TO THE INPUT AND THE SECOND IS THE TYPE
+              OF THE OUTPUT VERTICAL COORDINATE. 
+ 
+              
+       NOTES - 1) INPUT FILE RECORD LABELS REMAIN UNCHANGED IF ANY SUBFIELD
+                  IN JBUF CARD DOES NOT MATCH THE CORRESPONDING SUBFIELD
+                  READ OR IF THE KBUF CARD IS BLANK.
+               2) LABELS ARE READ WITH ALPHANUMERIC FORMAT BUT CHANGED 
+                  INTERNALLY TO THE NORMAL FORM OF (1X,A4,I10,1X,A4,5I8),
+                  EXCEPT FOR THE VERTICAL LEVELS WHICH ARE FIRST CONVERTED
+                  TO THEIR REAL UNCODED VALUES WITH A E10.0 FORMAT.
+               3) KEYWORD INPUT IS AVAILABLE BY SPECIFYING THE JBUF AND 
+                  KBUF VALUES IN SEQUENCE FOR THE REQUIRED KEYS. NO KEY
+                  IS REQUIRED, BUT TWO VALUES ARE REQUIRED FOR EACH 
+                  SPECIFIED KEY. QUOTED BLANK VALUES ARE LEGAL.
+                  THE DEFAULT IN THIS MODE IS TO DO NOTHING.
+ 
+       READ( 5,5010 ) JBUF
+       READ( 5,5010 ) KBUF
+ 5010  FORMAT(11X,A4, I10,1X,A4,3I5,I10,I5)
+ 
+ 
+      EXAMPLE OF INPUT CARDS...
+ 
+    RELABL GRID           VORT
+                           DIV                      -16
+ 
+         0123456789012345678901234567890123456789012345678901234567890
+         1         2         3         4         5         6         7
+ 
+   THIS CHANGES ALL GRIDS WITH NAME VORT TO DIV AND REPACKS THEM.
+ 
+ 
+      EXIT CONDITIONS...
+        0 NO PROBLEMS
+        1 PREMATURE EOF ON FILE OLD
+        2 ERROR READING FIRST INPUT LINE
+        3 ERROR READING SECOND INPUT LINE

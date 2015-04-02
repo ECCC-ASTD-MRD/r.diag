@@ -1,0 +1,29 @@
+ 
+      CALL SEQUENCE...
+      dertim  XIN XOUT OUTPUT
+ 
+ 
+      AUTHOR - B.Dugas, novembre 1992.
+      LAST REVISION: $Header: /home/cvs/RMNLIB/utils/rdiag/lspgm/dertim.ptn,v 4.15 2014/09/25 20:20:47 dugas Exp $
+ 
+ 
+      DESCRIPTION...
+       A CCC FILE ARITHMETIC PROGRAM WHICH...
+ 
+       ... PRODUCES FILE XOUT(T) = XIN(T)-XIN(T-1)
+       
+       NOTES - 1) DERTIM MAKES MINIMAL USE OF XIN'S TIME INFORMATION.
+                  THE FIRST SAMPLE TIME IS SIMPLY ASSIGNED T=0,
+                  THE NEXT ONE IS T=1, AND SO ON.
+               2) XOUT(T=0) = XIN(T=0) 
+               3) XIN CAN BE MULTI-LEVEL, MULTI-VARIABLE.
+                  IN THIS CASE, THE FILE IS SUPPOSED TO BE
+                  SORTED ACCORDING TO TIMESTEP/NAME/LEVEL,
+                  FROM MOST TO LEAST SIGNIFICANT
+      
+ 
+      EXIT CONDITIONS...
+        0 NO PROBLEMS
+        1 UNABLE TO READ FIRST SET
+        2 MORE THAN ONE SIZE IN XIN
+        3 UNABLE TO ALLOCATE ENOUGH WORKING MEMORY

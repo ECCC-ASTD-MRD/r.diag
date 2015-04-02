@@ -1,0 +1,175 @@
+ 
+      CALL SEQUENCE (gpasg)...
+       gpasg  GPFLD GSLNSP GSFLD [ GPTOP ] INPUT OUTPUT  \ 
+              -n VAL1 -kind VAL2 -i VAL3 -b VAL4 -c VAL5 \ 
+              -j VAL6 [VAL7] -k VAL8 [VAL9] [-l VAL10 [VAL11] ] -def
+                                   
+ 
+      CALL SEQUENCE (gsasg)...
+       gsasg  GSFLD GSLNSP GSFLD [ GPTOP ] INPUT OUTPUT                \ 
+       -n VAL1 -kind VAL2 [ VAL3 ] -i  VAL4 [  VAL5 [ VAL6 ] ] -b VAL7 \ 
+       -c VAL8 -j    VAL8 [ VAL9 ] -k VAL10 [ VAL11 [ VAL12 ] ] \ 
+       -def [ VAL13 ]
+ 
+ 
+      DESCRIPTIONS...
+       gpasg  - INTERPOLATE FROM PRESSURE TO SIGMA/HYBRID/GEM/GEM(2/3/4) LEVELS
+       gsasg  - INTERPOLATE BETWEEN SIGMA/HYBRID/GEM/GEM(2/3) LEVELS
+ 
+ 
+      AUTHORS - Nils Ek, Bernard Dugas, RPN: Sept 1998 (after GSAPL)
+      LAST REVISION: $Header: /home/cvs/RMNLIB/utils/rdiag/lspgm/gpasg.ptn,v 4.30 2014/12/03 23:57:22 dugas Exp $
+ 
+ 
+      PURPOSE - INTERPOLATES FROM PRESSURE OR ETA (SIGMA/HYBRID/GEM/GEM2/GEM3/GEM4)
+                LEVELS TO ANOTHER SET OF ETA LEVELS. THE INTERPOLATION IS
+                LINEAR IN LN(PRES)
+ 
+ 
+      INPUT FILES...
+       GPFLD  = SETS OF PRESSURE LEVEL GRID DATA                              (gpasg)
+       GSFLD  = SETS OF ETA (SIGMA/HYBRID/GEM/GEM2/GEM3/GEM4) LEVEL GRID DATA (gsasg)
+       GSLNSP = SERIES OF GRIDS OF LN(SF PRES)
+     [ GPTOP  = SERIES OF GRIDS OF PRESSURE AT TOP OF MODEL (OPTIONAL, GEM ONLY) ]
+ 
+       GPTOP AND GSLNSP HAVE UNITS OF MB AND LN(MB), RESPECTIVELY.
+ 
+      OUTPUT FILE...
+       GSFLD  = SETS OF ETA (SIGMA/HYBRID/GEM/GEM2/GEM3/GEM4) LEVEL GRID DATA
+ 
+ 
+      INPUT PARAMETERS USED BY ALL COMMANDS...
+ 
+       NSL    (n)     = NUMBER OF REQUESTED MODEL LEVELS (DEF 28, MAX 999).
+                        IF NSL IS NEGATIVE, EACH -NSL LEVS VALUES ARE READ WITH
+                        A I10 FORMAT OR AN E10.0 IF ITS VALUE CONTAINS A DECIMAL
+                        POINT.
+       COORD  (kind)  = 'SIG'/'ETA'/'GEM'/'GEM2'/'GEM3'/'GEM4' FOR OUTPUT SIGMA/ETA
+                        AND FOUR VARIANTS OF THE GEM VERTICAL COORDINATES. THE FILE
+                        CONTENTS IS USED TO DETERMINE THE RPN DEFAULTS (CAN BE EITHER
+                        OF 'GEM2','GEM3' OR 'GEM4'). HOWEVER, 'GEM4' OUTPUT IS ONLY
+                        SUPPORTED BY GPASG.
+       RLUP   (b)     = LAPSE RATE USED TO EXTRAPOLATE UPWARDS (DEF 0.0).
+       RLDN   (c)     = LAPSE RATE USED TO EXTRAPOLATE DOWNWARDS (DEF 0.0).
+       PTOIT  (i)     = PRESSURE (PA) AT THE OUTPUT LID (DEF pression_au_toit).
+       PREF   (j)     = REF PRESSURE USED WHEN COORD='GEM2' OR 'GEM3' (DEF 80000 PA).
+       R      (k)     = (FIRST) EXPONENT USED ONLY WHEN COORD='GEM2','GEM3' or 'GEM4' (DEF 1.0).
+ 
+       LEVS           = ETA LEVELS *1000 (READ FROM STANDARD INPUT). THE
+                        DEFAULTS ARE AS SPECIFIED IN THE EXAMPLE BELOW.
+ 
+      THE NEXT TWO INPUT PARAMETRES ARE USED BY GSASG...
+ 
+       COORDI (kind2) = 'SIG'/'ETA'/'GEM'/'GEM2'/'GEM3' AS WELL AS ETA AND
+                        SEVERAL OTHER VARIANTS OF THE GCM VERTICAL COORDINATES.
+       PTOITI (i2)    = PRESSURE (PA) AT THE LID OF INPUT MODEL (DEF = PTOIT)
+ 
+ 
+      THE NEXT TWO INPUT PARAMETRES ARE ONLY USED BY GSASG IF COORDI='GEM2' OR 'GEM3'...
+ 
+       PREFI  (j2)    = INPUT REFERENCE PRESSURE (DEF = PREF).
+       RI     (k2)    = INPUT EXPONENT (DEF = R).
+ 
+ 
+      THE NEXT THREE INPUT PARAMETRES ARE ONLY USED BY GPASG IF COORD='GEM4'...
+ 
+       R2     (k2)    = Second exponent (DEF = R).
+       G4LEV  (l)     = 'DYN' (default) or 'THERM' to output interpolated data
+                        on the GEM4 dynamic or thermodynamic set of levels, resp.
+       lTatU  (l2)    = 'T' => Put last thermodynamic level at last momentum level.
+                        'F' => Do not do this (DEF='F').
+ 
+ 
+       Notes: 1) When COORD='GEM', PTOIT is only used if GPTOP is empty
+              2) When COORD='GEM', RLUP and LAY are ignored 
+              3) Units for RLUP and RLDN are that of D(GSFLD)/D(LN PRES).
+                 Accordingly, it is assumed that only one variable is
+                 to be found in the GPFLD or GSFLD input files,
+                 possibly on several timesteps.
+              4) The first input line is NOT read if any command-line
+                 parameters are passed.
+              5) Furthermore, the second line will not be read either
+                 if the "-def" defaults processing mode is requested.
+              6) 'GEM' is the original gem coordinate. 'GEM2' is the
+                 hybrid coordinate implemented by Edouard & Gravel
+                 in GEM/DM V2.2.0, while 'GEM3' is the normalized
+                 version that was implemented in GEM/DM v2.3.1.
+                 'GEM4' is the version used from v4.0.6. 
+              7) The default value of COORDI is determined by the file type
+                 and the program will also try to determine it by the
+                 (internal) coding used for the coordinate itself.
+              8) The parametres needed to read/write 'GEM2' or 'GEM3' arrays
+                 can only be specified in command-line input mode.
+              9) Specifying "-def AABB" will force the attempt to read
+                 a text file called aabb.nml, containing a FORTRAN
+                 namelist AABB_NML, which in turns will hold two arrays,
+                 AI and BI such that the local pressure at level K, PL(K),
+                 can be calculated as "AI(K)+BI(K)*PS". This then by-passes
+                 all of the normal COORD-related calculations for PL(K),
+                 ** but is un-supported for GEM4 vertical coordinates **
+             10) When COORD='GEM4', the levels read on input will first be
+                 used to generate the two sets of dynamic and thermodynamic
+                 GEM4 staggered coordinate levels. Which set will be later
+                 used is determined by the value of the G4LEV ('-l')
+                 parametre (see above). The input data will then be
+                 interpolated to the (chosen) set of GEM4 levels.
+             11) Alternatively, specifying "-def APPEND" when COORD='GEM4'
+                 indicates that the program should attempt to find a !! GEM4
+                 vertical level descriptor record on the output file and use
+                 it, instead of creating one. The newly interpolated data
+                 that will result will then be appended to the file.
+ 
+ 
+       READ( 5,5010 ) NSL,COORD,PTOIT,              RLUP,RLDN (gpasg)
+       READ( 5,5015 ) NSL,COORD,PTOIT,COORDI,PTOITI,RLUP,RLDN (gsasg)
+       IF (NSL.GT.0)
+       READ( 5,5020 ) (LEVS(I),I=1,NSL)
+       IF (NSL.LT.0)
+       READ( 5,5030 ) (LEVS(I),I=1,-NSL)
+ 5010  FORMAT(10X,I5,1X,A4,3E10.0)
+ 5015  FORMAT(10X,I5,2(1X,A4,E10.0),2E10.0)
+ 5020  FORMAT(16E5.0)
+ 5030  FORMAT(8E10.0)
+ 
+ 
+      EXAMPLE OF (gsasg) INPUT CARDS...
+ 
+  GSASG.     27 GEM2      0.01 ET15    7.2E-3        0.        0.
+   0. .010 .020 .040 .061 .091 .131 .177 .222 .273 .328 .384 .444 .500 .555 .611
+ .666 .722 .773 .818 .859 .894 .925 .950 .970 .985 .995
+ 
+         01234567890123456789012345678901234567890123456789012345678901234567890
+         1         2         3         4         5         6         7
+ 
+ 
+      (gsasg+gpasg) EXIT CONDITIONS...
+        0 NO PROBLEMS
+        1 NUMBER ETA LEVELS GREATER THAN MAXLEV
+        2 PRESSURE OR MODEL VERT COORDINATE NOT MONOTONIC
+        3 ERROR READING FIRST SET IN GSLNSP
+        4 ERROR READING FIRST SET IN GPFLD OR GSFLD
+        5 GPFLD OR GSFLD AND GSLNSP NOT THE SAME SIZE
+        6 ERROR READING FIRST SET IN GPTOP
+        7 GPTOP, GSLNSP NOT THE SAME SIZE
+        8 ERROR UNPACKING FIRST SET IN GPFLD
+        9 MORE THAN ONE SIZE IN GPFLD OR GSFLD
+       10 MISSING GSLNSP FIELD
+       11 MORE THAN ONE SIZE IN GSLNSP
+       12 MISSING GPTOP FIELD
+       13 MORE THAN ONE SIZE IN GPTOP
+       14 ERROR ABORT READING INPUT CARD 1
+       15 ERROR ABORT READING INPUT CARD 2
+       16 UNSUPPORTED VERTICAL COORDINATE IN GPFLD
+       17 COORD PARAMETRE AND GPFLD DATA MISMATCH
+       18 FOUND DATA NOT OF TYPE 'GRID' OR 'SUBA'
+       19 UNSUPPORTED VERTICAL COORDINATE ON INPUT CARD 2
+       20 UNABLE TO READ AABB NAMELIST
+       21 GSLNSP DOES NOT CONTAIN LN( SURFP ) FOR EARTH
+       22 GPASG UNABLE TO CREATE (GEM4) TocToc record
+       23 UNRECOGNIZED VALUE OF THE G4LEV PARAMETRE
+ 
+      101 MORE THAN ONE VARIABLE NAME DETECTED, CHECK RLDN/RLUP VALIDITY
+ 
+      (gsahy) EXIT CONDITIONS...
+        1 CODE NOT YET ACTIVE
+ 

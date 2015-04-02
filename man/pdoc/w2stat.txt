@@ -1,0 +1,29 @@
+ 
+      CALL SEQUENCE...
+       w2stat  TSIN W2STAT OUT
+ 
+ 
+      AUTHOR  - B.Dugas, MARS 22/89.
+      LAST REVISION: $Header: /home/cvs/RMNLIB/utils/rdiag/lspgm/w2stat.ptn,v 4.4 2014/09/25 20:20:56 dugas Exp $
+ 
+ 
+      DESCRIPTION...
+       W2STAT calcule la statistique de cramer-von mises evaluant la 
+       normalite  de la distribution des points contenus dans chaque 
+       enregistrement.  On traite ceux-ci comme des series temporel- 
+       les prealablememt normalisees.  Une valeur est produite  pour 
+       chaque TSIN. 
+ 
+       (Voir " EDF STATISTICS FOR GOODNESS  OF FIT AND SOME COMPARI- 
+        SONS ", M.A. STEPHENS, Journal  of the American  Statistical 
+        Association, September 1974, pp 730-737.) 
+ 
+ 
+      EXIT CONDITIONS...
+       0 NO PROBLEMS
+       1 TSIN NOT A TIME SERIES FILE
+       2 TIME SERIES TOO LONG
+       3 PROBLEMS READING TSIN
+       4 MORE THAN ONE SIZE
+       5 TIME SERIES NOT NORMALIZED
+       6 PREMATURE EOF ON TSIN

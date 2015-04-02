@@ -1,0 +1,23 @@
+ 
+      CALL SEQUENCE...
+       modulus  XIN XOUT OUTPUT
+ 
+ 
+      AUTHOR - B.Dugas, 19 fevrier 1998.
+      LAST REVISION: $Header: /home/cvs/RMNLIB/utils/rdiag/lspgm/modulus.ptn,v 4.7 2014/09/25 20:20:51 dugas Exp $
+ 
+  
+      PURPOSE - CALCULATE THE MODULUS OF ANY NUMERICAL INPUT FIELD.
+  
+ 
+      INPUT FILE... 
+       XIN  = FILE OF FIELDS
+  
+      OUTPUT FILE... 
+       XOUT = FILE CONTAINING THE MODULUS OF XIN 
+ 
+ 
+      EXIT CONDITIONS...
+        0 NO PROBLEMS
+        1 MORE THAN ONE SIZE FOR XIN ARRAYS
+        2 UNABLE TO READ FILE XIN

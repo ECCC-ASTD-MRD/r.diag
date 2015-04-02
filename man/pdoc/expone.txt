@@ -1,0 +1,21 @@
+ 
+      CALL SEQUENCE...
+      expone  XIN XOUT OUTPUT
+ 
+ 
+      AUTHORS - R.Laprise AND J.D.Henderson, MAY 14 1983.
+      LAST REVISION: $Header: /home/cvs/RMNLIB/utils/rdiag/lspgm/expone.ptn,v 4.10 2014/09/25 20:20:47 dugas Exp $
+ 
+ 
+      DESCRIPTION...
+       A CCC FILE ARITHMETIC PROGRAM WHICH...
+ 
+       ... PRODUCES FILE XOUT = EXP( XIN ), 
+           WHERE XIN MUST NOT CONTAIN SPECTRAL OR FOURIER DATA.
+            
+ 
+      EXIT CONDITIONS...
+        0 NO PROBLEMS
+        1 MORE THAN ONE SIZE IN XIN
+        2 FOUND SPECTRAL OR FOURIER DATA IN XIN
+        3 PREMATURE EOF IN XIN OR TOO MANY LEVELS

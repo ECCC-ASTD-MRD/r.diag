@@ -1,0 +1,115 @@
+ 
+      CALL SEQUENCE...
+       ggatim  INFIL OUTFIL MASK INPUT OUTPUT [-dlat1 VAL1 -dlat2 VAL2
+                                               -dlon1 VAL3 -dlat2 VAL4 
+                                               -kind  VAL5]
+ 
+ 
+      DESCRIPTION...
+       GGATIM  - CONVERT GAUSSIAN GRIDS TO A NUMBER OF TIME SERIES
+ 
+ 
+      AUTHORS  - F.Zwiers AND B.Dugas, DEC/85.
+      LAST REVISION: $Header: /home/cvs/RMNLIB/utils/rdiag/lspgm/ggatim.ptn,v 4.22 2014/10/09 21:43:21 dugas Exp $
+ 
+ 
+      PURPOSE - TRANSPOSE A FILE OF (REAL OR COMPLEX) GRIDS, ZONAL PROFILES OR
+                SPECTRAL ARRAYS TO PRODUCE A FILE OF  TIME SERIES OR TO  PRODUCE
+                A TIME SERIES AT A SINGLE POINT IN A GRID, ZONAL PROFILE OR
+                SPECTRAL ARRAY.
+ 
+      WARNING - THIS PROGRAM DOES NO TIME SEQUENCE CHECKING.
+ 
+ 
+      INPUT FILES...
+       INFIL = A TIME SERIES OF GRIDS, ZONAL PROFILES OR SPECTRAL ARRAYS
+               FOR A REPEATABLE SEQUENCE OF VARIABLES ON THE SAME NUMBER
+               OF VERTICAL LEVELS.  IT IS ASSUMED THAT INPUT RECORDS ARE
+               ARRANGED IN PROPER TIME/VARIABLE/LEVEL SEQUENCE.
+       MASK  = (OPTIONNAL) GEOGRAPHY MASK FILE CONTAINNING THE POSITIONS
+                AT WHICH THE TIME SERIES ARE TO BE CONSTRUCTED.
+ 
+      OUTPUT FILE...
+       OUTFIL =  A FILE OF TIME SERIES (ONE RECORD FOR EACH POINT)
+                 WITH THE STANDARD TIME SERIES LABEL -->
+ 
+                      IBOUT(1) = COEF IF SPECTRAL INPUT. UNCHANGED OTHERWISE
+                      IBOUT(2) = LINEAR POSITION IN THE ORIGINAL ARRAY.
+                      IBOUT(3) = NAME
+                      IBOUT(4) = LEVEL
+                      IBOUT(5) = LENGTH OF SERIES
+                      IBOUT(6) = 1
+                      IBOUT(7) = DIMENSIONS OF ARRAY KHEM (IN FORMAT CCCRRRK,
+                                 WHERE CCC IS THE NUMBER OF LONGITUDES AND RRR
+                                 IS THE NUMBER OF LATITUDES,  OR  LRLMT)
+                      IBOUT(8) = PACKING DENSITY
+ 
+ 
+       INPUT PARAMETERS...
+ 
+        (dlat1) ILAT1 <= 0                ==> TRANSPOSE THE ENTIRE GRID OR 
+                                              ZONAL PROFILE.
+        (dlat2) ILAT2 = (dlon2) ILON2 = 0 ==> SELECT THE TIME SERIES AT ROW 
+                                              NUMBER ILAT1 AND COLUMN NUMBER 
+                                              ILON1.
+        (dlat1) ILAT1 = (dlat2) ILAT2   \ 
+                AND                      >==> SELECT THE TIME SERIES AT ROW 
+        (dlon1) ILON1 = (dlon2) ILON2   /     NUMBER ILAT1 AND COLUMN NUMBER 
+                                              ILON2.
+ 
+        (kind) IMASK .NE. 0               ==> READ A MASK FILE OF 0'S OR 1'S 
+                                              TO EXTRACTTHE DESIRED TIME SERIES. 
+                                              DISREGARD THE OTHER INPUT PARAME-
+                                              TERS ON THIS AND ANY OTHER CARD.
+                                              THIS PARAMETRE IS ONLY READ ON
+                                              THE FIRST INPUT CARD.
+ 
+        ANY OTHER VALUES OF ILAT1, ILON1 AND ILAT2, ILON2 INDICATE THAT
+        TIME SERIES ARE TO BE CONSTRUCTED FOR ALL POINTS CONTAINED IN THE
+        REGION WHICH HAS POINT (ILAT1, ILON1) AT ITS SOUTH-WEST CORNER
+        AND HAS (ILAT2, ILON2) AT ITS NORTH-EAST CORNER.
+ 
+        NOTES - TO CONSTRUCT TIME SERIES IN A REGION WHICH SPANS THE
+                GREENWICH MERIDIAN, IT IS NECESSARY TO DIVIDE THE REGION
+                INTO TWO PARTS AND TO SUPPLY TWO GGATIM CARDS. A MAXIMUM
+                OF NINE CARDS CAN BE READ.
+              - 'GGATIM' CARDS ARE READ AND EXECUTED ONE AT A TIME UNTIL
+                INPUT IS EXHAUSTED THEREBY ALLOWING THE USER TO SELECT A
+                NUMBER OF TIME  SERIES AT VARIOUS  POINTS IN ONE CALL TO
+                GGATIM.
+              - THE PROGRAM USES SCRATCH FILES TO SEPERATE THE VARIABLES
+                AND/OR THE LEVELS. EACH SYSTEM IMPOSES A LIMIT TO THE
+                NUMBER OF SUCH FILES. THIS IN TURN IMPOSES A LIMIT ON
+                THE NUMBER OF VARIABLES AND/OR LEVELS.
+              - IN THE COMPLEX 'CMPL' CASE, THE OPERATION ACTUALLY
+                YIELDS THE CONJUGATE TRANSPOSE MATRIX.
+              - GGATIM IS THE FUNCTIONAL INVERSE OF TIMAGG.
+                
+ 
+       READ( 5,5010 ) ILAT1,ILON1,ILAT2,ILON2,IMASK
+ 5010  FORMAT(10X,5I5)
+ 
+ 
+      EXAMPLE OF INPUT CARD...
+ 
+  GGATIM     24   44   27   47    0
+ 
+         0123456789012345678901234567890123456789012345678901234567890
+         1         2         3         4         5         6         7
+ 
+ 
+      EXIT CONDITIONS...
+        0 NO PROBLEMS
+        1 ILLEGAL DATA TYPE
+        2 ILLEGAL BOX COORDINATES
+        3 ILLEGAL COORDINATE FOR SINGNE TIME SERIE (TS)
+        4 UNABLE TO UNPACK MASK FILE OR MASK HAS WRONG DIMENSIONS
+        5 MASK FILE IS FULL OF ZEROES
+        6 MEMORY ALLOCATION PROBLEMS
+        7 TS TOO LONG (SINGLE TS MODE)
+        8 ERROR ABORT READING INPUT
+        9 ERROR ABORT READING INFIL
+       10 ERROR ABORT READING MASK
+       11 ABORT OPENNING SCRATCH FILE
+       12 MEMORY ALLOCATION PROBLEMS
+       13 UNSOPPORTED INPUT TYPE

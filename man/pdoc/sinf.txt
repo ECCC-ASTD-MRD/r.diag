@@ -1,0 +1,49 @@
+ 
+      CALL SEQUENCE...
+       sinf  XIN XOUT INPUT OUTPUT [ -a VAL0 -kind VAL1 ]
+ 
+ 
+      AUTHOR - B.Dugas, 10 mai 1994.
+      LAST REVISION: $Header: /home/cvs/RMNLIB/utils/rdiag/lspgm/sinf.ptn,v 4.12 2014/09/25 20:20:52 dugas Exp $
+ 
+ 
+      DESCRIPTION...
+       A CCC FILE ARITHMETIC PROGRAM WHICH...
+ 
+       ... PRODUCES FILE XOUT WHICH CONTAINS EITHER OF
+           1) SIN( A*XIN ), WHERE XIN IS CONSIDERED TO BE IN RADIANS
+           2) A * ARC SIN( XIN ), WHERE XIN SHOULD BE WHITHIN [-1,+1]
+           3) A * ARC TAN( XIN ), WHERE XIN IS ANY REAL NUMBER
+ 
+       Note that ARC TAN( XIN ) can also be derived using the
+       following relationship:
+ 
+        ARC TAN( XIN ) = ARC SIN( XIN / [ SQRT( XIN^2 +1 ) ] )
+ 
+ 
+      INPUT PARAMETER...
+ 
+       A    = WAVE NUMBER. BLANK DEFAULT VALUE IS 1.0
+       KIND = 0, SINUS CALCULATION (DEFAULT)
+              1, ARC SINUS CALCULATION
+              2, ARC TANGENT CALCULATION
+ 
+       READ( 5,5010 ) A,KIND
+ 5010 FORMAT(10X,E10.0,I5)
+ 
+ 
+      EXAMPLE OF INPUT CARD...
+ 
+  SINF           2.5    0
+ 
+         0123456789012345678901234567890123456789012345678901234567890
+         1         2         3         4         5         6         7
+ 
+ 
+      EXIT CONDITIONS...
+        0 NO PROBLEMS
+        1 ARC SINUS MODE UNSUPPORTED FOR COMPLEX DATA
+        2 MORE THAN ONE SIZE IN XIN
+        3 ILLEGAL DATA RANGE IN XIN FOR ARC SINUS MODE
+        4 ERROR ABORT READING INPUT
+        5 ERROR ABORT READING XIN OR TOO MANY LEVELS

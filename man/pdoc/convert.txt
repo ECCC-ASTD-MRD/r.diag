@@ -1,0 +1,208 @@
+ 
+  Sequence d'appel...
+   convert  -rpn   fichstd    -ccrn     fichccc    [-help]    [-sqi]    \ 
+           [-delt  [valeur]]  [-date    [valeur]]  [-info     [valeur]] \ 
+           [-time] [-tri]     [-siecle   valeur]   [-stamp    [valeur]] \ 
+           [-es    [valeur]]  [-mbhr]   [-laslon]  [-typvar   [valeur]] \ 
+           [-grtyp  valeur]   [-datyp    valeur]\ 
+           [-xg1    valeur     -xg2      valeur]   [-etiket    valeur]  \ 
+           [-xg3    valeur     -xg4      valeur]   [-bisect]  [-nobox]  \ 
+           [-keep   valeur]   [-lnsppa] [-pmslmb]  [-ip3dat]  [-lev1mb] \ 
+           [-opktyp valeur]   [-newnam] [-label]   [-mvalue   [valeur]] \ 
+           [-levtyp   valeur] [-ip1con]
+          
+ 
+ 
+  Auteur: B.Dugas, RPN - septembre 1990.
+  Derniere revision: $Header: /home/cvs/RMNLIB/utils/rdiag/lspgm/convert.ptn,v 4.86 2014/12/04 00:23:37 dugas Exp $
+ 
+  
+  Objet:
+  -----
+   CONVERT effectue soit la transformation d'un fichier de format CMC/RPN
+   (RND ou SQI) en un fichier de format CCCma,  soit l'operation inverse.
+   Les tampons d'informations sont  eux-memes convertis dans la mesure du
+   possible. De meme et toujours dans la mesure du possible, les rapports
+   de compaction sont aussi conserves.
+ 
+   Au final, le type de conversion est determine par le contenu des fichiers
+   dont les noms  sont specifies sur la ligne de commande.  Un seul de ces
+   noms devraient correspondre a un fichier existant. Le second fichier sera
+   alors cree et son type sera different du fichier existant. Si par hasard
+   les deux fichiers existent, la valeur de l'argument a la cle -keep sera
+   alors utilisee pour determiner quel sera le fichier source. Le fichier
+   destination est alors ecrase. Notez que par defaut, keep=RPN.
+ 
+  Parametres d'appel:                                           Valeurs defauts
+  ------------------                                            ---------------
+ 
+     rpn = Fichier standard rpn RaNDom ou SeQuentiel/Indexe    >    Aucune    <
+           Il est important de noter que les nom de fichiers
+           rpn ne contenant que des majuscules sont changes
+           en minuscules. Les autres formes de noms ne sont
+           pas modifies
+    ccrn = Fichier ccrn SEQuenciel/FORtran/UNFormatted         >    Aucune    <
+    keep = Determine quel fichier sera la source lorsque
+           les deux fichiers existent a l'appel.               >  RPN  /  CCC <
+ 
+     sqi = Type du fichier rpn de sortie (RND/SQI)             >  RND  /  SQI <
+    info = Niveau des messages retournes (DEBUG/WARNIN/FATALE) > ERRORS/INFORM<
+   nobox = Ne pas imprimer de boites d'informations            >  NON  /  OUI <
+    help = Affiche ce texte decrivant le programme et son      >  NON  /  OUI <
+           utilisation. Aucune autre tache de conversion 
+           n'est alors effectuee par le programme
+     tri = Trier les enregistrements RPN avant lecture selon   >  NON  /  OUI <
+           les cles DATEO/NPAS/TYPVAR/ETIKET/NOMVAR/IP1. Cette
+           option ne s'applique pas aux fichiers sequentiels 
+           non-indexes pre-1989
+ 
+  bisect = Tenir compte des annees bisectiles dans les         >  NON  / OUI  <
+           calculs de date et de pas de temps
+    date = Date de depart de l'analyse >DATE TIME STAMP<       >   -1  / JOUR <
+           Si CCRN==>RPN, par defaut dateo=10179001
+           Si RPN==>CCRN et date>0, la date lue dans le
+           fichier RPN sera utilisee comme date de validitee
+           De plus, npas sera recalcule comme la difference
+           entre ces deux dates (en pas de temps, si delt>0
+           ou bien en heures, sinon)
+    delt = Valeur d'un pas de temps en secondes.               >   -1  / HEURE<
+           Notez que cette valeur a preseance sur toutes
+           celles qui seraient lues dans le fichier d'entree
+  ip3dat = Si egal a OUI, ibuf(2) contient en fait un nombre   >  NON  /  OUI <
+           d'echantillon qui doit etre transfere vers ip3
+  siecle = Si defini, en mode CCRN==>RPN, ibuf(2) contient     >   -1  /   -1 <
+           deja une date CCRN a laquelle il faut ajouter la
+           valeur du parametre siecle. Apres ceci, on aura
+           ibuf(2) =  ibuf(2) + ( siecle * 1 00 00 00 00 )
+   stamp = Si egal a OUI, le parametre date contient deja un   >  OUI  /  NON <
+           >DATE TIME STAMP< code. Sinon, cet argument est
+           de la forme YYYYMMDDHHMMSS
+    time = Avec ip3dat, date et delt, determine le traitement  >  NON  /  OUI <  
+          du descripteur contenant l'information temporelle:
+       a)  Si RPN==>CCRN ...
+           ...  et time=OUI   Alors  ibuf(2) = datev
+           ...  et time=NON   Alors  ibuf(2) = npas
+       b)  Si CCRN==>RPN ...
+           i)   Si ip3dat=OUI, ip3=ibuf(2) et ip2=npas=0
+           ii)  Si ibuf(2) contient deja une date CCC valide
+                Alors datev=ibuf(2) et on tente de sauver:
+                1) ip2 et npas, si dateo et delt sont definis
+                2) ip2 et dateo, si npas et delt le sont
+           iii) Si delt.NE.-1 et time=OUI
+                Alors date=datev et npas=ip2=0 
+           iv)  Sinon
+                Alors date=dateo et npas=ibuf(2)
+ 
+   label = Si RPN==>CCRN, la valeur du champs ETIKET est
+           sous la forme d'un enregistrement de type LABEL     >  NON  /  OUI <
+  laslon = Ajout/Retrait d'une longitude lorsqu'on reproduit   >  NON  /  OUI <
+           RPN vers/de CCRN dans le cas de grille lat-lon 
+ 
+      es = Type de variable d'humidite dans le fichier ccrn.   >   ES  /  HU  <
+           Cette valeur sera utilisee si CCRN==>RPN. Dans le
+           sens inverse, es='ALL' implique que 'HU', 'SHUM',
+           'HR' et 'RHUM' seront toutes renommees a 'ES'. La
+           variable 'ES' restera telle quelle. Par contre, si
+           ES='HR'/'RHUM', seules ces deux variables seront
+           renommees. Idem lorsque es='HU'/'SHUM'.  
+  ip1con = Convertir ou non le format des IP1                  >  OUI  /  NON <
+  lev1mb = La valeur lev=1 doit etre interpretee comme etant   >  NON  /  OUI <
+           pression=1 MB et non pas comme etant sigma=1.0 
+  levtyp = Determine le type de coordonnee verticale lors de   >   -1  /   -1 <
+           la conversion d'un fichier CCRN. Les valeurs
+           reconnues sont les suivantes:
+              =0, hauteur (m) par rapport au niveau de la mer
+              =1, sigma (0.0 -> 1.0) * 1000
+              =2, pression (mb)
+              =3, type a-dimensionnel (ordinal)
+              =4, hauteur (M) par rapport au niveau du sol
+              =5, coordonnee hybride
+              =6, coordonnee Theta
+              =7, pression (Pa)
+              =999, deja en format IP1 (CMC/RPN)
+    mbhr = Le mouvement vertical RPN (si NOMVAR='WW') est      >  NON  /  OUI <
+           en unite de mb/heure plutot que Pascal/seconde
+  lnsppa = Cle pouvant etre utilisee pour que le champs LNSP
+           soit lu et ecrit en ln(Pascal) plutot qu'en ln(MB)  >  NON  /  OUI <
+  pmslmb = Cle pouvant etre utilisee pour que le champs MSLP
+           soit lu et ecrit en Mb plutot qu'en Pascal          >  NON  /  OUI <
+ 
+  newnam = Convertir les noms et unites au besoin. Si newnam   >  OUI  /  NON <
+           contient DYN ou PHY, seulement les variables
+           dynamiques ou physiques seront converties
+  typvar = Le type de variable. Previsions, Observations ...   >   P   /   O  <
+  etiket = L'etiquette a inserer dans le fichier RPN           >'CCRN SEQ'/' '<
+  datyp  = Forcer l'ecriture avec un type particulier. Ceci    >    Aucune    <
+           n'a de sens que pour les donnees reelles/entieres
+           et n'aura aucun effet pour les donnees complexes
+  mvalue = Valeur associee aux donnees manquante dans les      >    Aucune    <
+           fichiers CCC. La valeur 'OFF' desactive ce
+           traitement lors de l'ecriture de ces fichiers.
+ 
+   grtyp = Valeur GRTYP d'une grille CCRN d'entree. Surtout    >    Aucune    <
+           utile dans le cas ou il ne serait pas possibles de
+           distinguer entre des grilles lat/long avec ou sans
+           poles, entre des grilles hemispheriques et des  
+           grilles polaire-stereographiques, etc ...
+  xg1,xg2,xg3,xg4
+         = Parametres definissant la grille (CCRN) d'origine
+           si c'est une grille polaire-stereographique N ou S  >    Aucuns    <
+  
+       Notez que si grtyp ou l'un des xgi doit etre specifie en
+       entree, tous les autre descripteurs de grilles doivent
+       aussi l'etre.
+ 
+  opktyp = Exiger le traitement de la partie (SORTIE-CCC)
+           selon un type particulier de compaction (PK84,PK92) >  PK84 / **** <
+           Cette valeur peut aussi etre specifiee par la 
+           variable d'environment DEFAULT_PACKING_TYPE
+ 
+  Notes - Certains parametres peuvent etre specifies par un enregistrement
+  *       ccc de type='LABL', nom='INFO' sur lequel on ecrit:
+  *
+  *                     typvar,etiket,grtyp,
+  *                     ig1,ig2,ig3,ig4,
+  *                     deet,npas,neq1,ip3
+  *
+  *      avec le format suivant:
+  *
+  *      format(4x,a2,2x,a12,4x,a1,2(6x,i4),3(4x,i6),2x,i8,2x,a1,8x,i4)
+  *
+  *      Les valeurs touvees sur un LABL de ce type ont d'ailleur preseance 
+  *      sur les parametres. neq1 peut etre I,J ou K (N//neq1 Not Equal 1).
+  *
+  *      De plus, les xg1,xg2,xg3 et xg4 sont relies aux ig1,ig2,ig3 et ig4
+  *      par le biais des routines cxgaig et cigaxg.
+  *
+  *      Consultez le document RPN: "An introduction to RPN standard files"
+  *      par Y. Chartier pour plus de renseignements sur les fichiers RPN.
+  *
+  ****
+ 
+ 
+      Codes de sortie...
+        0 Pas d'erreur
+        1 Pas de noms de fichiers d'E/S
+        2 Les fichiers d'E/S sont tous deux vides ou inexistants
+        3 Fichier d'E/S de type inconnu
+        4 Grille CCRN de type inconnu
+        5 Les grilles CCRN de type FOUR ne sont pas supportees
+        6 Impossible de convertir IHEM vers GRTYP
+        7 Erreur d'ecriture sur fichier standard
+        8 Erreur de lecture du dictionnaire standard
+        9 Type de donnees (datyp) ne pouvant etre converties
+       10 Erreur de lecture des donnees du fichier standard
+       11 Un des noms declares pointe a un fichier du mauvais type
+       12 Option TRI indisponible pour un fichier SQI
+       13 Option TRI sur fichier zonal ayant plus d'une section ++
+       14 Probleme de conversion de date dans TIM2DAT
+       15 TMPDIR ou BIG_TMPDIR non definis
+       16 Specifications de grille manquant
+       17 Series temporelles non supportees pour ce grtyp
+       18 Choisir un seul des arguments SIGMA ou PASCAL
+       19 Valeur non reconnue pour argument NEWNAM
+       20 Label de type INFO incompatible 
+       21 Series temporelles non supportees
+       22 Probleme de series temporelles spectrales
+       23 Options incompatibles: IP1CONV=F et OLD_STYLE_IP1=T
+ 

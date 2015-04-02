@@ -1,0 +1,83 @@
+ 
+      CALL SEQUENCE...
+       spflux  IN OUT INPUT OUTPUT [-kind  VAL1 [VAL2] -label VAL3 \ 
+                                    -t1    VAL4 -name VAL5 -lv1 VAL6]
+ 
+ 
+      DESCRIPTION...
+       spflux - COMPUTE AND PRINT SPECTRAL M OR N FLUX
+ 
+ 
+      AUTHOR  - T.Shepherd, JUL 18/79.
+      LAST REVISION: $Header: /home/cvs/RMNLIB/utils/rdiag/lspgm/spflux.ptn,v 4.10 2014/09/25 20:20:53 dugas Exp $
+ 
+ 
+      PURPOSE - COMPUTES THE LEITH FLUX FUNCTION OF A COMPLEX-VALUED SPECTRAL
+                FILE SC(N,M) AND PRODUCES A CROSS-SECTION OF THE M OR N FLUX
+                AS A FUNCTION OF HEIGHT AND WAVENUMBER. SO, IT CAN BE EITHER
+                THE M-FLUX, PRINTING OUT THE RESULT FLUX(M), OR THE N-FLUX
+                WITH THE RESULT FLUX(N).
+ 
+                FLUX(M+1)=FLUX(M)-INTR(M) WHERE INTR(M) IS THE APPROPRIATE
+                INTERACTION TERM AND FLUX(0)=0 (IN MATH NOTATION). THIS IS A
+                CHANGE FROM THE PREVIOUS VERSION WHERE FLUX(0)=-INTR(0) AND
+                FLUX(M=+1)=FLUX(M)-INTR(M+1) WHICH CLEARLY DOESNT WORK FOR
+                THE M CASE (IE FLUX(0) NOT =0).
+ 
+                FLUX(N+1)=FLUX(N)-INTR(N+1) IS USED FOR THE N CASE SINCE 
+                THERE ISN'T A PROBLEM IN THIS CASE AND FOR CONSISTENCY WITH 
+                PAST USAGE.
+ 
+ 
+      INPUT FILE...
+       IN   = GLOBAL SPECTRAL FILE.
+ 
+      OUTPUT FILE...
+       OUT  = CONTAINS THE REQUESTED FLUX CROSS-SECTIONS
+ 
+ 
+      INPUT PARAMETERS...
+ 
+       FLUXTYP (kind-1) = M FOR M-FLUX, OR N FOR N-FLUX.
+       VKIND   (kind-2) = VERTICAL LEVEL TYPE. ONLY USE THIS WITH IN RPN STD FILES
+                          AND WHEN LEVX CONTAINS DECODED VALUES. FURTHERMORE, THIS
+                          PARAMETRE CAN ONLY BE SPECIFIED IN COMMAND-LINE MODE.
+                          THE CURRENTLY SUPPORTED VALUES ARE:
+                          'HAUTEUR'   , heights (m) with respect to sea level
+                          'SIGMA'     , classical terrain following (0.0 -> 1.0)
+                          'ETA'       , first version of the GEM ETA coordinate
+                          'PRESSION'  , pressure (mb)
+                          'ARBITRAIRE', arbitrary level (no units apply)
+                          'HAUTEURS'  , heights (M) with respect to the surface
+                          'HYBRIDE'   , hybrid GEM coordinate
+                          'THETA'     , potential temperature coordinate
+                          'GALCHEN'   , GalChen generalized coordinate
+       LABEL   (label)  = 256 CHARACTER LABEL.
+       NSTEP,NAME,LEVEL = RECORD LABEL ID FOR FIELD TO BE PROCESSED.
+        ( t1,name,lv1 )   NAME = Blank or 'ALL' PROCESSES THE COMPLETE FILE.
+ 
+       READ( 5,5005 ) FLUXTYP  *ONLY ONCE*
+       READ( 5,5015 ) LABEL    *ONLY ONCE*
+       READ( 5,5010 ) NSTEP,NAME,LEVEL
+ 5005  FORMAT(10X,4X,A1)
+ 5010  FORMAT(10X,I10,1X,A4,I5)
+ 5015  FORMAT(64A4)
+ 
+ 
+      EXAMPLE OF INPUT CARDS...
+ 
+    SPFLUX    M
+   LABEL CARD GOES HERE
+                  36 VORT  500
+ 
+         0123456789012345678901234567890123456789012345678901234567890
+         1         2         3         4         5         6         7
+ 
+ 
+      EXIT CONDITIONS...
+        0 NO PROBLEMS
+        1 ERROR READING IN
+        2 ERROR READING FLUXTYP
+        3 ERROR READING LABEL
+        4 ERROR DECODING NSTEP PARAMETERS
+        5 NO MORE RECORDS TO SKIP (NAM WAS 'SKIP')

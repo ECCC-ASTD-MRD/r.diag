@@ -1,0 +1,24 @@
+ 
+      CALL SEQUENCE...
+       rmax  XIN XOUT OUTPUT
+       rmin  XIN XOUT OUTPUT
+ 
+ 
+      AUTHOR - B.Dugas, 11 septembre 1998.
+      LAST REVISION: $Header: /home/cvs/RMNLIB/utils/rdiag/lspgm/rmax.ptn,v 4.6 2014/09/25 20:20:52 dugas Exp $
+ 
+ 
+      DESCRIPTION...
+       A SET OF CCC FILE ARITHMETIC PROGRAMS WHICH...
+ 
+       ... PRODUCE FILE XOUT WHICH CONTAINS EITHER OF
+           THE MAXIMUM OR MINIMUM VALUE OF EACH RECORD IN XIN
+ 
+      NOTES: - XOUT HAS THE SAME STRUCTURE AS FILE XIN
+             - FOR COMPLEX VALUES, THE MAX/MIN MODULUS IS USED
+ 
+ 
+      EXIT CONDITIONS...
+        0 NO PROBLEMS
+        1 MORE THAN ONE SIZE IN XIN
+        2 ERROR ABORT READING INPUT

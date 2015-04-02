@@ -1,0 +1,21 @@
+ 
+      CALL SEQUENCE...
+       rmlabl  IN OUT OUTPUT
+ 
+ 
+      AUTHOR - B.Dugas, 23 OCTOBRE 1990.
+      LAST REVISION: $Header: /home/cvs/RMNLIB/utils/rdiag/lspgm/rmlabl.ptn,v 4.8 2014/09/25 20:20:52 dugas Exp $
+ 
+ 
+      DESCRIPTION...
+       A CCC FILE MANIPULATION PROGRAM WHICH...
+ 
+       ... COPIES ALL NON LABL-TYPE RECORDS FROM IN TO OUT
+ 
+ 
+      EXIT CONDITIONS...
+        0 NO PROBLEMS
+        1 NO RECORDS READ FROM IN
+        2 NO RECORDS SAVED TO OUT
+        3 PREMATURE EOF ON FILE IN
+        4 CANNOT CHANGE PACKING TYPE

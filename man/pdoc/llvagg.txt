@@ -1,0 +1,152 @@
+ 
+      CALL SEQUENCE...                    / [ -lon  VAL1 -lat VAL2
+       llagg  LL GG INPUT OUTPUT       _ /    -nhem VAL3 -npg VAL6
+       llvagg LU LV GU GV INPUT OUTPUT   \    -kind VAL4 [VAL5]
+       psagg  LL GG INPUT OUTPUT          \   -a VAL7  -b VAL8 -c VAL9
+       psvagg LU LV GU GV INPUT OUTPUT     \  -i VAL10 -j VAL11 ]
+ 
+ 
+      DESCRIPTION...
+       llagg   - CONVERT LAT-LONG (MASKED/SHIFTED/ROTATED) GRIDS
+       llvagg  - SAME CONVERSION AS LLAGG BUT FOR WINDS
+       psagg   - CONVERT POLAR-STEREOGRAPHIC GRIDS
+       psvagg  - SAME CONVERSION AS PSAGG BUT FOR WINDS
+ 
+ 
+      AUTHOR  - J.D.HENDERSON
+      LAST REVISION: $Header: /data/armnraid1/cvs/RMNLIB/utils/rdiag/lspgm/llagg.ptn,v 4.43 2012/07/26 16:18:33 dugas Exp $
+ 
+ 
+      PURPOSE - CONVERTS A FILE OF LAT-LONG (POSSIBLY MASKED/SHIFTED
+                AND POSSIBLY WITH ROTATED POLES) OR POLAR-STEREOGRAPHIC
+                GRIDS TO A ANOTHER FILE OF GLOBAL GRIDS BY INTERPOLATION.
+ 
+      NOTES   - 1) IF KIND.LT.0, THEN INTERPOLATION IS LINEAR WITH VALUES EQUAL
+                   TO "SPVAL" ARE CONSIDERED TO BE BAD/MISSING DATA AND THEY
+                   ARE SKIPPED IN THE COMPUTATION.
+                3) WILL WORK WITH GEM GRIDS. THE PROGRAM THEN USES
+                   THE RMNLIB ROUTINE EZ_IGSCINT TO INTERPOLATE.
+                4) ZONAL ARRAYS CAN ALSO BE INTERPOLATED VIA A CALL
+                   TO LLAGG. THEN, NLG AND ILG BOTH HAVE TO BE ONE.
+                5) psagg AND psvagg ARE TWO ALIASES FOR llagg AND
+                   llvagg, RESPECTIVELY, REQUIRING THE PRESENCE
+                   OF POLAR-STEREOGRAPHIC (PS) INPUT FIELDS.
+ 
+ 
+      INPUT FILE (llagg/psagg)...
+       LL = LAT-LONG GRIDS (POSSIBLY MASKED/SHIFTED/ROTATED) WITH ILG
+            EQUALLY SPACED LONGITUDES AND ILAT EQUALLY SPACED LATITUDES
+            OR POLAR-STEREOGRAPHIC ARRAYS.
+                             
+      INPUT FILE (llvagg/psvagg)...
+       LU = LAT-LONG (POSSIBLY MASKED/SHIFTED/ROTATED)
+       LV   OR POLAR-STEREOGRAPHIC GRID WINDS.
+ 
+                             
+      NOTES: 1) IF KIND#1 < 0 "SPVAL" VALUES ARE TREATED AS BAD/MISSING DATA
+                               WITH LAT-LONG DATA POSSIBLY OFF THE POLES,
+                OTHERWISE,     LAT-LONG DATA ARE CONSIDERED SPANNING THE POLES
+                               IN THE TOP AND BOTTOM ROWS.
+             2) THE DEFAULT INPUT GRIDS CAN ALSO BE DESCRIBED AS RPN STANDARD
+                GRID TYPE B. FURTHERMORE, A (SHIFTED LAT-LONG), G (GAUSSIAN),
+                L (GENERALIZED LAT-LONG) OR Z (ROTATED, NON-REGULAR LAT-LONG)
+                GRIDS, AS WELL AS N AND S POLAR-STEREOGRAPHIC RPN GRIDS ARE
+                SUPPORTED AND ARE INTERPOLATED USING THE EZSCINT PACKAGE.
+             3) OUTPUT GRID TYPES OTHER THAN GAUSSIAN (I.E. G) CAN ONLY BE
+                SPECIFIED IN COMMAND-LINE PARAMETRE MODE (WITH KIND#2).
+             4) DIGITAL FILTERING WILL BE APPLIED BEFORE INTERPOLATION IF THE
+                DESTINATION GRID IS AT MUCH LOWER RESOLUTION THAN THE INPUT.
+                AS APPROPRIATE MESSAGE WILL BE PRINTED WHEN THIS IS DONE.
+             5) IF "-def 1" IS SPECIFIED AND THE INPUT GRID TYPE IS Z (GEM),
+                THE GRID ORIENTATION IS CONSERVED ON OUTPUT, AND THE RESULTING
+                Z-GRID HAS UNIFORM RESOLUTION FOLLOWING THE ILG,ILAT VALUES.
+             6) Missing value treatment is activated by providing a real
+                number to be used as a missing value flag with the "-mvalue"
+                global command-line argument. Data that is "close" to this
+                value will be disregarded by the program.
+                
+ 
+ 
+      OUTPUT FILES...
+       GG    = GRIDS HAVING ILG EQUALLY SPACED LONGITUDES. Please see
+               the KIND#2 documentation for the supported grid types.
+       GU,GV = WINDS ON OUTPUT GRIDS.
+ 
+ 
+      INPUT PARAMETERS...
+ 
+       ILG    (lon) = NUMBER OF OUTPUT LONGITUDES (DEF: SAME AS IN GG)
+       ILAT   (lat) = NUMBER OF OUTPUT LATITUDES  (DEF: SAME AS IN GG)
+       NHEM         = DESTINATION HEMISPHERIC INFO 
+                      0=GLOBAL ; 1=NH ; 2=SH
+       KIND#1      >= 0; INTERPOLATION TYPE
+                         1 FOR LINEAR,
+                         2 FOR NEAREST NEIGHBOR (only RPN/CMC Standard files)
+                         OTHERWISE CUBIC
+                   <  0; INTERPOLATION IS LINEAR AND THE INPUT LAT-LONG GRID
+                         IS TREATED AS MASKED AND POSSIBLY SHIFTED (AND VALUES
+                         READ IN FOR "SPVAL", "SHFTLT" AND "SHFTLG" ARE USED)
+       KIND#2       = OUTPUT GRID TYPE. POSSIBLE VALUES ARE G (GAUSSIAN),
+                      A (LAT-LONG), B (LAT-LONG WITH POLES AND EQUATOR)
+                      OR L (GENERALIZED LAT-LONG).
+                      THE DEFAULT VALUE IS G.
+       NPKGG  (npg) = OUTPUT GRID PACKING DENSITY (0 DEFAULTS TO -16)
+       SPVAL  (a)   = ACTUAL VALUES FOR BAD/MISSING DATA. WHEN
+                      SPECIFIED, IT IS THE VALUE TO BE USED WHEN
+                      EXTRAPOLATING IS TO BE DONE.
+ 
+      WHEN KIND#1 .LT. 0 (*** But only for CCCma files ***)
+ 
+       SHFTLT (b)   = THE VALUE IN DEGREES BY WHICH THE LAT-LONG
+                      GRID IS SHIFTED FROM THE POLES.
+       SHFTLG (c)   = THE VALUE IN DEGREES BY WHICH THE LAT-LONG
+                      GRID IS SHIFTED EAST FROM GREENWICH.
+ 
+      OTHERWISE, (I.E. WHEN KIND#1 .GE. 0) IN COMMAND-LINE MODE ONLY...
+ 
+      IF THE DESTINATION FIELDS ARE GENERALIZED LAT-LONG (L) GRIDS,
+      THE GRID DESCRIPTORS ARE DEFINED AS FOLLOWS:
+ 
+       XLAT0  (b)   = Latitude of the southwest corner of the grid.
+       XLON0  (c)   = Longitude of the southwest corner of the grid.
+ 
+       DLAT   (i)   = Latitudinal grid length in degrees.  (REQUIRED)
+       DLON   (j)   = Longitudinal grid length in degrees. (REQUIRED)
+       
+ 
+       READ(5,5010) ILG,ILAT,KIND,NPKGG,SPVAL,SHFTLT,SHFTLG
+ 5010  FORMAT(10X,2I5,I2,I3,I5,3E10.0)
+ 
+ 
+      EXAMPLE OF INPUT CARD...
+ 
+   FOR LAT-LONG GRID SPANNING THE POLES WITH VALUES AT GREENWICH,
+ 
+ *  LLAGG    64   32    1    2
+ 
+   SAME A ABOVE BUT FOR NH ONLY
+ 
+ *  LLAGG    64   16 1  1    2
+ 
+   FOR MASKED/SHIFTED LAT-LONG GRID FROM THE POLES AND GREENWICH,
+ 
+ *  LLAGG    96   48   -1    0     1.E38      1.25      1.25
+ 
+         0123456789012345678901234567890123456789012345678901234567890
+         1         2         3         4         5         6         7
+ 
+ 
+      EXIT CONDITIONS...
+        0 NO PROBLEMS
+        1 UNABLE TO READ FILE LL
+        2 ILLEGAL GRID TYPE DETECTED
+        3 MORE THAN ONE SIZE IN FILE LL
+        4 PROBLEMS WHILE READING DIRECTIVES
+        5 WIND COMPONENTS ARE NOT THE SAME SIZE
+        6 LLVAGG DOES NOT SUPPORT ZONAL CROSS-SECTIONS
+        7 ZONAL CROSS-SECTIONS REQUIRE ILG TO BE ONE
+        8 CONFLICT BETWEEN REQUESTED AND LL HEMISPHERE
+        9 ONLY GAUSSIAN OUTPUT FOR CCC INPUT FILES
+       10 PS INPUT NOT SUPPORTED FOR CCC FILES
+       11 MISSING GRID DESCRIPTOR PARAMETRE
+ 

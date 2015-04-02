@@ -1,0 +1,38 @@
+ 
+      CALL SEQUENCE...
+       complex  X Y Z OUTPUT [-name VAL1 [VAL2]]
+ 
+ 
+      DESCRIPTION...
+       complex - JOINS/SEPARATES REAL AND IMAGINARY PARTS OF A COMPLEX ARRAY
+ 
+ 
+      AUTHOR   - B.Dugasr, Oct/94.
+      LAST REVISION: $Header: /home/cvs/RMNLIB/utils/rdiag/lspgm/complex.ptn,v 4.10 2014/09/25 20:20:46 dugas Exp $
+ 
+ 
+      PURPOSE - MODE 1: FILE Y = REAL (X) AND Z = IMAG (X)
+                MODE 2: FILE Z = CMPLX( X , Y )
+ 
+      NOTES   - 1) THE MODE IS DETERMINED BY THE TYPE OF FILE X.
+                   IF X IS OF TYPE COMPLEX ('SPEC', 'FOUR' OR 'CMPL'),
+                   MODE 1 HOLDS. IF X IS OF TYPE REAL ('GRID' OR 'ZONL'),
+                   MODE 2 HOLDS
+                2) ALL OF THE OUTPUT GRID PARAMETERS ARE AS THE INPUT,
+                   EXCEPT FOR THE TYPE WHICH MAY CHANGE TO/FROM
+                   'GRID'/'SUBA'/'ZONL' AND 'CMPL'/'SPEC'/'FOUR'
+ 
+ 
+      (COMMAND LINE) PARAMETRE...
+ 
+       name = DEFINES THE VARIABLE NAMES USED IN OUTPUT FILE(S) IF
+              THEY ARE TO BE DIFFERENT FROM THOSE IN INPUT FILE(S).
+ 
+ 
+      EXIT CONDITIONS...
+        0 NO PROBLEMS
+        1 ERROR READING X
+        2 ERROR READING Y (MODE 2)
+        3 X AND Y NOT THE SAME SIZE (MODE 2)
+        4 UNSUPPORTED DATA TYPE IN X
+        6 MORE RECORDS IN X THAN IN Y (MODE 2)

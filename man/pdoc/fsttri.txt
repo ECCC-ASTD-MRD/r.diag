@@ -1,0 +1,66 @@
+ 
+  Sequence d'appel...
+   fsttri  -s source       [-dateo  [*]] [-typvar [*]]  \ 
+           -d destination  [-etiket [*]] [-nomvar [*]]  \ 
+          [-info [valeur]] [-npas   [*]] [-ip1    [*]]  \ 
+          [-rnd] [-help]   [-nobox]      [-ip3    [*]]  \ 
+          [-sqi] [-desc]   [-e] [-f]     [-split]
+ 
+ 
+  Auteur: B.Dugas, RPN - avril 1991.
+  Derniere revision: $Header: /home/cvs/RMNLIB/utils/rdiag/lspgm/fsttri.ptn,v 4.41 2014/09/25 20:20:47 dugas Exp $
+ 
+ 
+  Objet:
+  -----
+   FSTTRI   Trie un fichier standart RPN/RND. Le resultat de
+            l'operation est par defaut un fichier de type SQI, 
+            puisque ce sont les seuls garantissant les positions 
+            des enregistrement. L'ordre du tri se fait selon  
+            IP3/DATEO/NPAS/TYPVAR/ETIKET/NOMVAR/IP1. Cet ordre ne
+            peut encore etre modifie mais certaines cles peu-
+            vent etre desactivees en placant "*" dans la
+            liste a la position correspondante.
+ 
+ 
+  Parametres d'appel:
+  ------------------
+   s         Fichier source (doit etre de type RND)
+   d         Fichier destination. Celui-ci ne doit pas exister
+             a l'entree, sauf si la cle f est egalement specifiee.
+ 
+   split     Separer le resultat du tri, une date par fichier.            
+ 
+   dateo \ 
+   typvar \  Cles selon laquelle le tri est effectue. Specifier
+   etiket  > la cle sans valeur (ou avec la valeur "*") desactive
+   nomvar /  le parametre correspondant de la liste.
+   npas  / 
+   ip1  /
+   ip3 / 
+   info      Niveau des messages retournes (ERRORS/INFORM/DEBUG).
+   rnd       Le type du fichier de sortie est RND (def STD2000).
+   sqi       Le type du fichier de sortie est SQI (def STD1989).
+   nobox     Ne pas imprimer de boites d'informations.
+   help      Afficher ce texte sur stdout et quitter.
+   desc      Ne pas faire le tri sur les enregistrements de renvois.
+   e         Enlever les enregistrements redondants (identiques).
+   f         Forcer la re-ecriture du fichier de sortie. 
+ 
+ 
+  Codes de sortie:
+  ----------------
+        0 Pas d'erreur
+        1 Deux noms de fichiers sont requis a l'entree
+        2 Impossible d'associer un nom a une unite d'E/S
+        3 Le fichier source doit exister au depart
+        4 Le fichier destination existe deja
+        5 Erreur durant ecriture (fstecr)
+        6 Le fichier source n'est pas de type RND
+        7 Erreur durant la lecture (fstluk)
+        8 Erreur durant la lecture (fstprm)
+        9 Tri de 2 sections '++' de tailles differentes
+       10 Erreur d'allocation memoire (allocate)
+       11 Erreur de decodage de date (newdate)
+       12 Incapable de forcer la re-ecriture
+ 

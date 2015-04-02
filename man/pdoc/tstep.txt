@@ -1,0 +1,69 @@
+ 
+      CALL SEQUENCE...
+         tstep  IN OUT INPUT OUTPUT [-a VAL1 -b VAL2 -kind VAL3]
+ 
+ 
+      DESCRIPTION...
+       tstep  - RELABELS MODEL TIMESTEP NUMBER TO DATE-TIME GROUP.
+ 
+ 
+      AUTHORS - S.Lambert, E.Chan, MARCH 01/1993.
+      LAST REVISION: $Header: /home/cvs/RMNLIB/utils/rdiag/lspgm/tstep.ptn,v 4.12 2014/09/25 20:20:55 dugas Exp $
+ 
+ 
+      PURPOSE - CHANGES THE MODEL TIMESTEP NUMBER IN IBUF(2) TO ONE OF THE
+                SUPPORTED DATE-TIME FORMATS, A DATE AND TIME CORRESPONDING
+                TO THE BEGINNING OF THE MODEL RUN MAY BE SPECIFIED ON THE
+                INPUT CARD, OTHERWISE JAN 1 00Z OF YEAR 1901 IS ASSUMED.
+ 
+ 
+      INPUT FILE...
+       IN     = INPUT FILE WITH MODEL TIMESTEP NUMBERS IN IBUF(2).
+                PLEASE NOTE THAT TIMESTEP SHOULD ALL HAVE THE SAME
+                NUMBER OF LEVELS AND VARIABLES
+ 
+      OUTPUT FILE...
+       OUT    = COPY OF IN WITH 2ND WORD OF THE 8-WORD LABEL CHANGED
+                                                                            
+ 
+      INPUT PARAMETERS... 
+       MSTEP  (a) = NUMBER OF MINUTES PER MODEL TIMESTEP
+       MSTART (b) = STARTING DATE AND TIME OF THE MODEL RUN IN THE
+                    FORMAT SPECIFIED BY THE DTM PARAMETER. OTHERWISE,
+                    JAN 1 00Z OF YEAR 1901 IS ASSUMED.
+       DTM (kind) = FLAG TO INDICATE METHOD OF TIME MEASUREMENT.
+                  = 0,1 ==> IBUF(2) WILL BE IN THE FORMAT YYYYMMDDHH
+                  = 2   ==> IBUF(2) WILL BE IN THE FORMAT YYYYMMDDHHMM
+                  = 3   ==> IBUF(2) WILL BE IN THE FORMAT YYYYMMDDHH. BUT
+                            NOW, LEAP YEARS ARE TAKEN INTO ACCOUNT.
+                  = 4   ==> IBUF(2) IS SIMPLY THE ORDINAL OF THE
+                            TIMESTEP IN THE FILE
+ 
+ 
+      Note:   - An IBUF(2) value will be recognized as a timestep if it
+                a positive number smaller than 30 01 01 00. Larger values
+                are assumed to already be in a particular time format.
+                This number of steps corresponds to about 570 years,
+                assuming 10 minute timesteps.
+ 
+ 
+       READ(5,5010) MSTEP,MSTART,DTM
+ 5010  FORMAT(10X,I5,I15,I5)
+ 
+ 
+      EXAMPLE OF INPUT CARD...
+ 
+  TSTEP      20       79070112    0
+ 
+         0123456789012345678901234567890123456789012345678901234567890
+         1         2         3         4         5         6         7
+ 
+ 
+      EXIT CONDITIONS...
+        0 NO PROBLEMS
+        1 PROBLEM DECODING MSTART
+        2 UNABLE TO READ FIRST TIMESTEP
+        3 PROBLEM WHILE READING DIRECTIVES
+        4 UNABLE TO ALLOCATE ENOUGH WORKING MEMORY
+        5 IBUF(2) IS NOT RECOGNIZED AS A TIMESTEP
+ 

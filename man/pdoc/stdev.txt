@@ -1,0 +1,89 @@
+ 
+      CALL SEQUENCE...
+       timcov  SERA SERB COV   [MISSOUT] OUTPUT [ -def ] [-mvalue VAL1 -npg VAL2 -name VAL3]
+       stdev   FILEDEV STDDEVI [MISSOUT] OUTPUT [ -def ] [-mvalue VAL1 -npg VAL2 -kind VAL3]
+ 
+ 
+      DESCRIPTIONS...
+       timcov - COMPUTES MULTI-LEVEL TIME COVARIANCES
+       stdev  - COMPUTES STANDARD DEVIATION OF ONE GRID DEVIATION FILE
+ 
+ 
+      AUTHORS - J.D.Henderson, May 07/80 AND B.Dugas, April 01/92.;
+                M. Giguere, March 28/95 (STDEV entry Module).
+      LAST REVISION: $Header: /home/cvs/RMNLIB/utils/rdiag/lspgm/timcov.ptn,v 4.30 2014/09/25 20:20:54 dugas Exp $
+ 
+ 
+      PURPOSE...
+       TIMCOV - COMPUTES THE 2-D TIME COVARIANCES FOR EACH VARIABLE AND
+                LEVEL OF A SERIES OF SETS OF DATA.
+       STDEV  - CALCULATES AT EACH LEVEL, THE 2-D STANDARD DEVIATION OF
+                ONE MULTI-LEVEL TIME SERIE DATA SETS OF DEVIATIONS FROM
+                THE TIME MEAN
+ 
+ 
+      INPUT FILES...
+      (FOR TIMCOV)
+       SERA    = FIRST TIME SERIES OF MULT-VARIABLE MULTI-LEVEL SETS.
+       SERB    = SECOND TIME SERIES OF MULT-VARIABLE MULTI-LEVEL SETS.
+      (FOR STDEV)
+       FILEDEV = TIME SERIES OF MULT-VARIABLE MULTI-LEVEL DEVIATIONS SETS
+ 
+       THESE FILES ARE ALL SUPPOSED TO BE SORTED ACCORDING TO A
+       TIMESTEP/NAME/LEVEL RULE, FROM MOST TO LEAST SIGNIFICANT
+              
+      OUTPUT FILE...
+      (FOR TIMCOV)
+       COV     = THE TIME COVARIANCE OF THE TWO OTHER (INPUT) FILES.
+      (FOR STDEV)
+       STDDEVI = GRID SET OF THE STANDARD DEVIATION.
+ 
+ 
+      Command-line arguments...
+       def    = [STDEV ONLY] Remove mean from FILEDEV (see note 1)
+       kind   = [STDEV ONLY] 'STD' ==> Output standard deviations (Default)
+                [STDEV ONLY] 'VAR' ==> Output variances rather than std devs
+       mvalue = Real number used to identify missing values (DEF = none)
+       name   = [TIMCOV only] Alternate output name when SERA and SERB differ
+       npg    = Output packing density (DEF = -32)
+ 
+      Missing value mode...
+       Missing value treatment is activated by providing a real number to be
+       used as a missing value flag with the "-mvalue" command-line argument.
+       Data that has this value will be disregarded by the program.
+ 
+ 
+      Notes: 1) The input file(s) may or may not already contain deviations
+                from the time mean(s). The time means will removed from the
+                file(s) when the "-def" command-line key is specified (i.e.
+                TIMDEV need not be called previous to TIMCOV or STDEV)
+             2) Only the first full homogeneous sets are treated.
+             3) By default, when SERA and SERB contain different
+                variables, the output variable name is set to "COV".
+                This behavior can be overwritten by using the "-name"
+                command-line parametre to specify an altername name.
+             4) The data may be REAL or COMPLEX. For COMPLEX fields,
+                the programs will perform either of the following operation
+                >> TIMAVG( SERA * COMPLEX CONJUGATE( SERB ) ) <<  *** OR ***
+                >> SQRT( TIMAVG( FILEDEV * COMPLEX CONJUGATE( FILEDEV ) ) ) <<
+             5) Specifying the "-npg" command-line parametre with a valid
+                value forces TIMCOV/STDEV to use this packing density.
+             6) When dealing with RPN Standard files, TIMCOV and STDEV
+                modify the file's time descriptors such that the earliest
+                sample time sample time is saved in DATEO, while the latest
+                can be reconstructed from new values of DATEO, NPAS and DEET.
+                In addition, IP3 will then contain the number of time samples
+                used to construct the average. Other R.DIAG modules such as
+                TIMGEN and the statistical testing modules (FTEST, ...)
+                can then use this information directly.
+ 
+ 
+      EXIT CONDITIONS...
+        0 NO PROBLEMS
+        1 TOO MANY OR NOT ENOUGH VERTICAL LEVELS
+        2 PREMATURE EOF ON FILE SERA/FILEDEV
+        3 LABEL RECORD MISMATCH BETWEEN SERA AND SERB
+        4 PREMATURE EOF ON FILE SERB
+        5 MISSING RECORD IN FILE SERB
+        6 UNABLE TO ALLOCATE ENOUGH WORKING MEMORY
+        7 BAD ARGUMENT VALUE WITH THE "-NPG" COMMAND-LINE PARAMETRE

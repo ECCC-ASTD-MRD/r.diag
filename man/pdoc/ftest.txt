@@ -1,0 +1,136 @@
+ 
+      CALL SEQUENCE...
+       ftest  SDX SDY FRATIO KVALU DVALU MASK INPUT OUTPUT \
+                 [ -a VAL1 -lx VAL2 -ly VAL3 -kind VAL4 ]
+ 
+ 
+      DESCRIPTION...
+       ftest   - CONDUCT AN EQUALITY OF VARIANCE TEST (F-TEST).
+ 
+ 
+      AUTHORS - F. ZWIERS, F. MAJAESS, November 28/1984.
+      LAST REVISION: $Header: /home/cvs/RMNLIB/utils/rdiag/lspgm/ftest.ptn,v 4.16 2014/09/25 20:20:48 dugas Exp $
+ 
+ 
+      PURPOSE - CONDUCT AN EQUALITY OF VARIANCES TEST ( AN F-TEST ) AND
+                REPORT THE 'F-VALUE' IN FRATIO, AS WELL AS RETURNING THE
+                K-VALUE AND D-VALUE WHICH ARE RESPECTIVELY THE TRANSFORMED
+                SIGNIFICANCE LEVELS AND THE ACCEPTANCE/REJECTION FLAG.
+ 
+      NOTE: 1 - TESTS ARE NOT PERFORMED WHEN EITHER OF THE VARIANCES IS
+                APPROXIMATELY EQUAL TO THE NOISE INDUCED BY THE PACKING
+                ALGORITHM.
+            2 - INTERPRETATION OF SDX AND SDY FILES IS CONTROLLED BY INPUT
+                PARAMETER ISTD (SEE INPUT CARD PARAMETERS DESCRIPTION BELOW).
+            3 - ALSO, MASK FILE NEED NOT BE SPECIFIED IN THE PROGRAM CALLING
+                SEQUENCE.
+ 
+ 
+      INPUT FILES...
+      (IF (ISTD.EQ.0) THEN
+      (SDX    = FIELDS OF THE STANDARD DEVIATION OF THE X-VARIABLE.
+      (         SQRT(SUM(X(I)-XBAR)**2/(NX-1)), I=1,...,NX.
+      (OTHERWISE,
+      (SDX    = FIELDS OF THE VARIANCE OF THE X-VARIABLE.
+      (         SUM(X(I)-XBAR)**2/NX, I=1,...,NX.
+       SDY    = AS SDX EXCEPT FOR THE Y-VARIABLE.
+ 
+      OUTPUT FILES...
+       FRATIO = FIELDS OF F-VALUES COMPUTED AS :
+ 
+                           F=SX**2/SY**2
+ 
+                WHERE, SX AND SY ARE THE STANDARD DEVIATIONS OF X
+                AND Y RESPECTIVELY.
+       KVALU  = FIELDS OF K-VALUES OF TRANSFORMED SIGNIFICANCE LEVELS
+                COMPUTED AS K IN:
+ 
+                           P=ALPHA/(5**(K-1))
+ 
+                OR         K=LOG (ALPHA/P)+1
+                                5
+ 
+                WHICH INDICATES THAT THE OBSERVED STATISTIC IS
+                SIGNIFICANT AT THE
+ 
+                           ALPHA/(5**(K-1))
+ 
+                SIGNIFICANCE LEVEL.
+                THUS K=1 INDICATES THAT THE OBSERVED STATISTIC IS JUST
+                SIGNIFICANT AT THE ALPHA SIGNIFICANCE LEVEL.
+                IF PLOTTED WITH UNIT CONTOUR INTERVALS, SUCCESSIVE
+                CONTOURS WILL ENCLOSE REGIONS WHERE LOCALLY IT IS
+                FIVE TIMES AS UNLIKELY THAT VALUES OF THE OBSERVED
+                STATISTICS ARE CONSISTENT WITH THE NULL HYPOTHESIS
+                THAN IN REGIONS OUTSIDE THE NEXT LOWER CONTOUR.
+       DVALU  = FIELDS OF D-VALUES COMPUTED AS:
+                            __
+                            ! 0  IF THE NULL HYPOTHESIS IS ACCEPTED
+                        D = !
+                            ! 1  IF THE NULL HYPOTHESIS IS REJECTED
+                            --
+ 
+       MASK   = FIELDS OF MASK-VALUES COMPUTED AS:
+                            __
+                            ! 1  IF THE TEST WAS     CONDUCTED
+                     MASK = !
+                            ! 0  IF THE TEST WAS NOT CONDUCTED
+                            --
+ 
+                THE MASK FILE IS NOT RETURNED IF THE PROGRAM IS
+                NOT CALLED WITH OUTPUT FILE MASK.
+ 
+  
+      INPUT PARAMETERS...
+ 
+       ALPHA (a)    = THE SIGNIFICANCE LEVEL OF THE TEST.
+       ANX   (lx)   = THE NUMBER OF OBSERVATIONS IN THE X-VARIABLE DATA SET,
+       ANY   (ly)   = THE NUMBER OF OBSERVATIONS IN THE Y-VARIABLE DATA SET.
+                      THE ACTUAL VALUE USED ARE RATHER NX AND NY DEFINED AS
+                      NX = INT( ANX ) AND  NY = INT( ANY ).
+                      IF NX > 1 AND NY > 1 THEN
+                         NX AND NY READ FROM THE INPUT CARD ARE USED IN THE
+                         COMPUTATION OF THE NUMBER OF DEGREES OF FREEDOM.
+                      OTHERWISE,
+                        THE NX AND NY VALUES NEEDED IN THE COMPUTATION ARE
+                        OBTAINED FROM THE RECORD LABELS OR FROM THE IP3
+                        DESCRIPTORS, DEPENDING ON THE FILE TYPE OF THE
+                        FILES SDX AND SDY.
+       ISTD  (kind) = A FLAG USED TO DETERMINE THE CONTENTS OF
+                      THE SDX AND SDY FILES. THAT IS :
+                      IF (ISTD.EQ.0) THEN
+                        SDX AND SDY FILES CONTAIN THE UNBIASED ESTIMATES
+                        OF THE STANDARD DEVIATIONS OF X AND Y RESPECTIVELY.
+                      OTHERWISE,
+                        SDX AND SDY FILES CONTAIN THE VARIANCES
+                        OF X AND Y, RESPECTIVELY.
+ 
+       READ(LIGNE,5010) ALPHA,ANX,ANY,ISTD
+ 5010  FORMAT(10X,E10.0,2F5.0,I5)
+ 
+ 
+      EXAMPLE OF INPUT CARD...
+ 
+ *FTEST.       5.E-2  10.   5.    1
+ 
+         0123456789012345678901234567890123456789012345678901234567890
+         1         2         3         4         5         6         7
+ 
+ 
+      EXIT CONDITIONS...
+        0 NO PROBLEMS
+ 
+      FATAL CONDITIONS...
+        1 PREMATURE EOF ON UNIT 5
+        2 PREMATURE EOF ON UNIT 1 AND/OR 2
+        3 INITIAL ILLEGAL DATA TYPE OR SDX/SDY NOT COMPATIBLE
+        4 CANNOT READ FIRST RECORD IN SDX
+        5 PARAMETER NX TOO SMALL
+        6 CANNOT READ FIRST RECORD IN SDY
+        7 PARAMETER NY TOO SMALL
+        8 MORE THAN ONE SIZE IN SDX AND/OR SDY
+ 
+      NON-FATAL CONDITIONS...
+      101 VERY SMALL VALUES FOUND IN SDX OR SDY
+      102 NAMEL MISMATCH BETWENN SDX AND SDY
+ 

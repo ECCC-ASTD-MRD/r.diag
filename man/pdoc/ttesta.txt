@@ -1,0 +1,176 @@
+ 
+      CALL SEQUENCE...
+       ttesta  XBAR VX YBAR VY MDIF TVALUE KVALUE DVALUE MASK \ 
+       INPUT OUTPUT [ -a VAL1 -lx VAL2 -ly VAL3 -kind VAL4 [VAL5] [VAL6] ]
+ 
+ 
+      DESCRIPTION...
+       ttesta  - CONDUCT AN "APPROXIMATE" DIFFERENCE OF MEANS TEST.
+ 
+ 
+      AUTHORS - F.Zwiers, JAN 25/85,
+      LAST REVISION: $Header: /home/cvs/RMNLIB/utils/rdiag/lspgm/ttesta.ptn,v 4.20 2014/09/25 20:20:55 dugas Exp $
+ 
+ 
+      PURPOSE - CONDUCT A DIFFERENCE OF MEANS TEST. THE TEST WHICH IS CONDUCTED
+                IS THE 'APPROXIMATE T-TEST' WHICH MAKES  NO ASSUMPTION  ABOUT THE
+                EQUALITY OF VARIANCES. HOWEVER, ALL THE OTHER ASSUMPTIONS USUALLY
+                MADE WHEN CONDUCTING A T-TEST (I.E., INDEPEDENT OBSERVATIONS FROM
+                NORMAL POPULATIONS IN EACH SAMPLE, INDEPENDENT SAMPLES) MUST STILL
+                BE SATISFIED. UPON RETURN, THE PROGRAM REPORTS THE COMPUTED T-TEST
+                VALUES  IN  TVALUE  AS WELL AS  RETURNING THE  K-VALUE AND D-VALUE
+                WHICH ARE RESPECTIVELY THE TRANSFORMED SIGNIFICANCE LEVELS AND THE
+                ACCEPTANCE/REJECTION FLAG.
+ 
+      NOTE - 1) TESTS ARE NOT PERFORMED WHEN THE "POOLED VARIANCE" IS
+                APPROXIMATELY EQUAL TO THE NOISE INDUCED BY THE PACKING
+                ALGORITHM.
+             2) INTERPRETATION OF VX AND VY FILES IS CONTROLED BY INPUT
+                PARAMETER IVAR.
+             3) MASK FILE NEED NOT BE SPECIFIED IN THE PROGRAM CALLING
+                SEQUENCE.(SEE OUTPUT FILES SECTION BELOW).
+ 
+ 
+      INPUT FILES...
+       XBAR   = FIELDS OF MEANS OF THE 'X-CONTROL' VARIABLE.
+      (IF (IVAR.EQ.0) THEN
+      (VX     = FIELDS OF THE VARIANCE OF X.
+      (         SUM(X(I)-XBAR)**2/NX, I=1,...,NX.
+      (OTHERWISE,
+      (VX     = FIELDS OF THE STANDARD DEVIATION OF X.
+      (         SQRT(SUM(X(I)-XBAR)**2/(NX-1)), I=1,...,NX.
+       YBAR   = SAME AS XBAR EXCEPT FOR THE 'Y-EXPERIMENT' VARIABLE.
+       VY     = SAME AS VX   EXCEPT FOR THE 'Y-EXPERIMENT' VARIABLE.
+ 
+      OUTPUT FILES...
+       MDIF   = FIELDS OF MEAN DIFFERENCES COMPUTED AS D=(YBAR-XBAR).
+       TVALUE = FIELDS OF 'T-VALUES' GIVEN BY
+ 
+                      T    = (YBAR-XBAR)/SDIF
+ 
+                      SDIF = SQRT( AXT+AYT )
+ 
+                      AXT  = VX/(NX-1)
+ 
+                      AYT  = VY/(NY-1)
+ 
+                WHERE, VX AND VY ARE THE VARIANCES OF X AND Y
+                VARIABLES RESPECTIVELY.
+       NOTE   - THE APPROPRIATE NUMBER OF DEGREES OF FREEDOM, (NDF),
+                ARE ESTIMATED FROM THE OBSERVATIONS AS FOLLOWS:
+                (SEE FOR EXAMPLE, PROB AND STATS FOR ENGINEERS
+                AND SCIENTISTS BY WALPOLE AND MYERS).
+ 
+                      NDF  = MAX( 1,INT( ANUM/ADEN+0.5 ) )
+ 
+                      ANUM = ( AXT+AYT )**2
+ 
+                      ADEN = AXT**2/(NX-1) + AYT**2/(NY-1)
+ 
+                WHERE, AXT AND AYT ARE AS DEFINED ABOVE.
+       KVALUE = FIELDS OF 'K-VALUES' OF TRANSFORMED SIGNIFICANCE LEVELS
+                COMPUTED AS K IN:
+ 
+                      P    = ALPHA/( 5**(K-1) )
+ 
+                OR    K    = LOG ( ALPHA/P )+1
+                                5
+ 
+                WHICH INDICATES THAT THE OBSERVED STATISTIC IS SIGNIFICANT
+                AT THE  "ALPHA/(5**(K-1))" SIGNIFICANCE LEVEL.
+                THUS K=1 INDICATES THAT THE OBSERVED STATISTIC IS JUST
+                SIGNIFICANT AT THE ALPHA SIGNIFICANCE LEVEL.
+                IF PLOTTED WITH UNIT CONTOUR INTERVALS, SUCCESSIVE
+                CONTOURS WILL ENCLOSE REGIONS WHERE LOCALLY IT IS
+                FIVE TIMES AS UNLIKELY THAT VALUES OF THE OBSERVED
+                STATISTICS ARE CONSISTENT WITH THE NULL HYPOTHESIS
+                THAN IN REGIONS OUTSIDE THE NEXT LOWER CONTOUR.
+       DVALUE = FIELDS OF 'D-VALUES' COMPUTED AS:
+                        __
+                        ! 0  IF THE NULL HYPOTHESIS IS ACCEPTED
+                    D = !
+                        ! 1  IF THE NULL HYPOTHESIS IS REJECTED
+                        --
+ 
+       MASK   = FIELDS OF 'MASK-VALUES' COMPUTED AS:
+                        __
+                        ! 1  IF THE TEST WAS     CONDUCTED
+                 MASK = !
+                        ! 0  IF THE TEST WAS NOT CONDUCTED
+                        --
+ 
+       NOTE   - THE MASK FILE IS NOT RETURNED IF THE PROGRAM IS NOT
+                CALLED WITH OUTPUT FILE MASK.
+  
+ 
+      INPUT PARAMETERS...
+ 
+       ALPHA (a)     = THE SIGNIFICANCE LEVEL OF THE TEST.
+       ANX   (lx)    = THE NUMBER OF OBSERVATIONS IN THE CONTROL    DATA SET,
+       ANY   (ly)    = THE NUMBER OF OBSERVATIONS IN THE EXPERIMENT DATA SET.
+                       THE ACTUAL VALUE USED ARE RATHER NX AND NY DEFINED AS
+                       NX = INT( ANX ) AND  NY = INT( ANY ).
+                       IF NX >= 1 , NY >= 1 THEN
+                          NX AND NY FROM THE INPUT CARD ARE USED IN THE
+                          COMPUTATION OF THE NUMBER OF DEGREES OF FREEDOM.
+                       OTHERWISE,
+                          THE NX AND NY VALUES NEEDED IN THE COMPUTATION ARE
+                          OBTAINED FROM THE RECORD LABELS OR FROM THE IP3
+                          DESCRIPTORS, DEPENDING ON THE FILE TYPE OF THE
+                          XBAR AND YBAR FILES.
+       KIND (kind/1) = -1, REJECT THE NULL HYPOTHESIS IF P > 1 - ALPHA
+                          (IE - CONDUCT A ONE TAILED TEST AND REJECT IF
+                                THE TEST STATISTIC IS UNUSUALLY SMALL).
+                     =  0, INDICATES A TWO TAILED TEST (REJECT IF
+                           P > 1 - ALPHA/2   OR IF  P < ALPHA/2)
+                           (IE - REJECT IF THE TEST STATISTIC IS
+                                 UNUSUALLY SMALL OR LARGE).
+                     =  1, REJECT THE NULL HYPOTHESIS IF P < ALPHA
+                           (IE - CONDUCT A ONE TAILED TEST AND REJECT IF
+                                 THE TEST STATISTIC IS UNUSUALLY LARGE).
+       IVAR (kind/2) = A FLAG USED TO DETERMINE THE CONTENTS
+                       OF THE VX AND VY FILES. THAT IS :
+                       IF (IVAR.EQ.0) THEN
+                         THE VX AND VY FILES CONTAIN THE
+                         VARIANCES OF X AND Y, RESPECTIVELY.
+                       OTHERWISE,
+                         VX AND VY FILES CONTAIN THE UNBIASED ESTIMATES OF
+                         THE STANDARD DEVIATIONS OF X AND Y, RESPECTIVELY.
+       MATCH(kind/3) = A FLAG USED TO DETERMINE IF THE VARIABLE NAMES IN
+                       XBAR AND YBAR *MUST* BE MATCHED. In this case, An
+                       unmatched variables will generate an error abort.
+                       THE DEFAULT BEHAVIOUR IS NOT TO CHECK THIS (=NO).
+ 
+       READ(5,5010) ALPHA,ANX,ANY,KIND,IVAR
+ 5010  FORMAT(10X,E10.0,2F5.0,2I5)
+ 
+ 
+      EXAMPLE OF INPUT CARD...
+ 
+ *TTESTA.      5.E-2  10.   5.    0    1
+ 
+         0123456789012345678901234567890123456789012345678901234567890
+         1         2         3         4         5         6         7
+ 
+ 
+      EXIT CONDITIONS...
+        0 NO PROBLEMS
+ 
+      FATAL CONDITIONS...
+        1 PREMATURE EOF ON UNIT 5
+        2 PREMATURE EOF ON UNIT 1 AND/OR 3
+        3 INITIAL ILLEGAL DATA TYPE OR SDX/SDY NOT COMPATIBLE
+        4 CANNOT READ FIRST RECORD IN XBAR
+        5 PARAMETER NX TOO SMALL
+        6 CANNOT READ RECORD IN VX
+        7 MORE THAN ONE SIZE IN XBAR AND/OR VX
+        8 CANNOT READ FIRST RECORD IN YBAR
+        9 PARAMETER NY TOO SMALL
+       10 CANNOT READ RECORD IN VY
+       11 MORE THAN ONE SIZE IN YBAR AND/OR VY
+       12 MORE THAN ONE SIZE IN XBAR AND/OR YBAR
+ 
+      NON-FATAL CONDITIONS...
+      101 VERY SMALL VALUES FOUND IN VX OR VY
+      102 NAMES OF MEAN FIELDS DO NOT MATCH
+ 

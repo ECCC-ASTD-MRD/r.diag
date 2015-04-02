@@ -1,0 +1,84 @@
+ 
+      CALL SEQUENCE...
+       gpdpd  HUM TEMP ES [SP] OUTPUT \ 
+              [ -kind VAL1 -c VAL2 -d VAL3 -i VAL4 -def [VAL5] ]
+ 
+ 
+      DESCRIPTION...
+       gpdpd  - COMPUTES DEW POINT DEPRESSION FROM T,SHUM OR RHUM
+ 
+ 
+      AUTHOR  - J.D.Henderson, DEC 04/80.
+      LAST REVISION: $Header: /home/cvs/RMNLIB/utils/rdiag/lspgm/gpdpd.ptn,v 4.25 2014/09/25 20:20:49 dugas Exp $
+ 
+ 
+      PURPOSE - CONVERTS PRESSURE LEVEL GRID FILES OF TEMPERATURE AND
+                SPECIFIC OR RELATIVE HUMIDITY TO DEW POINT DEPRESSION.
+ 
+ 
+      INPUT FILES...
+       HUM  = SPECIFIC OR RELATIVE HUMIDITY ARRAY.
+       TEMP = TEMPERATURE OR VIRTUAL TEMPERATURE ARRAY.
+      [SP   = SURFACE PRESSURE (MB), ONLY USED WHEN COORD .NE. 'PRES'.
+              NOTE THAT ITS ACCEPTED VARIABLE NAMES ARE 'P0' OR 'PS']
+ 
+      OUTPUT FILE...
+       ES   = DEW POINT DEPRESSION ARRAYS.
+ 
+ 
+      NOTES:  - 1) WATER AND ICE PHASES ARE CONSIDERED IN THE CONVERSION
+                   WHEN THE COMMAND LINE PARAMETER "-def" IS SPECIFIED.
+                   OTHERWISE, ONLY WATER PHASE IS CONSIDERED.
+                2) CALCULATIONS ARE DONE WITH THE RPN PHYSIC'S SET
+                   OF THERMODYNAMIC CONVERSION FUNCTIONS (I.E. FINTERN)
+                3) IF TEMP CONTAINS VIRTUAL TEMPERATURES (I.E. 'VT'),
+                   HUM MUST CONTAIN SPECIFIC HUMIDITIES.
+                4) THE ASSUMED UNITS FOR 'VT' ARE EITHER CENTIGRADES
+                   (FOR RPN/CMC FILES) OR KELVINS (FOR CCCma FILES).
+ 
+ 
+      (COMMAND-LINE) INPUT PARAMETERS...
+ 
+       COORD (kind) = 'SIG'/'GEM'/'GEM2'/'GEM3'/'PRES'.
+       PTOIT (c)    = CONSTANT PRESSURE (PA) AT THE LID OF MODEL WHEN
+                      (COORD.NE.'PRES') (DEF = pression_au_toit).
+ 
+       The next two parametres are only used when COORD='GEM2' or 'GEM3'.
+ 
+       PREF  (d)    = REF PRESSURE (DEF 80000 PA).
+       R     (i)    = REFERENCE EXPONENT (DEF 1.0)
+ 
+       Notes: 1) 'GEM' is the original gem eta coordinate, while 'GEM2' is
+                 the first gem hybrid coordinate as implemented by Edouard
+                 & Gravel in GEM/DM v2.2.0. 'GEM3' is the normalized version
+                 that was implemented in the v2.3.1 GEM/DM.
+              2) The default value of COORD is determined by the file type
+                 and the program will also try to determine it by the
+                 (internal) coding used for the coordinate itself.
+              3) Specifying "-def AABB" will force the attempt to read
+                 a text file called aabb.nml, containing a FORTRAN
+                 namelist AABB_NML, which in turns will hold two arrays,
+                 A and B such that the local pressure at level K, PL(K),
+                 can be calculated as "A(K)+B(K)*PS". This then by-passes
+                 all of the normal COORD-related calculations for PL(K).
+ 
+ 
+      EXIT CONDITIONS...
+        0 NO PROBLEMS
+        1 UNABLE TO READ HUMIDITY FILE
+        2 FOUND DATA OTHER THAN TYPE 'GRID' OR 'SUBA'
+        3 HUMIDITY FILE IS NOT SHUM OR RHUM
+        4 PREMATURE EOF ON HUMIDITY FILE 
+        5 PREMATURE EOF ON TEMPERATURE FILE 
+        6 HUMIDITY AND TEMPERATURE ARRAYS NOT THE SAME SIZE
+        7 VIRTUAL TEMPERATURE NOT SUPPORTED WITH RELATIVE HUMIDITY
+        8 INPUT FILE AND "COORD" MISMATCH
+        9 PREMATURE EOF ON SURFACE PRESSURE FILE
+       10 SURFACE PRESSURE AND TEMPERATURE ARRAYS NOT THE SAME SIZE
+       11 UNSUPPORTED TYPE OF VERTICAL COORDINATE
+       12 PROBLEM READING COMMAND-LINE PARAMETRE
+       13 UNSUPPORTED VERTICAL COORDINATE FOUND IN GPHUM
+       14 UNABLE TO READ AABB NAMELIST
+       15 SP DOES NOT CONTAIN SURFACE PRESSURES FOR EARTH
+       16 WRONG NUMBER OF A,B IN AABB
+ 
