@@ -28,7 +28,7 @@ NP      = 1
 OPTIL   = 1
 STD     = 98
 
-ARCH    = $(BASE_ARCH)
+ARCH    = $(EC_ARCH)
 
 DIAGS   = $(DIAGNOSTIQUE)
 BINDIR  = $(DIAGS)/bin/$(BASE_ARCH)

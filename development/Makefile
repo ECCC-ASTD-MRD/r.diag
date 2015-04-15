@@ -69,9 +69,10 @@ allbin: initial rdiag cdf2conv
 all: allbin document
 
 export:
-	/bin/mkdir -p $(DESTINATION)/lib $(DESTINATION)/bin ;\
-	rsync -av $(DIAGNOSTIQUE)/lib/$(EC_ARCH) $(DESTINATION)/lib/$(BASE_ARCH) ;\
-	rsync -av $(DIAGNOSTIQUE)/bin/$(BASE_ARCH) $(DESTINATION)/bin ;\
+	/bin/mkdir -p $(DESTINATION)/lib/$(EC_ARCH) ;\
+	rsync -av $(DIAGNOSTIQUE)/lib/$(EC_ARCH) $(DESTINATION)/lib/$(EC_ARCH)/.. ;\
+	rsync -av $(DIAGNOSTIQUE)/bin $(DESTINATION)/ ;\
+	rsync -av $(DIAGNOSTIQUE)/include $(DESTINATION)/ ;\
 	rsync -av $(DIAGNOSTIQUE)/share $(DESTINATION)
 
 # Ensure initial setup is done

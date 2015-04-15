@@ -44,7 +44,7 @@ CC      = $(COMPILE) -includes "$(INCLUDE)"           -defines "=$(DEFINE)" -O $
 FTNC    = $(COMPILE) -includes "$(INCLUDE)"           -defines "=$(DEFINE)" -P -src
 FTNT    = $(CPPT) $(TXT)
 
-ARCH    = $(BASE_ARCH)
+ARCH    = $(EC_ARCH)
 
 default: $(ARCH)
 

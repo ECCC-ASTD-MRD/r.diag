@@ -19,10 +19,10 @@
 *
 * http://web-mrb.cmc.ec.gc.ca/mrb/si/eng/si/howto-si/doku.php?id=netcdf
 *
-* In Dorval, the different AIX, IRIX64 (now deprecated) and
-* Linux binaries can be found under
+* In Dorval, the different AIX and Linux binaries can be
+* obtained with the command
 *
-* $ARMNLIB/modeles/diag/bin/$BASE_ARCH
+* . s.ssmuse.dot /ssm/net/rpn/utils/<rev>
 *
 * You will need to define a UDUNITS environment variable.
 *
