@@ -86,7 +86,7 @@ default:  $(LIBP)
 	if [ -f $@ ]; then chmod 644 $@ ; fi
 	$(AR) rv $@ $*.o
 	$(ZIP) $(ZIPFILE) $*.f
-	/bin/rm -f $*.o $*.f $*.ftn
+	/bin/rm -f $*.o $*.ftn
 
 .ptn90.a:
 	sed s/' PROGRAM $*'/' SUBROUTINE $*'/ $< > $*.ftn90 ;\
@@ -94,15 +94,15 @@ default:  $(LIBP)
 	if [ -f $@ ]; then chmod 644 $@ ; fi
 	$(AR) rv $@ $*.o
 	$(ZIP) $(ZIPFILE) $*.f90
-	/bin/rm -f $*.o $*.f90 $*.ftn90
+	/bin/rm -f $*.o $*.ftn90
 
 .ptn.o:
 	sed s/'      PROGRAM '/'      SUBROUTINE '/ $< > $*.ftn ;\
-	$(FC) $*.ftn ;	/bin/rm -f $*.f $*.ftn
+	$(FC) $*.ftn ;	/bin/rm -f $*.ftn
 
 .ptn90.o:
 	sed s/' PROGRAM $*'/' SUBROUTINE $*'/ $< > $*.ftn90 ;\
-	$(FC) $*.ftn90 ;	/bin/rm -f $*.f90 $*.ftn90
+	$(FC) $*.ftn90 ;	/bin/rm -f $*.ftn90
 
 .ptn.f:
 	sed s/'      PROGRAM '/'      SUBROUTINE '/ $< > $*.ftn ;\
@@ -430,7 +430,7 @@ driver: driver.ptn $(LIBP) $(LIBS)
 	if [ -x $@ ] ; then \
 		/bin/mv driver $(BINDIR)/r.diag_$(DIAG_VERSION) ; \
 		touch -t 199001010000 driver && chmod 755 driver ; \
-		/bin/rm $@.f $@.o ; \
+		/bin/rm $@.o ; \
 	fi
 
 info.lspgm: driver.ptn
