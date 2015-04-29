@@ -1,5 +1,5 @@
 #     if !defined (grille_maximale)
-#         define   grille_maximale 400000
+#         define   grille_maximale 10000000
 #     endif
 #     if !defined (ligne_maximale)
 #         define   ligne_maximale 512
