@@ -21,9 +21,9 @@ all: clean
 	echo Fortran compiler used : $(FCOMP) 
 	echo C compiler used : $(CCOMP) 
 	mkdir -p $(CURDIR)/NetcdfUdunits/$(EC_ARCH)
-	[[ -d  netcdf-3.6.3 ]] || /bin/cp netcdf-3.6.3_udunits-1.12.11.tar.bz2 X.tar.bz2 ;\
-		bunzip2 X.tar.bz2 ; tar xf X.tar ; /bin/rm -f X.tar
-	cd udunits-1.12.11/src && ./configure --prefix=$(CURDIR)/NetcdfUdunits/$(EC_ARCH) CC=$(CCOMP) CFLAGS=-fPIC FC=$(FCOMP) F77=$(FCOMP) CPPFLAGS=$(CPPFLAGS) CFLAGS=$(CFLAGS) --enable-shared
+	[[ -d netcdf-3.6.3 ]] || /bin/cp -drp src/netcdf-3.6.3 .
+	[[ -d udunits-1.12.11 ]] || /bin/cp -drp src/udunits-1.12.11 .
+	cd udunits-1.12.11/src && ./configure --prefix=$(CURDIR)/NetcdfUdunits/$(EC_ARCH) CC=$(CCOMP) CFLAGS=-fPIC FC=$(FCOMP) F77=$(FCOMP) CPPFLAGS=$(CPPFLAGS) --enable-shared
 	cd udunits-1.12.11/src && make && make test
 	-cd udunits-1.12.11/src && make -k install
 	cd netcdf-3.6.3 && ./configure --prefix=$(CURDIR)/NetcdfUdunits/$(EC_ARCH) CC=$(CCOMP) FC=$(FCOMP) F77=$(FCOMP) CPPFLAGS=$(CPPFLAGS) --disable-shared --disable-cxx --enable-separate-fortran
