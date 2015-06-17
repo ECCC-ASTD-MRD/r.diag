@@ -36,7 +36,7 @@ case ${1:---help} in
   exit 0
   ;;
 * )
-  RDIAG=${RDIAG:-${Location}/lib/${BASE_ARCH}/r.diag}
+  RDIAG=${RDIAG:-${Location}/bin/r.diag.exe}
   if [ `echo ${RDIAG} | cut -c1` != "/" ]; then RDIAG=${Location}/bin/$RDIAG ; fi
   if [[ -x ${RDIAG} ]] ; then
     if [ ! "${launched_by_r_diag_script}" ]; then
@@ -51,7 +51,7 @@ case ${1:---help} in
       exit 99
     fi
   else
-    ${Location}/lib/${BASE_ARCH}/r.diag "$@"
+    ${Location}/bin/r.diag.exe "$@"
     exit $?
   fi
   ;;

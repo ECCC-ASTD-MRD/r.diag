@@ -31,8 +31,7 @@ STD     = 98
 ARCH    = $(EC_ARCH)
 
 DIAGS   = $(DIAGNOSTIQUE)
-# Hide the r.diag backend from public access, in lib/
-BINDIR  = $(DIAGS)/lib/$(BASE_ARCH)
+BINDIR  = $(DIAGS)/bin
 INCLUDE = $(DIAGS)/include
 LIBDIR  = $(DIAGS)/lib/$(EC_ARCH)
 MANDIR  = $(DIAGS)/share/pdoc

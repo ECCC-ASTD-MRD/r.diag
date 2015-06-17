@@ -70,7 +70,7 @@ all: allbin document
 
 export:
 	/bin/mkdir -p $(DESTINATION)/lib/$(EC_ARCH) ;\
-	rsync -av $(DIAGNOSTIQUE)/lib/$(BASE_ARCH) $(DESTINATION)/lib/ ;\
+	rsync -av $(DIAGNOSTIQUE)/lib/$(EC_ARCH) $(DESTINATION)/lib/$(EC_ARCH)/.. ;\
 	rsync -av $(DIAGNOSTIQUE)/bin $(DESTINATION)/ ;\
 	rsync -av $(DIAGNOSTIQUE)/include $(DESTINATION)/ ;\
 	rsync -av $(DIAGNOSTIQUE)/share $(DESTINATION)
