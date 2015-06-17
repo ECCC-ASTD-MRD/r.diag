@@ -17,7 +17,7 @@ case ${1:---help} in
   exit 0
   ;;
 --man )
-  cd ${Location}/share/pdoc
+  cd ${Location}/../all/share/pdoc
   [[ "$2" == topics ]] && ls *.txt | sed 's/[.]txt//' | xargs -l8 printf "%10s %10s %10s %10s %10s %10s %10s %10s\n"  && exit 0
   [[ -f ${2}.txt ]] && ${PAGER:-less} ${2}.txt
   exit $?
@@ -27,12 +27,12 @@ case ${1:---help} in
   exit 0
   ;;
 --versions )
-  cd ${Location}/bin/${BASE_ARCH}/
+  cd ${Location}/bin/
   ls ${0##*/}_*.*.*
   exit 0
   ;;
 --src )
-  echo ${Location}/src
+  cat ${Location}/bin/revision.txt
   exit 0
   ;;
 * )
