@@ -15,25 +15,25 @@ case ${1:-*} in
   exit 0
   ;;
 --man )
-  cd ${DIAGNOSTIQUE}/../all/share/pdoc
+  cd ${DIAGNOSTIQUE}/share/pdoc
   [[ -f cdf2ccc.txt ]] && ${PAGER:-less} cdf2ccc.txt
   exit $?
   ;;
 --doc )
-  echo ${DIAGNOSTIQUE}/../all/share/pdoc
+  echo ${DIAGNOSTIQUE}/share/pdoc
   exit 0
   ;;
 --versions )
-  cd ${DIAGNOSTIQUE}/bin/
+  cd ${Location}/bin/
   ls ${0##*/}_*.*.*
   exit 0
   ;;
 --src )
-  cat ${DIAGNOSTIQUE}/bin/revision.txt
+  cat ${Location}/bin/revision.txt
   exit 0
   ;;
 * )
-  CDF2RPN=${CDF2RPN:-${DIAGNOSTIQUE}/bin/cdf2rpn}
+  CDF2RPN=${CDF2RPN:-${Location}/bin/cdf2rpn}
   if [[ `echo ${CDF2RPN} | cut -c1` != "/" ]]; then CDF2RPN=${DIAGNOSTIQUE}/bin/${BASE_ARCH}/${CDF2RPN} ; fi
   if [[ -x ${CDF2RPN} ]] ; then
     if [[ -z "${launched_by_cdf2rpn_script}" ]]; then
@@ -48,7 +48,7 @@ case ${1:-*} in
       exit 99
     fi
   else
-    ${DIAGNOSTIQUE}/bin/cdf2rpn "$@"
+    ${Location}/bin/cdf2rpn "$@"
     exit $?
   fi
   ;;
