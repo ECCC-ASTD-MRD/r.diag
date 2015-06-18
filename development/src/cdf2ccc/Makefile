@@ -22,7 +22,7 @@ DIAGNOSTIQUE  = $(CURDIR)/../..
 IGNORE_ERRORS = set -e
 MAKE     = $(IGNORE_ERRORS) ; make DIAGNOSTIQUE=$(DIAGNOSTIQUE)
 
-EXTRAS   = $(DIAGNOSTIQUE)/extras/NetcdfUdunits/$(EC_ARCH)
+EXTRAS   = $(DIAGNOSTIQUE)/../extras/NetcdfUdunits/$(EC_ARCH)
 
 DIAGS    = $(DIAGNOSTIQUE)
 BINDIR   = $(DIAGS)/bin/$(BASE_ARCH)
@@ -31,7 +31,7 @@ LIBDIR   = $(DIAGS)/lib/$(EC_ARCH)
 MANDIR   = $(DIAGS)/share/pdoc
 MODDIR   = $(INCLUDES) $(INCLUDES)/$(EC_ARCH) $(EXTRAS)/include
 
-CONV_VERSION = 2.2.0
+CONV_VERSION = 2.2.1
 
 STD      = 98
 
@@ -308,8 +308,9 @@ $(LIBP):	initial	$(FDECKS)	$(HDECKS)	\
 	 $(LIBP)(wrfile.o)			\
 	 $(LIBP)(wrlalo.o)
 
-document: cdf2ccc.ftn $(TXTDECKS)
+document: cdf2ccc.ftn attribut_netcdf.dat	$(TXTDECKS)
 # Creation de la documentation pour cdf2ccc
+	rsync -av attribut_netcdf.dat $(MANDIR)
 
 cdf2ccc: initial cdf2ccc.ftn
 # Creation de l'executable cdf2ccc ailleurs que ailleurs que sous AIX
@@ -317,19 +318,19 @@ cdf2ccc: initial cdf2ccc.ftn
 	$(FC) $@.ftn -o $@ -libpath "$(LIBPATH)" \
 	-libappl "$(MALIB) $(lNetCDF) $(UDUNITS) $(DIAGLIB) $(VGDLIB)" \
 	-librmn $(RMNLIB) -obj "lire_arg.o $(OBJ)" $(CODEBETA) -libsys $(DDFUN90)
-	/bin/rm lire_arg.o cdf2ccc.o ; /bin/mv $@ $(BINDIR)/cdf2ccc_$(CONV_VERSION) ;\
-	cd $(BINDIR)  ; /bin/ln -f cdf2ccc_$(CONV_VERSION) cdf2rpn_$(CONV_VERSION)
+	/bin/rm -f lire_arg.o $@.o $@.f ; /bin/mv $@ $(BINDIR)/$@_$(CONV_VERSION) ;\
+	cd $(BINDIR)  ; /bin/ln -f $@_$(CONV_VERSION) cdf2rpn_$(CONV_VERSION)
 
 cdf2rpn: cdf2ccc
 
 AIX: initial cdf2ccc.ftn
 # Creation de l'executable cdf2ccc pour architecture AIX
 	$(AR) xv $(LIBP) lire_arg.o
-	$(FC) cdf2ccc.ftn -o $@ -libpath "$(LIBPATH)" \
+	$(FC) $@.ftn -o $@ -libpath "$(LIBPATH)" \
 	-libappl "$(MALIB) $(lNetCDF) $(UDUNITS) $(DIAGLIB) $(VGDLIB)" \
 	-librmn $(RMNLIB) -obj "lire_arg.o $(OBJ)" $(CODEBETA)
-	/bin/rm lire_arg.o cdf2ccc.o ; /bin/mv $@ $(BINDIR)/cdf2ccc_$(CONV_VERSION) ;\
-	cd $(BINDIR)  ; /bin/ln -f cdf2ccc_$(CONV_VERSION) cdf2rpn_$(CONV_VERSION)
+	/bin/rm -f lire_arg.o $@.o $@.f ; /bin/mv $@ $(BINDIR)/$@_$(CONV_VERSION) ;\
+	cd $(BINDIR)  ; /bin/ln -f $@_$(CONV_VERSION) cdf2rpn_$(CONV_VERSION)
 
 clean:
 # Faire un petit menage. On enleve tous les .o et les fichiers .f superflus

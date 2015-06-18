@@ -57,8 +57,8 @@ DDFUN90  = ddfun90
 lNetCDF  = netcdff netcdf
 UDUNITS  = udunits
 
-DIAG_VERSION = 6.3.0
-CONV_VERSION = 2.2.0
+DIAG_VERSION = 6.3.1
+CONV_VERSION = 2.2.1
 
 STD     = 98
 
@@ -71,7 +71,7 @@ all: allbin document
 export:
 	/bin/mkdir -p $(DESTINATION)/lib/$(EC_ARCH) ;\
 	rsync -av $(DIAGNOSTIQUE)/lib/$(EC_ARCH) $(DESTINATION)/lib/$(EC_ARCH)/.. ;\
-	rsync -av $(DIAGNOSTIQUE)/bin $(DESTINATION)/ ;\
+        rsync -avH $(DIAGNOSTIQUE)/bin $(DESTINATION)/ ;\
 	rsync -av $(DIAGNOSTIQUE)/include $(DESTINATION)/ ;\
 	rsync -av $(DIAGNOSTIQUE)/share $(DESTINATION)
 
@@ -82,7 +82,7 @@ initial:
 	s.locate --lib $(VGDLIB) 1> /dev/null || { echo -e PLS execute \". s.ssmuse.dot vgriddesc\" \n ; false ; }
 	if [[ ! -f $(EXTLIB)/libudunits.a ]]; then cd $(EXTRAS) ; make all ; fi
 	if [[ ! -f $(LIBDIR)/libddfun90.a || -z "$(DDFUN90)" ]]; then \
-	cd $(DIAGNOSTIQUE)/src/extras/ddfun90 ; $(MAKE) ; fi
+	cd $(DIAGNOSTIQUE)/src/extras/ddfun90 ; $(MAKE) RMNLIB=$(RMNLIB) ; fi
 	if [[ ! -x $(BINDIR)/r.echo ]]; then cd $(DIAGNOSTIQUE)/src/extras/tools ; $(MAKE) ; fi
 	if [[ ! -f $(LIBDIR)/program_version.o ]]; then cd $(LIBDIR) ;\
 	s.f77 -g -c ../../program_version.f ; fi
@@ -113,6 +113,16 @@ cdf2conv:
 	RMNLIB=$(RMNLIB) VGDLIB=$(VGDLIB) OBJ=$(FIXES) \
 	EXTRAS=$(EXTRAS)/NetcdfUdunits/$(EC_ARCH) DDFUN90=$(DDFUN90) \
 	lNetCDF="$(lNetCDF)" UDUNITS=$(UDUNITS)
+
+# Only generate the LSSUB, LSPM and CDF2CCC libraries
+
+libs:
+	echo "*** Making libdiag_sq98.a and libdiag_sq98_g.a ***" ;\
+	cd $(DIAGNOSTIQUE)/src/lssub ; $(MAKE) VGDLIB=$(VGDLIB)
+	echo "Making libprog_sq98.a" ;\
+	cd $(DIAGNOSTIQUE)/src/lspgm ; $(MAKE) ;\
+	echo "*** Making libcdf2ccc.a ***" ;\
+	cd $(DIAGNOSTIQUE)/src/cdf2ccc ; $(MAKE)
 
 # Online documentation (which was originaly found in $ARMNLIB/man/pdoc) recipe
 

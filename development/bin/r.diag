@@ -11,35 +11,36 @@ print_usage() {
 }
 Location=$(true_path $0)
 Location=${Location%/bin/*}
+export DIAGNOSTIQUE=${DIAGNOSTIQUE:-${Location}}
 case ${1:---help} in
 --help | -h )
   print_usage
   exit 0
   ;;
 --man )
-  cd ${Location}/../all/share/pdoc
+  cd ${DIAGNOSTIQUE}/../all/share/pdoc
   [[ "$2" == topics ]] && ls *.txt | sed 's/[.]txt//' | xargs -l8 printf "%10s %10s %10s %10s %10s %10s %10s %10s\n"  && exit 0
   [[ -f ${2}.txt ]] && ${PAGER:-less} ${2}.txt
   exit $?
   ;;
 --doc )
-  echo ${Location}/share/pdoc
+  echo ${DIAGNOSTIQUE}/../all/share/pdoc
   exit 0
   ;;
 --versions )
-  cd ${Location}/bin/
+  cd ${DIAGNOSTIQUE}/bin/
   ls ${0##*/}_*.*.*
   exit 0
   ;;
 --src )
-  cat ${Location}/bin/revision.txt
+  cat ${DIAGNOSTIQUE}/bin/revision.txt
   exit 0
   ;;
 * )
-  RDIAG=${RDIAG:-${Location}/bin/r.diag.exe}
-  if [ `echo ${RDIAG} | cut -c1` != "/" ]; then RDIAG=${Location}/bin/$RDIAG ; fi
+  RDIAG=${RDIAG:-${DIAGNOSTIQUE}/bin/r.diag.exe}
+  if [[ `echo ${RDIAG} | cut -c1` != "/" ]]; then RDIAG=${DIAGNOSTIQUE}/bin/$RDIAG ; fi
   if [[ -x ${RDIAG} ]] ; then
-    if [ ! "${launched_by_r_diag_script}" ]; then
+    if [[ -z "${launched_by_r_diag_script}" ]]; then
       export launched_by_r_diag_script=YES
       ${RDIAG} "$@"
       exit $?
@@ -51,7 +52,7 @@ case ${1:---help} in
       exit 99
     fi
   else
-    ${Location}/bin/r.diag.exe "$@"
+    ${DIAGNOSTIQUE}/bin/r.diag.exe "$@"
     exit $?
   fi
   ;;

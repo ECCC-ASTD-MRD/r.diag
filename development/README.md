@@ -6,10 +6,14 @@
  and 3D meteorological data, as produced either by the Environment
  Canada (EC) GEM forecast model or the EC CCCma General Circulation
  Model (GCM). The CMC/RPN GEM file formats and two flavors of the
- GCM's binary sequential format are supported.
+ GCM's binary sequential format are supported. This toolkit was
+ originally derived from an early 1990's unix port of the then
+ CRAY version of the CCCma diagnostic toolkit. Additional code
+ produced at UQAM for diagnostics of regional climate data in
+ the late 1990's is also included in the toolbox.
 
- The toolkit is built in the R.DIAG executable binary. The toolkit
- commands can be grouped under several themes or section.
+ The GEM toolkit is built in the R.DIAG executable binary. The
+ toolkit commands can be grouped under several themes or section.
 
  The available sections are :
 
@@ -20,25 +24,53 @@
  e) Manipulations on Fourrier or Spherical harmonics data
  f) Time-series manipulations
 
+ Once installed, a documentation .txt file for each R.DIAG command and
+ a few .html files can be found in the share/pdoc directory. Each R.DIAG
+ command is thus documented. In particular, the share/pdoc/index.html
+ file holds another description of the package but also of the basic
+ arguments and environment variables that it responds to. The .txt
+ files are only available in English while the .html file are in
+ French at this time. The list of R.DIAG commands can be retreived
+ via the "r.diag lspgm" command. To figure out what a particular
+ command does, simply execute the "r.diag command_name" command.
+
  In addition to the toolkit, a conversion tool for either the CCCma
  or CMC/RPN file formats to/from the NetCDF v3 file format is included.
  Input NetCDF files should closely conform to the CF v1.4 Metadata
  convention. The converter will otherwise (at best) choke on them.
  Depending on this executable's name, which should be either cdf2ccc
  or cdf2rpn, the default EC file format read/written by the executable
- will be either the CCCma of CMC/RPN formats. These two executable
- are in general automatically generated as hard-links.
+ will be either the CCCma or CMC/RPN formats. These two executable
+ are in general automatically generated as hard-links. The first
+ version of the converter was created by the Ouranos Consortium
+ from 2003 to 2006. Note that a .txt documentation file for the
+ converter is also available in the share/pdoc directory.
+
+ The default Makefile target ("allbin") attempts to generate the
+ libraries and executables, after checking that the initial setup
+ has been done. The "all" target includes the "allbin" and "document"
+ targets. The "export" target copies the final products to the parent
+ directory. The working directory that holds the package is assumed
+ to be just that, somewhere users may not be too confortable.
+ The package implicitely assumes that make=gmake.
 
  To generate the toolkit executable, the RPN/CMC development environment
  has to be installed and active (see mfvalin/rmnlib on github.com). As
  well, the Vgrid Descriptors package used in the GEM v4+ model also has
  to be available. Furthermore, to generate the two cdf2xxx executables,
  the old NetCDF v3.6 and UdUnits v1.2 library packages also have to
- available.
+ available. Most of the code available here is written in FORTRAN.
 
- The Linux version of the toolkit also uses the DDFUN90 package as
+ Some versions of the toolkit may also use the DDFUN90 package as
  produced by  David H. Bailey of the NERSC, Lawrence Berkeley Lab.
- The 2005-03-11 version of this package is included here.
+ The 2005-03-11 version of this package is included here. This is
+ the case for the PGI versions as these compilers (at least as of
+ their version 14xx) do not provide for quad-precision real arithmetic.
+ On the other hand, since the Intel/ifort, AIX/xlf and GFORTRAN
+ compilers do support this, toolkit versions generated with them
+ will not require the DDFUN90 package. To account for this, the
+ src/lssub/gaussg.F90 source file may need to be modified
+ according to your environment's specifications.
  
  R.DIAG is copyrighted (C) 1990-2010 by the "Division de Recherche
  en Prevision Numerique" of Environment Canada. This code is free
@@ -47,5 +79,5 @@
  Software Foundation, version 2.1 of the License.
 
  Contact : Dugas.Bernard@uqam.ca
- Last revision : January 2015
+ Last revision : April 2015
 

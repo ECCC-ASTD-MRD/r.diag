@@ -1,0 +1,17 @@
+
+Exemples de commandes pour generer les binaires r.diag, cdf2ccc et cdf2rpn
+
+UQAM sans libgraph.a
+
+. s.ssmuse.dot pgi13         ; . s.ssmuse.dot vgriddesc ; make allbin RMNLIB=rmnbeta_015 FIXES=${PWD}/lib/Linux_x86-64/pgi13xx/msg.o 
+. s.ssmuse.dot gfortran-4.9  ; . s.ssmuse.dot vgriddesc ; make allbin FIXES=${PWD}/lib/Linux_x86-64/gfortran-4.9/stubs.o
+
+CMC sans libgraph.a
+
+. ssmuse-sh -d hpcs/201402/02/base -d hpcs/201402/02/intel13sp1u2 -d rpn/libs/15.2 ; \
+eval ". s.ssmuse.dot /ssm/net/cmdn/vgrid/${VGRID_REVISION}/\${COMP_ARCH}" ; make allbin RMNLIB=rmn_015.2 FIXES=${PWD}/lib/${EC_ARCH}/stubs.o
+
+s.use gmake as make ; s.use gnu_find as find ; . ssmuse-sh -d hpcs/201402/02/base -d hpcs/ext/xlf_13.1.0.10 -d rpn/libs/15.2 ; \
+eval ". s.ssmuse.dot /ssm/net/cmdn/vgrid/${VGRID_REVISION}/\${COMP_ARCH}" ; make allbin RMNLIB=rmn_015.2 FIXES=${PWD}/lib/${EC_ARCH}/stubs.o
+
+Pour generer avec libgraph.a ==> Ajouter "NOPLOT='' GRAFLIB=graph" a une des commandes precedentes.
