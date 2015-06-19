@@ -10,14 +10,8 @@ endif
 SHELL = /bin/sh
 
 AR      = s.ar
-
-ifeq "$(BASE_ARCH)" "AIX-powerpc7"
-    ZIP     = `which gtar` -zcf
-    UNZIP   = `which gtar` -zxf
-else
-    ZIP     = `which zip`
-    UNZIP   = `which unzip`
-endif
+ZIP     = `which tar` -jcf
+UNZIP   = `which tar` -jxf
 
 MPCPP   = 
 MPF90   = 
@@ -35,7 +29,7 @@ DEBUG   = $(OPTIM)
 CFLAGS  = $(DEBUG)
 FFLAGS  = $(DEBUG) -includes $(INCLUDES)/$(EC_ARCH)
 
-FICHIZ  = $(DIAGS)/lib/$(EC_ARCH)/lssub$(STD).f.zip
+FICHIZ  = $(DIAGS)/lib/$(EC_ARCH)/lssub$(STD).f.tar.bz2
 
 FCOMP   = s.compile $(FFLAGS) -src
 CC      = s.compile $(CFLAGS) -src

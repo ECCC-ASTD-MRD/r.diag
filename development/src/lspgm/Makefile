@@ -11,12 +11,7 @@ SHELL   = /bin/bash
 
 AR      = s.ar
 CPPT    = r.gppf -chop_bang -gpp -F
-
-ifeq "$(BASE_ARCH)" "AIX-powerpc7"
-    ZIP     = `which gtar` -zcf
-else
-    ZIP     = `which zip`
-endif
+ZIP     = `which tar` -jcf
 
 DIAGNOSTIQUE = $(CURDIR)/../..
 MAKE    = make DIAGNOSTIQUE=$(DIAGNOSTIQUE)
@@ -58,7 +53,7 @@ VGDLIB  = descrip
 
 LIBP    = $(LIBDIR)/lib$(PROGLIB).a
 LIBS    = $(LIBDIR)/lib$(DIAGLIB).a
-ZIPFILE = $(LIBDIR)/lspgm_STD$(STD).f.zip
+ZIPFILE = $(LIBDIR)/lspgm_STD$(STD).f.tar.bz2
 
 DIAG_VERSION = 6.3.1
 
