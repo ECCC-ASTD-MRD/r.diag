@@ -71,9 +71,11 @@ all: allbin document
 export:
 	/bin/mkdir -p $(DESTINATION)/lib/$(EC_ARCH) ;\
 	rsync -av $(DIAGNOSTIQUE)/lib/$(EC_ARCH) $(DESTINATION)/lib/$(EC_ARCH)/.. ;\
-        rsync -avH $(DIAGNOSTIQUE)/bin $(DESTINATION)/ ;\
+	rsync -avH $(DIAGNOSTIQUE)/bin $(DESTINATION)/ ;\
 	rsync -av $(DIAGNOSTIQUE)/include $(DESTINATION)/ ;\
-	rsync -av $(DIAGNOSTIQUE)/share $(DESTINATION)
+	rsync -av $(DIAGNOSTIQUE)/share $(DESTINATION)/ ;\
+	rsync -av $(DIAGNOSTIQUE)/src/lspgm/*.html $(DESTINATION)/share/pdoc/ ;\
+	rsync -av $(DIAGNOSTIQUE)/src/lssub/*.html $(DESTINATION)/share/pdoc
 
 # Ensure initial setup is done
 
