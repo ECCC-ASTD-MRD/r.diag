@@ -79,11 +79,9 @@ default: $(ARCH)
 
 .ftn.o:
 	$(FCOMP) $<
-	/bin/rm -f $*.f
 
 .ftn90.o:
 	$(FCOMP) $<
-	/bin/rm -f $*.f90
 
 .c.o:
 	$(CC) $<

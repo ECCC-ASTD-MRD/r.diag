@@ -93,13 +93,13 @@ initial:
 
 rdiag:
 	echo "*** Making libdiag_sq98.a and libdiag_sq98_g.a ***" ;\
-	cd $(DIAGNOSTIQUE)/src/lssub ; $(MAKE) VGDLIB=$(VGDLIB)
+	cd $(DIAGNOSTIQUE)/src/lssub ; $(MAKE) VGDLIB=$(VGDLIB) OPTIL="0 -debug"
 	echo "Making libprog_sq98.a" ;\
-	cd $(DIAGNOSTIQUE)/src/lspgm ; $(MAKE)
+	cd $(DIAGNOSTIQUE)/src/lspgm ; $(MAKE) OPTIL="0 -debug"
 	echo "*** Making executable r.diag ***" ;\
 	cd $(DIAGNOSTIQUE)/src/lspgm ; $(MAKE) $(BASE_ARCH) OBJ=$(FIXES) \
 	NOPLOT=$(NOPLOT) GRAFLIB=$(GRAFLIB) DDFUN90=$(DDFUN90) VGDLIB=$(VGDLIB) \
-	DIAG_VERSION=$(DIAG_VERSION) RMNLIB=$(RMNLIB)
+	DIAG_VERSION=$(DIAG_VERSION) RMNLIB=$(RMNLIB) OPTIL="0 -debug" DIAGLIB="diag_sq98_g"
 
 # NetCDF to/from ( CCCma or CMC/RPN) file format converter recipe
 
