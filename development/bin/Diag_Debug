@@ -96,7 +96,7 @@ else
   STD=''
 fi
 #
-libsrc=lspgm_STD98.f.zip
+libsrc=lspgm_STD98.f.tar.bz2
 DIAGLIB=diag_sq98${std}
 #
 Location=$(true_path $0)
@@ -146,11 +146,11 @@ if [ -f "${main_source}" ]; then
           reponse_LOCAL=oui
       elif [ ${reponse_LOCAL} = n -o ${reponse_LOCAL} = N ]; then 
           reponse_LOCAL=oui
-          unzip -o ${LIBSRC} ${main_source}
+          tar -jxf -o ${LIBSRC} ${main_source}
       fi
     done
 else
-    unzip ${LIBSRC} ${main_source}
+    tar -jxf ${LIBSRC} ${main_source}
 fi
 #
 if [ ! \( -f ${main_source} -o -f ${other_source} \) ]; then
