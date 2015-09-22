@@ -28,17 +28,17 @@ MANUALS		= @PERL_MANUAL@
 GARBAGE		= $(MANUALS)
 PERL		= @PERL@
 
-all:		port/all lib/all udunits/all @PERL_ALL@
+all:		port/all lib/all udunits/all
 
-test:		FORCE udunits/test perl_test
+test:		FORCE udunits/test
 
 install:	port/install lib/install udunits/install \
-		@PERL_INSTALL@ installed_manuals
+		installed_manuals
 
-clean:		port/clean lib/clean udunits/clean @PERL_CLEAN@
+clean:		port/clean lib/clean udunits/clean
 
 distclean:	port/distclean lib/distclean \
-	        udunits/distclean @PERL_DISTCLEAN@
+	        udunits/distclean
 
 perl_test:	@PERL_ALL@
 	@case "@PERL_TEST@" in \
