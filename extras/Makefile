@@ -10,7 +10,7 @@ $(error FATAL: EC_ARCH is equal to BASE_ARCH, no compiler architecture is define
 endif
 
 FCOMP = s.f90
-CCOMP = cc
+CCOMP = icc
 
 #CCOMP = xlc_r
 #CFLAGS='-q64 -qtbtable=full -DpgiFortran -g -O0'
