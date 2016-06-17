@@ -7,6 +7,9 @@ endif
 
 SHELL   = /bin/bash
 
+FCOMP = s.f90
+CCOMP = cc
+
 # Location of the development versions of the src, bin/$(BASE_ARCH),
 # lib/$(EC_ARCH) and share/pdoc directory trees
 
