@@ -11,7 +11,7 @@ SHELL   = /bin/bash
 # lib/$(EC_ARCH) and share/pdoc directory trees
 
 DIAGNOSTIQUE = $(CURDIR)
-MAKE    = make DIAGNOSTIQUE=$(DIAGNOSTIQUE)
+MAKEOVERRIDES += " DIAGNOSTIQUE=$(DIAGNOSTIQUE)"
 
 # Destination that the current working binaries and libraries
 # will be exported to, as well as where to find the EXTRAS
@@ -82,7 +82,7 @@ export:
 initial:
 	/bin/mkdir -p $(BINDIR) $(LIBDIR) $(MANDIR) $(MODDIR) $(SUBDIR)
 	s.locate --lib $(VGDLIB) 1> /dev/null || { echo -e PLS execute \". s.ssmuse.dot vgriddesc\" \n ; false ; }
-	if [[ ! -f $(EXTLIB)/libudunits.a ]]; then cd $(EXTRAS) ; make all ; fi
+	if [[ ! -f $(EXTLIB)/libudunits.a ]]; then cd $(EXTRAS) ; $(MAKE) all ; fi
 	if [[ ! -f $(LIBDIR)/libddfun90.a || -z "$(DDFUN90)" ]]; then \
 	cd $(DIAGNOSTIQUE)/src/extras/ddfun90 ; $(MAKE) RMNLIB=$(RMNLIB) ; fi
 	if [[ ! -x $(BINDIR)/r.echo ]]; then cd $(DIAGNOSTIQUE)/src/extras/tools ; $(MAKE) ; fi

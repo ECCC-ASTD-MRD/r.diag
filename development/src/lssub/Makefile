@@ -14,7 +14,6 @@ CPPT    = r.gppf -chop_bang -gpp -F
 ZIP     = `which zip`
 
 DIAGNOSTIQUE = $(CURDIR)/../..
-MAKE    = make DIAGNOSTIQUE=$(DIAGNOSTIQUE)
 
 CFLAGS  =
 FFLAGS  = 

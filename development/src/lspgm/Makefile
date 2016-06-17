@@ -14,7 +14,6 @@ CPPT    = r.gppf -chop_bang -gpp -F
 ZIP     = `which tar` -jcf
 
 DIAGNOSTIQUE = $(CURDIR)/../..
-MAKE    = make DIAGNOSTIQUE=$(DIAGNOSTIQUE)
 
 FFLAGS  =  
 

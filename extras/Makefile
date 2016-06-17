@@ -33,11 +33,11 @@ all: clean
 	#        touch utscan.c and utscan.h, and delete utscan.o
 	touch ./udunits-1.12.11/src/lib/utscan.c  ./udunits-1.12.11/src/lib/utscan.h
 	rm -f ./udunits-1.12.11/src/lib/utscan.o
-	cd udunits-1.12.11/src && make && make test
-	-cd udunits-1.12.11/src && make -k install
+	cd udunits-1.12.11/src && $(MAKE) && $(MAKE) test
+	-cd udunits-1.12.11/src && $(MAKE) -k install
 	## Do NOT make netcdf at CMC.  Use the library supplied with the compiler instead
 	## cd netcdf-3.6.3 && ./configure --prefix=$(CURDIR)/NetcdfUdunits/$(EC_ARCH) CC=$(CCOMP) FC=$(FCOMP) F77=$(FCOMP) CPPFLAGS=$(CPPFLAGS) --disable-shared --disable-cxx --enable-separate-fortran
-	## cd netcdf-3.6.3 && make && make test && make install
+	## cd netcdf-3.6.3 && $(MAKE) && $(MAKE) test && $(MAKE) install
 
 clean:
 	rm -rf netcdf-3.6.3 udunits-1.12.11
