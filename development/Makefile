@@ -78,7 +78,8 @@ export:
 	rsync -av $(DIAGNOSTIQUE)/include $(DESTINATION)/ ;\
 	rsync -av $(DIAGNOSTIQUE)/share $(DESTINATION)/ ;\
 	rsync -av $(DIAGNOSTIQUE)/src/lspgm/*.html $(DESTINATION)/share/pdoc/ ;\
-	rsync -av $(DIAGNOSTIQUE)/src/lssub/*.html $(DESTINATION)/share/pdoc
+	rsync -av $(DIAGNOSTIQUE)/src/lssub/*.html $(DESTINATION)/share/pdoc/ ;\
+	rsync -av $(EXTRAS)/src/udunits-1.12.11/src/lib/udunits.dat $(DESTINATION)/include
 
 # Ensure initial setup is done
 
