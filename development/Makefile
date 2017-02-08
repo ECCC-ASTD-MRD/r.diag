@@ -42,7 +42,7 @@ GRAFLIB =
 
 # Binaires pre-compiles
 
-FIXES   =
+FIXES   = $(PWD)/lib/$(EC_ARCH)/stubs.o
 
 # (obsolete) WEB Host Server for the documentation
 
@@ -75,6 +75,7 @@ export:
 	/bin/mkdir -p $(DESTINATION)/lib/$(EC_ARCH) ;\
 	rsync -av $(DIAGNOSTIQUE)/lib/$(EC_ARCH) $(DESTINATION)/lib/$(EC_ARCH)/.. ;\
 	rsync -avH $(DIAGNOSTIQUE)/bin $(DESTINATION)/ ;\
+	rsync -lptgoDv $(DIAGNOSTIQUE)/bin/* $(DESTINATION)/bin ;\
 	rsync -av $(DIAGNOSTIQUE)/include $(DESTINATION)/ ;\
 	rsync -av $(DIAGNOSTIQUE)/share $(DESTINATION)/ ;\
 	rsync -av $(DIAGNOSTIQUE)/src/lspgm/*.html $(DESTINATION)/share/pdoc/ ;\
@@ -103,7 +104,7 @@ rdiag:
 	echo "Making libprog_sq98.a" ;\
 	cd $(DIAGNOSTIQUE)/src/lspgm ; $(MAKE)
 	echo "*** Making executable r.diag ***" ;\
-	cd $(DIAGNOSTIQUE)/src/lspgm ; $(MAKE) $(BASE_ARCH) OBJ=$(FIXES) \
+	cd $(DIAGNOSTIQUE)/src/lspgm ; $(MAKE) $(BASE_ARCH) OBJ="$(FIXES)" \
 	NOPLOT=$(NOPLOT) GRAFLIB=$(GRAFLIB) DDFUN90=$(DDFUN90) VGDLIB=$(VGDLIB) \
 	DIAG_VERSION=$(DIAG_VERSION) RMNLIB=$(RMNLIB)
 
@@ -116,7 +117,7 @@ cdf2conv:
 	echo "*** Making executable cdf2ccc ***" ;\
 	cd $(DIAGNOSTIQUE)/src/cdf2ccc ;\
 	$(MAKE) cdf2rpn CONV_VERSION=$(CONV_VERSION) \
-	RMNLIB=$(RMNLIB) VGDLIB=$(VGDLIB) OBJ=$(FIXES) \
+	RMNLIB=$(RMNLIB) VGDLIB=$(VGDLIB) OBJ="$(FIXES)" \
 	EXTRAS=$(EXTRAS)/NetcdfUdunits/$(EC_ARCH) DDFUN90=$(DDFUN90) \
 	lNetCDF="$(lNetCDF)" UDUNITS=$(UDUNITS)
 
@@ -133,6 +134,10 @@ libs:
 # Online documentation (which was originaly found in $ARMNLIB/man/pdoc) recipe
 
 document:
-	cd $(DIAGNOSTIQUE)/src/lspgm   ; $(MAKE) $@ ; $(MAKE) info.lspgm ;\
-	cd $(DIAGNOSTIQUE)/src/lssub   ; $(MAKE) $@ ;\
-	cd $(DIAGNOSTIQUE)/src/cdf2ccc ; $(MAKE) $@
+	cd $(DIAGNOSTIQUE)/man/pdoc ; $(MAKE) $@
+
+# Clean
+
+clean:
+	cd $(DIAGNOSTIQUE)/src/lspgm   ; $(MAKE) $@ ;\
+	cd $(DIAGNOSTIQUE)/src/lssub   ; $(MAKE) $@
