@@ -336,4 +336,4 @@ $(ARCH): initial
 # dans $(SOURCES) tandis que les deux derniers generent les librairies 
 # (debug et ordinaire, respectivement)
 	$(MAKE) $(LIBS) ;	$(MAKE) clean ; cd $(SOURCES) ; $(MAKE) ; \
-	$(MAKE) DIAGLIB=diag_sq$(STD) OPTIM='-O 2' OPTIM90='-O 2'
+	$(MAKE) DIAGLIB=diag_sq$(STD) OPTIM='-O $(OPTIL)' OPTIM90='-O $(OPTIL)'
