@@ -1,4 +1,3 @@
-#     if defined (RDIAG_LICENCE)
 !---------------------------------- LICENCE BEGIN -------------------------------
 ! R.DIAG - Diagnostic tool kit for the GEM numerical atmospheric model
 ! Copyright (C) 1990-2010 - Division de Recherche en Prevision Numerique
@@ -13,18 +12,17 @@
 ! along with this library; if not, write to the Free Software Foundation, Inc.,
 ! 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 !---------------------------------- LICENCE END ---------------------------------
-#     endif
-      subroutine encodate(DTIME,intime,timeunit)
+
+      subroutine encodate( DTIME, intime,timeunit )
 *
       implicit none
 
-#     include "udunits.inc"
       include 'netcdf.inc'
       include 'cdf2ccc.h'
 
-      real*8  dtime             ! The output time value
-      integer intime
-      character*128 timeunit    ! The unit attribute for time in the netCDF file
+      real(8) DTIME               ! The output NetCDF time value
+      integer intime              ! The input CMC/RPN date-time-stamp
+      character(len=128) timeunit ! The unit attribute for time in the netCDF file
  
 
 ******
@@ -36,6 +34,11 @@
 *     timeunit.
 *
 *REVISIONS
+*
+*  Bernard Dugas, fevrier 2017 :
+*   Tout le traitement de type udunits (y compris 
+*   l'initialisation) se fait maintenant dans
+*   la routine udparse3 qui remplace udparse2
 *
 *  Bernard Dugas, septembre 2014 :
 *   Corriger le code d'initiation pour le cas .NOT.leap.
@@ -67,37 +70,26 @@
 * - Faire un "call xit" en cas d'erreur
 *
 ******
+
+      integer, parameter :: encod=-1, decod=+1
+
       logical, save :: first_call = .true.
       integer, save :: iyear0,imonth0,iday0,ihour0,imin0,isec0,intime0
 
       character(len=128) text
       integer iyear,imonth,iday,ihour,imin,isec
       integer status,datchek,part1,part2
-      real    retcode, sec
+      real    retcode
       real(8) hours
 
       integer, external :: newdate
-      
-C     Note: POINTER type is integer*4 on the CDC SparcCenter 2000
-C     system running SunOS 5.3, but it is integer*8 under IBM
-C     Power systems running AIX The udunits pre-processor
-C     macro UD_POINTER provides the correct size
-
-      UD_POINTER unitptr ! Pointer to udunits "unit" type
-
-      integer ercode    ! For determining udunits result
 
 *-----------------------------------------------------------------------
-*     initialisation UDUNITS :
-
-      if (boot) retcode=utopen(trim( udunits_dat ))
-      boot=.false.
-
       if (first_call .and. (cccvx .or. .not.leap .or. noUD)) then
 
          hours = 0
-         call udparse2(timeunit,hours,iyear0,imonth0,iday0,ihour0,
-     .                                       imin0,isec0)
+         call udparse3(timeunit,udunits_dat,decod,hours,
+     .                 iyear0,imonth0,iday0,ihour0,imin0,isec0)
          part1   =  (iyear0*100+imonth0 )*100+iday0
          part2   = ((ihour0*100+imin0)*100+isec0)*100
          datchek = newdate( intime0, part1,part2, +3 )
@@ -125,8 +117,6 @@ C     macro UD_POINTER provides the correct size
 
       call def_date2( intime, iyear,imonth,iday, ! Decodons intime
      .                        ihour,imin,  isec, 'decode' )
-
-      sec = isec
 
       if (cccvx) then ! Calendrier 360 jours
 
@@ -188,23 +178,8 @@ C     macro UD_POINTER provides the correct size
 
       else ! Calendrier Gregorien (par defaut)
 
-         unitptr = UTMAKE()
-         ercode = UTDEC(trim(timeunit),unitptr)
-
-         if (ercode.eq.0) then
-
-            ercode= uticaltime (iyear,imonth,iday,ihour,imin,sec,
-     .                                               unitptr, dtime)
-
-            if (ercode.ne.0) then
-               print*,'ercode = ',ercode
-               call uduerr(ercode,'UTICALTIME','')
-               call xit('encodate',-1 )
-            endif
-         endif
-
-         ! Free the pointer
-         call UTFREE(unitptr)
+         call udparse3( timeunit,udunits_dat,encod,DTIME,
+     .                  iyear,imonth,iday,ihour,imin,isec )
 
       endif
 

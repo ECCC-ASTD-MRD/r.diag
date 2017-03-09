@@ -54,11 +54,11 @@ FIXES   = $(PWD)/lib/$(EC_ARCH)/stubs.o
 RMNLIB  = rmn_015.2
 VGDLIB  = descrip
 
-# DDFUN90, NetCDF3 and UdUnits1 library names
+# DDFUN90, NetCDF4 and UdUnits2 library names
 
 DDFUN90  = ddfun90
-lNetCDF  = netcdff netcdf
-UDUNITS  = udunits
+lNetCDF  = netcdff netcdf hdf5_hl hdf5 dl z
+UDUNITS  = udunits2 expat
 
 DIAG_VERSION = 6.3.1
 CONV_VERSION = 2.2.1
@@ -94,6 +94,8 @@ initial:
 	s.f77 -g -c ../../program_version.f ; fi
 	if [[ ! -f $(LIBDIR)/stubs.o ]]; then cd $(LIBDIR) ;\
 	s.f90 -g -c ../../stubs.f90 ; fi
+	if [[ ! -f $(LIBDIR)/crc32.o ]]; then cd $(LIBDIR) ;\
+	s.cc -g -c ../../crc32.c ; fi
 
 # RDIAG Diagnostic toolkit recipe
 
