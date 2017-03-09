@@ -73,7 +73,11 @@ default: $(ARCH)
 .ftn.a:
 	/bin/rm -f $*.f
 	$(FTNC) $<
+ifndef DO_DEBUG
 	/bin/mv -f $*.f $(SOURCES)
+else
+	/bin/cp -f $*.f $(SOURCES)
+endif
 
 .ftn90.a:
 	/bin/rm -f $*.f90
@@ -86,11 +90,15 @@ default: $(ARCH)
 
 .ftn.o:
 	$(FCOMP) $<
+ifndef DO_DEBUG
 	/bin/rm -f $*.f
+endif
 
 .ftn90.o:
 	$(FCOMP) $<
+ifndef DO_DEBUG
 	/bin/rm -f $*.f90
+endif
 
 .cdk90.o:
 	$(FCOMP) $<

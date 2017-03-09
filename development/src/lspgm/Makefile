@@ -86,7 +86,9 @@ default:  $(LIBP)
 	if [ -f $@ ]; then chmod 644 $@ ; fi
 	$(AR) rv $@ $*.o
 	$(ZIP) $(ZIPFILE) $*.f
+ifndef DO_DEBUG
 	/bin/rm -f $*.o $*.f $*.ftn
+endif
 
 .ptn90.a:
 	sed s/' PROGRAM $*'/' SUBROUTINE $*'/ $< > $*.ftn90 ;\
@@ -94,7 +96,9 @@ default:  $(LIBP)
 	if [ -f $@ ]; then chmod 644 $@ ; fi
 	$(AR) rv $@ $*.o
 	$(ZIP) $(ZIPFILE) $*.f90
+ifndef DO_DEBUG
 	/bin/rm -f $*.o $*.f90 $*.ftn90
+endif
 
 .ptn.o:
 	sed s/'      PROGRAM '/'      SUBROUTINE '/ $< > $*.ftn ;\
