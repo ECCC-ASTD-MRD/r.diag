@@ -1255,7 +1255,7 @@
               END DO
           END IF
 
-          CALL PUTMSET4( 12, AVG, SET,NSAMP,RKIND,
+          CALL PUTMSET3( 12, AVG, SET,NSAMP,RKIND,
      +                            HIVAL,LOVAL,NSET,
      +                            LEV,VARIAB,MAXLEV,
      +                            IBUF,MAXW )
