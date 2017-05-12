@@ -23,18 +23,18 @@ all: clean
 	mkdir -p $(CURDIR)/NetcdfUdunits/$(EC_ARCH)
 	## Do NOT make netcdf at CMC.  Use the library supplied with the compiler instead
 	## [[ -d netcdf-3.6.3 ]] || /bin/cp -drp src/netcdf-3.6.3 .
-	[[ -d udunits-1.12.11 ]] || /bin/cp -drp src/udunits-1.12.11 .
-	cd udunits-1.12.11/src && ./configure --prefix=$(CURDIR)/NetcdfUdunits/$(EC_ARCH) CC=$(CCOMP) FC=$(FCOMP) F77=$(FCOMP) CPPFLAGS=$(CPPFLAGS) --enable-shared
-	# N.B.:  Because GIT does not retain file dates, Make attempts to recreate
-	#        utscan.c from utscan.l.  This is not necessary unless we change
-	#        utscan.l.  What's more, Make's attempt will fail because our
-	#        revision of yacc / bison behaves a little differently than that
-	#        of Unidata.  A Unidata-endorsed solution is to
-	#        touch utscan.c and utscan.h, and delete utscan.o
-	touch ./udunits-1.12.11/src/lib/utscan.c  ./udunits-1.12.11/src/lib/utscan.h
-	rm -f ./udunits-1.12.11/src/lib/utscan.o
-	cd udunits-1.12.11/src && $(MAKE) && $(MAKE) test
-	-cd udunits-1.12.11/src && $(MAKE) -k install
+	[[ -d udunits-2.1.24 ]] || /bin/cp -drp src/udunits-2.1.24 .
+        # Follow Bernard ...
+        #  --enable-shared=no :  Le fait que ma librairie udunits2 est statique m'a permis d'y mettre le f_udunits_2.o.
+	cd udunits-2.1.24 && ./configure --prefix=$(CURDIR)/NetcdfUdunits/$(EC_ARCH) CFLAGS=$(CFLAGS) CC=$(CCOMP) FC=$(FCOMP) F77=$(FCOMP) CPPFLAGS=$(CPPFLAGS) --enable-shared=no
+	cd udunits-2.1.24 && cp -drp udunits2.pdf prog/udunits2prog.pdf lib/udunits2lib.pdf $(CURDIR)/NetcdfUdunits/$(EC_ARCH)/share/doc/udunits
+	cd udunits-2.1.24 && make && make check && make -k install && make clean
+	cd udunits-2.1.24/lib && $(FCOMP) -c f_udunits_2.f90 && \
+         s.ar -r $(CURDIR)/NetcdfUdunits/$(EC_ARCH)/lib/libudunits2.a f_udunits_2.o && \
+         rsync -a f_udunits_2.inc f_udunits_2.mod $(CURDIR)/NetcdfUdunits/$(EC_ARCH)/include && \
+         /bin/rm -f f_udunits_2.o f_udunits_2.mod
+        # ... was following Bernard
+
 	## Do NOT make netcdf at CMC.  Use the library supplied with the compiler instead
 	## cd netcdf-3.6.3 && ./configure --prefix=$(CURDIR)/NetcdfUdunits/$(EC_ARCH) CC=$(CCOMP) FC=$(FCOMP) F77=$(FCOMP) CPPFLAGS=$(CPPFLAGS) --disable-shared --disable-cxx --enable-separate-fortran
 	## cd netcdf-3.6.3 && $(MAKE) && $(MAKE) test && $(MAKE) install
