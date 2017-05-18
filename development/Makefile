@@ -77,9 +77,8 @@ export:
 	rsync -avH $(DIAGNOSTIQUE)/bin $(DESTINATION)/ ;\
 	rsync -lptgoDv $(DIAGNOSTIQUE)/bin/* $(DESTINATION)/bin ;\
 	rsync -av $(DIAGNOSTIQUE)/include $(DESTINATION)/ ;\
-	rsync -av $(DIAGNOSTIQUE)/share $(DESTINATION)/ ;\
-	rsync -av $(DIAGNOSTIQUE)/man/pdoc/*.html $(DESTINATION)/share/pdoc/ ;\
-	rsync -av $(EXTRAS)/src/udunits-1.12.11/src/lib/udunits.dat $(DESTINATION)/include
+	[ -d $(DIAGNOSTIQUE)/share ] && rsync -av $(DIAGNOSTIQUE)/share $(DESTINATION)/ ;\
+	rsync -av $(DIAGNOSTIQUE)/man/pdoc/*.html $(DESTINATION)/share/pdoc/
 
 # Ensure initial setup is done
 
