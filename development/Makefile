@@ -119,7 +119,7 @@ cdf2conv:
 	$(MAKE) cdf2rpn CONV_VERSION=$(CONV_VERSION) \
 	RMNLIB=$(RMNLIB) VGDLIB=$(VGDLIB) OBJ="$(FIXES)" \
 	EXTRAS=$(EXTRAS)/NetcdfUdunits/$(EC_ARCH) DDFUN90=$(DDFUN90) \
-	lNetCDF="$(lNetCDF)" UDUNITS=$(UDUNITS)
+	lNetCDF="$(lNetCDF)" UDUNITS="$(UDUNITS)"
 
 # Only generate the LSSUB, LSPM and CDF2CCC libraries
 
