@@ -13,9 +13,14 @@ FCOMP = s.f90
 CCOMP = cc
 
 #CCOMP = xlc_r
+
 #CFLAGS='-q64 -qtbtable=full -DpgiFortran -g -O0'
 
 CPPFLAGS = -DpgiFortran
+
+documentation:
+	mkdir -p $(CURDIR)/../development/man/pdoc/udunits
+	cd src/udunits-2.1.24 && cp -drp udunits2.pdf prog/udunits2prog.pdf lib/udunits2lib.pdf $(CURDIR)/../development/man/pdoc/udunits
 
 all: clean
 	echo Fortran compiler used : $(FCOMP) 
@@ -27,7 +32,6 @@ all: clean
         # Follow Bernard ...
         #  --enable-shared=no :  Le fait que ma librairie udunits2 est statique m'a permis d'y mettre le f_udunits_2.o.
 	cd udunits-2.1.24 && ./configure --prefix=$(CURDIR)/NetcdfUdunits/$(EC_ARCH) CFLAGS=$(CFLAGS) CC=$(CCOMP) CXX=$(CXX) FC=$(FCOMP) F77=$(FCOMP) CPPFLAGS=$(CPPFLAGS) --enable-shared=no
-	cd udunits-2.1.24 && cp -drp udunits2.pdf prog/udunits2prog.pdf lib/udunits2lib.pdf $(CURDIR)/NetcdfUdunits/$(EC_ARCH)/share/doc/udunits
 	cd udunits-2.1.24 && make && make check && make -k install && make clean
 	cd udunits-2.1.24/lib && $(FCOMP) -c f_udunits_2.f90 && \
          s.ar -r $(CURDIR)/NetcdfUdunits/$(EC_ARCH)/lib/libudunits2.a f_udunits_2.o && \
