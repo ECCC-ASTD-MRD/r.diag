@@ -82,7 +82,7 @@ export:
 	rsync -av $(DIAGNOSTIQUE)/include $(DESTINATION)/ ;\
 	[ -d $(DIAGNOSTIQUE)/share ] && rsync -av $(DIAGNOSTIQUE)/share $(DESTINATION)/ ;\
 	rsync -av $(DIAGNOSTIQUE)/man/pdoc/*.html $(DESTINATION)/share/pdoc/ ;\
-	rsync -av $(DIAGNOSTIQUE)/man/pdoc/udunits $(DESTINATION)/share/pdoc
+	rsync -av $(DIAGNOSTIQUE)/man/pdoc/udunits $(DESTINATION)/share/pdoc || true
 
 # Ensure initial setup is done
 
