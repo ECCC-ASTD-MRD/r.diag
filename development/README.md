@@ -59,10 +59,11 @@
  well, a VgridDescriptors package compatible with the current GEM v4+
  model version has to be available. Furthermore, to generate the two
  cdf2xxx executables, the NetCDF (v3 or v4) and UdUnits v2 library
- packages also have to available. These in turn require the hdf5,
- dl and z libraries (if NetCDF v4 is used) and the expat library
- (for UdUnits v2). The current configuration assumes that
- the NetCDF v4 package is used.
+ packages also have to available. These in turn require the hdf5, dl,
+ and z libraries (if NetCDF v4 is used) and the expat library (for
+ UdUnits v2). The current configuration assumes that the the NetCDF
+ v4 package is used and that the netcdff library is provided as a SSM
+ bundle that also points to the UdUnits2 necessary components.
 
  Most of the code available here is written in FORTRAN (and a lot
  of it is still in F77). As a consequnce of this, the conversion tool
@@ -87,5 +88,5 @@
  Software Foundation, version 2.1 of the License.
 
  Contact : Dugas.Bernard@uqam.ca
- Last revision : April 2017
+ Last revision : May 2017
 

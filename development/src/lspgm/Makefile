@@ -9,7 +9,7 @@
 # - Ajouter des dependances a toc_gest_1.cdk, toc_gest_2.cdk et set_a_b_from_AABB.cdk
 #   pour DXDP, GPASG, GPDPD, GPHUM, GSAPL, GSAPZL, GSATHL, GSMSLPH, PGEN et VSINTH
 
-ifeq "$(BAtail -f ../../Resultats.make.pgi13xx.ST1SE_ARCH)" "$(EC_ARCH)"
+ifeq "$(BASE_ARCH)" "$(EC_ARCH)"
 $(error FATAL: EC_ARCH is equal to BASE_ARCH, no compiler architecture is defined, ABORTING)
 endif
 
@@ -53,14 +53,17 @@ DIAGLIB = diag_sq$(STD)
 GRAFLIB =
 LAPACK  = lapack
 PROGLIB = prog_sq$(STD)
-RMNLIB  = rmn_015.2
+RMNLIB  = rmn_016.2
 VGDLIB  = descrip
 
 LIBP    = $(LIBDIR)/lib$(PROGLIB).a
 LIBS    = $(LIBDIR)/lib$(DIAGLIB).a
 ZIPFILE = $(LIBDIR)/lspgm_STD$(STD).f.tar.bz2
 
-DIAG_VERSION = 6.3.1
+DIAG_VERSION = 6.4.0
+
+HOSTWEB =
+DIAGWEB =
 
 NOPLOT  = -DNOPLOT
 DINTERP = -DNEW_INTERP
@@ -118,11 +121,13 @@ endif
 
 .ptn.txt:
 	$(FTNT) $< | sed s/'^[*]'/' '/ > $(MANDIR)/$@ ;\
+	command-origin-document.sh $< $(MANDIR)/$@ ;\
 	if ( test "$(HOSTWEB):$(DIAGWEB)" != ":" ) then \
 	rsync -av $(MANDIR)/$@ $(HOSTWEB):$(DIAGWEB) ; fi
 
 .ptn90.txt:
 	$(FTNT) $< | sed s/'^[!]'/' '/ > $(MANDIR)/$@ ;\
+	command-origin-document.sh $< $(MANDIR)/$@ ;\
 	if ( test "$(HOSTWEB):$(DIAGWEB)" != ":" ) then \
 	rsync -av $(MANDIR)/$@ $(HOSTWEB):$(DIAGWEB) ; fi
 
@@ -446,9 +451,10 @@ driver: driver.ptn $(LIBP) $(LIBS)
 	-librmn $(RMNLIB) $(CODEBETA) -obj "$(OBJ)" \
 	-libsys "$(DDFUN90) $(LAPACK) $(BLAS)"
 	if [ -x $@ ] ; then \
-		/bin/mv driver $(BINDIR)/r.diag_$(DIAG_VERSION) ; \
+		/bin/mv driver $(BINDIR)/r.diag_$(DIAG_VERSION)_$(COMP_ARCH) ; \
+		ssh localhost ldd $(BINDIR)/r.diag_$(DIAG_VERSION)_$(COMP_ARCH) | \
+		grep -i "not found" && exit 1 ; /bin/rm $@.f $@.o ; \
 		touch -t 199001010000 driver && chmod 755 driver ; \
-		/bin/rm $@.f $@.o ; \
 	fi
 
 info.lspgm: driver.ptn

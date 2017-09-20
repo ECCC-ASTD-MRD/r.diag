@@ -24,7 +24,10 @@ ZIP     = `which zip`
 DIAGNOSTIQUE = $(CURDIR)/../..
 
 CFLAGS  =
-FFLAGS  = 
+FFLAGS  =
+ 
+HOSTWEB = 
+DIAGWEB =
 
 ENTETE  = 32
 NP      = 1
