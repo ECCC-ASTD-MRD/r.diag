@@ -38,7 +38,7 @@ eval `cclargs   $0              "[Genere un module pouvant etre utilise en mode 
       -graph    ""     "graph"  "[Librairie contenant les routines graphiques NCARlib]"\
       -nodebug  "NON"  "OUI"    "[Ne pas generer un code de type debug -g]"\
       -f90+     "NON"  "OUI"    "[Chercher une source .f90 de preference ?]"\
-      -rmnlib   "rmn_016.3" ",,,," "[Librairie rmnlib]"\
+      -rmnlib   "rmn_016.2" ",,,," "[Librairie rmnlib]"\
       -lapack   "lapack"  ",,,," "[Code LAPACK]"\
       -vgdlib   "descrip" ",,,," "[Code vgrid_descriptors]"\
       -ddfun90  "ddfun90" ",,,," "[Code precision etendue F90]"\
