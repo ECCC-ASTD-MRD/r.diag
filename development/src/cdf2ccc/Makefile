@@ -22,15 +22,14 @@ DIAGNOSTIQUE  = $(CURDIR)/../..
 # IGNORE_ERRORS = set -e
 # MAKE     = $(IGNORE_ERRORS) ; make DIAGNOSTIQUE=$(DIAGNOSTIQUE)
 
-#EXTRAS   = $(DIAGNOSTIQUE)/../extras/NetcdfUdunits/$(EC_ARCH)
+EXTRAS   = $(DIAGNOSTIQUE)/../extras/NetcdfUdunits/$(EC_ARCH)
 
 DIAGS    = $(DIAGNOSTIQUE)
 BINDIR   = $(DIAGS)/bin/$(BASE_ARCH)
 INCLUDES = $(DIAGS)/include
 LIBDIR   = $(DIAGS)/lib/$(EC_ARCH)
 MANDIR   = $(DIAGS)/share/pdoc
-#MODDIR   = $(INCLUDES) $(INCLUDES)/$(EC_ARCH) $(EXTRAS)/include
-MODDIR   = $(INCLUDES) $(INCLUDES)/$(EC_ARCH)
+MODDIR   = $(INCLUDES) $(INCLUDES)/$(EC_ARCH) $(EXTRAS)/include
 
 CONV_VERSION = 2.3.0
 
@@ -62,20 +61,19 @@ DIAGLIB  = diag_sq$(STD)_g
 RMNLIB   = rmn_016.2
 VGDLIB   = descrip
 
-# Static (_s) load via symlinks in the netcdff-4.4 SSM package
-lNetCDF  = netcdff_s netcdf_s hdf5_hl_s hdf5_s dl sz_s z
-UDUNITS  = udunits2f_s udunits2_s
+# UQUM:  Static (_s) load via symlinks in the netcdff-4.4 SSM package
+#lNetCDF  = netcdff_s netcdf_s hdf5_hl_s hdf5_s dl sz_s z
+#UDUNITS  = udunits2f_s udunits2_s
+#
+# CMC:   compile udunits with r.diag
+lNetCDF  = netcdff netcdf hdf5_hl hdf5 dl z
+UDUNITS  = udunits2 expat
 
-LIBPATH  = $(LIBDIR)
+LIBPATH  = $(LIBDIR) $(EXTRAS)/lib
 
 # Shared load via the netcdff SSM package
 #lNetCDF  = netcdff
 #UDUNITS  = udunits2f udunits2
-
-# Other/outdated items
-#UDUNITS  = udunits2 expat
-#lNetCDF  = netcdff netcdf hdf5_hl hdf5 dl z
-#LIBPATH  = $(LIBDIR) $(EXTRAS)/lib
 
 # les programatheques externes
 
@@ -252,6 +250,7 @@ initial:
 #	s.locate --lib netcdff_s 1> /dev/null || { echo -e \n PLS execute \". s.ssmuse.dot netcdff-4.4\" \n ; false ; }
 #	s.locate --lib $(lNetCDF) 1> /dev/null || { echo -e \n PLS execute \". s.ssmuse.dot netcdff\" \n ; false ; }
 #	if [[ ! -f $(EXTRAS)/lib/libnetcdf.a ]]; then cd $(EXTRAS)/../../.. ; make all ; cd $(DIAGNOSTIQUE)/src ; fi
+	if [[ ! -f $(EXTRAS)/lib/libudunits.a ]]; then cd $(EXTRAS)/../../.. ; $(MAKE) all ; cd $(DIAGNOSTIQUE)/src ; fi
 
 # Voir "Managing project with make" de O'Reilly & Associates, 1989,
 # pages 51-53, pour les details de ce qui se passe dans ce qui suit

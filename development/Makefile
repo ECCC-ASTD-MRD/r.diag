@@ -21,15 +21,21 @@ MAKEOVERRIDES += DIAGNOSTIQUE=$(DIAGNOSTIQUE)
 
 DESTINATION = $(DIAGNOSTIQUE)/..
 
-# NetCDF v_3.6 and Udunits v_1.2 libraries used to be found 
+# NetCDF v_3.6 and Udunits v_1.2 libraries
+# UQAM:
+# used to be found 
 # in the EXTRAS directory. The package now can either 1) use
 # the netcdff SSM package to locate all the necessary shared
 # libraries including MFV's udunits2f FORTRAN wrapper as well
 # as udunits2 itself or 2) use the static versions of these
 # same libraries as provided by the netcdff-4.4 SSM package.
 # As of May 2017, the second option is used.
-#EXTRAS  = $(DESTINATION)/extras
-#EXTLIB  = $(EXTRAS)/NetcdfUdunits/$(EC_ARCH)/lib
+#
+# CMC:
+# netcdf now comes with the compiler
+# udunits must still be compiled with r.diag
+EXTRAS  = $(DESTINATION)/extras
+EXTLIB  = $(EXTRAS)/NetcdfUdunits/$(EC_ARCH)/lib
 
 # Directories used/created by this Makefile
 
@@ -63,13 +69,14 @@ VGDLIB  = descrip
 
 DDFUN90  = ddfun90
 
-# Shared load via the netcdff SSM package
-#lNetCDF  = netcdff
-#UDUNITS  = udunits2f udunits2
-
+# UQAM: Shared load via the netcdff SSM package
 # Static (_s) load via symlinks in the netcdff-4.4 SSM package
-lNetCDF  = netcdff_s netcdf_s hdf5_hl_s hdf5_s dl sz_s z
-UDUNITS  = udunits2f_s udunits2_s expat
+#lNetCDF  = netcdff_s netcdf_s hdf5_hl_s hdf5_s dl sz_s z
+#UDUNITS  = udunits2f_s udunits2_s expat
+#
+# CMC:  compile udunits with r.diag
+lNetCDF  = netcdff netcdf hdf5_hl hdf5 dl z
+UDUNITS  = udunits2 expat
 
 
 DIAG_VERSION = 6.4.0
@@ -106,6 +113,7 @@ initial_base:
 #	s.locate --lib netcdff_s 1> /dev/null || { echo -e "\nPLS execute \". s.ssmuse.dot netcdff-4.4\"\n" ; false ; }
 #	s.locate --lib $(lNetCDF) 1> /dev/null || { echo -e "\nPLS execute \". s.ssmuse.dot netcdff\"\n" ; false ; }
 #	if [[ ! -f $(EXTLIB)/libnetcdf.a ]]; then cd $(EXTRAS) ; make all ; fi
+	if [[ ! -f $(EXTLIB)/libudunits.a ]]; then cd $(EXTRAS) ; $(MAKE) all ; fi
 	if [[ ! -f $(LIBDIR)/libddfun90.a || -z "$(DDFUN90)" ]]; then \
 	cd $(DIAGNOSTIQUE)/src/extras/ddfun90 ; $(MAKE) RMNLIB=$(RMNLIB) ; fi
 	if [[ ! -x $(BINDIR)/r.echo ]]; then cd $(DIAGNOSTIQUE)/src/extras/tools ; $(MAKE) ; fi
@@ -142,8 +150,8 @@ cdf2conv: initial_base initial_cdf
 	$(MAKE) cdf2rpn CONV_VERSION=$(CONV_VERSION) \
 	RMNLIB=$(RMNLIB) VGDLIB=$(VGDLIB) OBJ="$(FIXES)" \
 	lNetCDF="$(lNetCDF)" UDUNITS="$(UDUNITS)" \
-	DDFUN90=$(DDFUN90) ENTETE=$(ENTETE)
-#	EXTRAS=$(EXTRAS)/NetcdfUdunits/$(EC_ARCH) DDFUN90=$(DDFUN90)
+	DDFUN90=$(DDFUN90) ENTETE=$(ENTETE) \
+	EXTRAS=$(EXTRAS)/NetcdfUdunits/$(EC_ARCH)
 
 # Only generate the LSSUB, LSPM and CDF2CCC libraries
 
