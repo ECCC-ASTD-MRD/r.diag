@@ -244,11 +244,12 @@ genlib: $(OBJECTS)
 
 #Descriptions des recettes personnelles
 
+# At CMC, do not load the netcdff library.  It comes with the compiler.
 initial:
 #	Setup des repertoires dependants de $(EC_ARCH)
 	/bin/mkdir -p $(LIBDIR) $(MANDIR) $(MODDIR) $(BINDIR)
 	s.locate --lib $(VGDLIB) 1> /dev/null || { echo -e \n PLS execute \". s.ssmuse.dot vgriddesc\" \n ; false ; }
-	s.locate --lib netcdff_s 1> /dev/null || { echo -e \n PLS execute \". s.ssmuse.dot netcdff-4.4\" \n ; false ; }
+#	s.locate --lib netcdff_s 1> /dev/null || { echo -e \n PLS execute \". s.ssmuse.dot netcdff-4.4\" \n ; false ; }
 #	s.locate --lib $(lNetCDF) 1> /dev/null || { echo -e \n PLS execute \". s.ssmuse.dot netcdff\" \n ; false ; }
 #	if [[ ! -f $(EXTRAS)/lib/libnetcdf.a ]]; then cd $(EXTRAS)/../../.. ; make all ; cd $(DIAGNOSTIQUE)/src ; fi
 
