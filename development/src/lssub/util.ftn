@@ -18,6 +18,17 @@
 !---------------------------------- LICENCE END ---------------------------------
 #     endif
 C     $Log: util.ftn,v $
+C     Revision 3.125  2018/02/20 10:10:10  dugas
+C     Ajouter deux messages informatifs dans QQQDOC
+C
+C     Revision 3.124  2018/01/28 15:15:15  dugas
+C     - Ajouter l'argument general '-version'
+C     - Tenir compte des valeurs optionelles 'ALL',
+C       'DAT' et 'REV' de l'argument general '-vers'
+C
+C     Revision 3.123  2018/01/18 14:14:14  dugas
+c     Ajouter l'option DTM=4 dans SET_DTM
+c
 C     Revision 3.122  2016/10/26 15:15:24  dugas
 C     - Explicitement desactiver tous les types de donnees
 C       manquantes dans JCLPNT lorsque MValue est faux
@@ -874,7 +885,7 @@ C
 
       IMPLICIT        none
 
-      INTEGER,        PARAMETER :: NBRGEN = 16 , NBRUNT = 80
+      INTEGER,        PARAMETER :: NBRGEN = 17 , NBRUNT = 80
       INTEGER,        PARAMETER :: MAXUNIT = unite_io_maximale
 
       INTEGER         LISTE(NBRUNT)
@@ -1016,7 +1027,8 @@ C
      +     cles(13)/ 'MVALUE' /,nam(13)/ 'NONE' /,def(13)/ 'OUI'  /,
      +     cles(14)/ 'MVALUE' /,nam(14)/ 'NONE' /,def(14)/ '  -1' /,
      +     cles(15)/ 'BISECT' /,nam(15)/ 'OUI'  /,def(15)/ 'NON'  /,
-     +     cles(16)/ 'CENDIAN'/,nam(16)/ 'BIG'  /,def(16)/ 'SMALL'/ 
+     +     cles(16)/ 'CENDIAN'/,nam(16)/ 'BIG'  /,def(16)/ 'SMALL'/,
+     +     cles(17)/ 'VERSION'/,nam(17)/ 'NON'  /,def(17)/ 'OUI'  /
 
 *----------------------------------------------------------------------
 ***    GET INITIAL SYSTEM TIME AND SAVE IT.
@@ -1209,7 +1221,19 @@ C
       IF (INFMODI.EQ. 4)            INFMODX = 'INFORM  '
       IF (INFMODI.EQ. 5)            INFMODX = 'TRIVIAL '
 
-      IF (INFO .OR. IS_ON( NAM(10) )) CALL program_version('OUI')
+***    Check for the "-vers" or "-version" arguments.
+
+      IF (INFO .OR. IS_ON( NAM(10) )
+     +         .OR. IS_ON( NAM(17) ))                          THEN
+          CALL program_version('OUI')
+      ELSE
+          CALL LOW2UP( NAM(10),NAM(10) )
+          IF (NAM(10) == 'ALL'
+     +   .OR. NAM(10) == 'DAT'
+     +   .OR. NAM(10) == 'REV')                                THEN
+              CALL program_version( NAM(10) )
+          END IF
+      END IF
 
       IF (INFO)                                                THEN
           IF (BIGENDI == 0) EVALUE = ' Little Endian machine'
@@ -2698,11 +2722,12 @@ CCC           END IF
       ENTRY SET_DTM ( DTM )
 
 ***   PARAMETERS...
-*      DTM     = FLAG TO INDICATE METHOD OF TIME MEASUREMENT IN CCC FILES
-*              = 0 ==> TIME IN UNITS OF TIME STEPS.
-*              = 1 ==> TIME IN YYYYMMDDHH FORMAT, NO LEAP YEARS.
-*              = 2 ==> TIME IN YYYYMMDDHHMM FORMAT AND AGAIN, NO LEAP YEARS.
-*              = 3 ==> TIME IN YYYYMMDDHH FORMAT, LEAP YEARS ACCOUNTED FOR,
+*      DTM = FLAG TO INDICATE METHOD OF TIME MEASUREMENT IN CCC FILES
+*          = 0 ==> TIME IN UNITS OF TIME STEPS.
+*          = 1 ==> TIME IN YYYYMMDDHH FORMAT, NO LEAP YEARS.
+*          = 2 ==> TIME IN YYYYMMDDHHMM FORMAT AND AGAIN, NO LEAP YEARS.
+*          = 3 ==> TIME IN YYYYMMDDHH FORMAT, LEAP YEARS ACCOUNTED FOR.
+*          = 4 ==> TIME IN YYYYMMDDHHMM FORMAT AND AGAIN, LEAP YEARS ACCOUNTED FOR.
 
       IF (DTM == 0)                                            THEN
           DATE_CONVERSION_FACTOR = 0
@@ -2714,6 +2739,9 @@ CCC           END IF
           CALL Ignore_LeapYear()
       ELSE IF (DTM == 3)                                       THEN
           DATE_CONVERSION_FACTOR = 1 00 00 00
+          CALL Accept_LeapYear()
+      ELSE IF (DTM == 4)                                       THEN
+          DATE_CONVERSION_FACTOR = 1 00 00
           CALL Accept_LeapYear()
       END IF
 
@@ -2922,65 +2950,65 @@ CCC           END IF
       LOGICAL                INFO
       COMMON       /ZZVERBO/ INFO
 
-C$    CHARACTER     EVAL*8
-C$    INTEGER       Mp_My_ThreadNum
-C$    EXTERNAL      Mp_My_ThreadNum, Mp_Set_NumThreads,
-C$   +              Mp_Block,        Mp_UnBlock,
-C$   +              Mp_Destroy,      Mp_Create,
-C$   +              Mp_BlockTime,    GETENVC
+!!    CHARACTER     EVAL*8
+!!    INTEGER       Mp_My_ThreadNum
+!!    EXTERNAL      Mp_My_ThreadNum, Mp_Set_NumThreads,
+!!   +              Mp_Block,        Mp_UnBlock,
+!!   +              Mp_Destroy,      Mp_Create,
+!!   +              Mp_BlockTime,    GETENVC
 C
 *------------------------------------------------------------------
-C$    IF (SERVICE.EQ.'THREADS')                                THEN
+!!    IF (SERVICE.EQ.'THREADS')                                THEN
 C
-C$        IF (Check.NE.'Mp_Check')                             THEN
-C$            CALL GETENVC('MP_SET_NUMTHREADS',EVAL )
-C$            READ(EVAL,'(BN,I4)') NPs
-C$            NPs =  MIN( NUMBER, MAX( 1, NPs ) )
-C$            IF (NPs.GT.1) CALL Mp_Set_NumThreads( NPs )
-C$            Check   = 'Mp_Check'
-C$        ELSE IF (NUMBER.GT.1)                                THEN
-C$            NPs     =  MIN( NUMBER, NPs )
-C$        END IF
-C$        mpserv      =  NPs
+!!        IF (Check.NE.'Mp_Check')                             THEN
+!!            CALL GETENVC('MP_SET_NUMTHREADS',EVAL )
+!!            READ(EVAL,'(BN,I4)') NPs
+!!            NPs =  MIN( NUMBER, MAX( 1, NPs ) )
+!!            IF (NPs.GT.1) CALL Mp_Set_NumThreads( NPs )
+!!            Check   = 'Mp_Check'
+!!        ELSE IF (NUMBER.GT.1)                                THEN
+!!            NPs     =  MIN( NUMBER, NPs )
+!!        END IF
+!!        mpserv      =  NPs
 C
-C$    ELSE IF (SERVICE.EQ.'BLOCK')                             THEN
+!!    ELSE IF (SERVICE.EQ.'BLOCK')                             THEN
 C
-C$        IF (NPs.GT.1) CALL Mp_Block()
-C$        mpserv = -1
+!!        IF (NPs.GT.1) CALL Mp_Block()
+!!        mpserv = -1
 C
-C$    ELSE IF (SERVICE.EQ.'UNBLOCK')                           THEN
+!!    ELSE IF (SERVICE.EQ.'UNBLOCK')                           THEN
 C
-C$        IF (NPs.GT.1) CALL Mp_UnBlock()
-C$        mpserv = -2
+!!        IF (NPs.GT.1) CALL Mp_UnBlock()
+!!        mpserv = -2
 C
-C$    ELSE IF (SERVICE.EQ.'DESTROY')                           THEN
+!!    ELSE IF (SERVICE.EQ.'DESTROY')                           THEN
 C
-C$        IF (NPs.GT.1) CALL Mp_Destroy()
-C$        mpserv = -3
+!!        IF (NPs.GT.1) CALL Mp_Destroy()
+!!        mpserv = -3
 C
-C$    ELSE IF (SERVICE.EQ.'CREATE')                            THEN
+!!    ELSE IF (SERVICE.EQ.'CREATE')                            THEN
 C
-C$        IF (NPs.GT.1) CALL Mp_Create( NUMBER )
-C$        mpserv = -4
+!!        IF (NPs.GT.1) CALL Mp_Create( NUMBER )
+!!        mpserv = -4
 C
-C$    ELSE IF (SERVICE.EQ.'BLOCKTIME')                         THEN
+!!    ELSE IF (SERVICE.EQ.'BLOCKTIME')                         THEN
 C
-C$        IF (NPs.GT.1) CALL Mp_BlockTime( NUMBER )
-C$        mpserv = -5
+!!        IF (NPs.GT.1) CALL Mp_BlockTime( NUMBER )
+!!        mpserv = -5
 C
-C$    ELSE IF (SERVICE.EQ.'THREADNUM')                         THEN
+!!    ELSE IF (SERVICE.EQ.'THREADNUM')                         THEN
 C
-C$        NUMBER = Mp_My_ThreadNum()
-C$        mpserv = -6
+!!        NUMBER = Mp_My_ThreadNum()
+!!        mpserv = -6
 C
-C$    ELSE
+!!    ELSE
 C
-C$        IF (INFO) WRITE(6,6000) SERVICE
-C$        mpserv =  0
+!!        IF (INFO) WRITE(6,6000) SERVICE
+!!        mpserv =  0
 C
-C$    END IF
+!!    END IF
 C
-C$    RETURN
+!!    RETURN
 C
 *------------------------------------------------------------------
       IF (SERVICE.EQ.'THREADS')                                THEN
@@ -3794,6 +3822,10 @@ CCC           ERROR = .FALSE.
       CHARACTER*256          nom
       COMMON       /PROGNAM/ nom
 
+      LOGICAL                INFO,DEBUG
+      COMMON       /ZZVERBO/ INFO
+      COMMON       /ZZDEBUG/      DEBUG
+
       EXTERNAL      getenvc,messys
 
 #include <clib_interface.cdk>
@@ -3842,32 +3874,58 @@ CCC           ERROR = .FALSE.
 
       if (path == ' ')                                         then
           docs = './' // nom(i:j) // '.txt'
+          if (DEBUG)                                           then
+              write(6,'(/A )')
+     +       'QQQDOC: Since $ARMNLIB and $DIAGNOSTIQUE are undefined...'
+              write(6,'(/A )') 'QQQDOC: Trying to use local directory'
+          end if
       else
           err = clib_isdir( trim( path ) // '/share/pdoc/' )
           if (err == CLIB_OK ) then
-              docs = trim(path) // '/share/pdoc/' // nom(i:j) // '.txt'
+              docs = trim( path ) // '/share/pdoc/' // nom(i:j) // '.txt'
+              if (DEBUG)                                       then
+                  if (checked_ARMNLIB)                         then
+                      write(6,'(/A/)')
+     +               'QQQDOC: Using share/pdoc under $ARMNLIB'
+                  else
+                      write(6,'(/A/)')
+     +               'QQQDOC: Using share/pdoc under $DIAGNOSTIQUE'
+                  end if
+              end if
           else
               err = clib_isdir( trim(path) // '/man/pdoc/' )
               if (err == CLIB_OK ) then
-                  docs = trim( path ) // '/man/pdoc/' // nom(i:j) // '.txt'
-              else
-                  err = clib_isdir( trim( path ) // '/pdoc/' )
-                  if (err == CLIB_OK ) then
-                  docs = trim( path ) // '/pdoc/' // nom(i:j) // '.txt'
-                  else if (.not.checked_ARMNLIB)                    then
-                      path = ' '
-                      goto 250
-                  else
-                      return
+                  docs = trim( path ) // '/man/pdoc/' //
+     +                       nom(i:j) // '.txt'
+                  if (DEBUG)                                   then
+                      if (checked_ARMNLIB)                     then
+                          write(6,'(/A/)')
+     +                   'QQQDOC: Using pdoc under $ARMNLIB'
+                      else
+                          write(6,'(/A/)')
+     +                   'QQQDOC: Using pdoc under $DIAGNOSTIQUE'
+                      end if
                   end if
+              else if (.not.checked_ARMNLIB)                   then
+                  path = ' '
+                  goto 250
+              else
+                  if (DEBUG)
+     +            write(6,'(/A/)') 'Unable to find directories ' //
+     +           'man/pdoc or pdoc under $DIAGNOSTIQUE or $ARMNLIB'
+                  return
               end if
           end if
       end if
 
       err = clib_isfile( trim( docs ) )
 
-      if (err /= CLIB_OK )                                      then
-          if (checked_ARMNLIB) return
+      if (err /= CLIB_OK )                                     then
+          if (checked_ARMNLIB)                                 then
+              if (DEBUG) write(6,'(/A/)')
+     +           'Unable to find ' // trim( docs )
+              return
+          end if
           path = ' '
           goto 250
       end if
@@ -3879,7 +3937,12 @@ CCC           ERROR = .FALSE.
 
 ***    do it...
 
-  400 call system( trim( pager ) // ' ' //d ocs )
+      if (INFO)                                                then
+          write(6,'(/"QQQDOC issuing command line ..."/A/)')
+     +              trim( pager ) // ' ' // trim( docs ) 
+      end if
+
+  400 call system( trim( pager ) // ' ' // trim( docs ) )
 
 ***    open docs and read/write till EOF.
 ***    unit number corresponds to stderr.

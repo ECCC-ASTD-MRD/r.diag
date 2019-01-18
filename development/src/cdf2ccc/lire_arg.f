@@ -40,6 +40,18 @@
 *
 *REVISIONS
 *
+*  B. Dugas janvier '18 :
+*   - Remplacer la commande GETARG par GET_COMMAND_ARGUMENT
+*  B. Dugas janvier '18 :
+*   - Ajouter les arguments -typvar et -etiket
+*  B. Dugas novembre '17 :
+*   - Utiliser ${DIAGNOSTIQUE}/man/pdoc/attribut_netcdf.dat
+*     lorsque l'argument -attr n'est pas specifie ou qu'il
+*     pointe a quelque chose qui n'existe pas
+*  B. Dugas avril '17 :
+*   - Utiliser get_environment_variable pour verifier la valeur de
+*     la variables d'environnement UDUNITS2_XML_PATH. Celle-ci a
+*     pre-seance sur udunits2_def
 *  B. Dugas fevrier '17 :
 *   - Remplacer UDUNITS_PATH par UDUNITS2_XML_PATH
 *   - Remplacer udunits.dat par udunits2.xml
@@ -168,14 +180,15 @@
 *
 *******
 
+      logical ex
       character(512) file_attr,local
-      parameter(local='attribut_netcdf.dat')
+      parameter(local='./attribut_netcdf.dat')
       parameter(file_attr=
      .'/LOGICIELS/cdf2ccc/etc/attribut_netcdf.dat')
 
 ******les_arg(ccard)
 
-      integer, parameter :: ncle = 46 ! nombre de cles
+      integer, parameter :: ncle = 48 ! nombre de cles
 
       character*16  cles(ncle)    ! nom de la cle
       character*60  def(ncle)     ! defenition de la cle
@@ -211,11 +224,11 @@
      .  cles(22)/'invj'   /,  def1(22)/'yes'     /,  def2(22)/'no'    /
      .  cles(23)/'npack'  /,  def1(23)/'999'     /,  def2(23)/'?'     /,
      .  cles(24)/'lalo'   /,  def1(24)/'no'      /,  def2(24)/'yes'   /,
-     .  cles(25)/'attr'   /,  def1(25)/file_attr /,  def2(25)/local   /,
+     .  cles(25)/'attr'   /,  def1(25)/'def1at'  /,  def2(25)/'def2at'/,
      .  cles(26)/'miss_ccc'/, def1(26)/'?'       /,  def2(26)/'ERR'   /,
      .  cles(27)/'fill_ccc'/, def1(27)/'?'       /,  def2(27)/'ERR'   /,
      .  cles(28)/'cle_nhem'/, def1(28)/'?'       /,  def2(28)/'?'     /,
-     .  cles(29)/'udunits'/,  def1(29)/udunit_def/,  def2(29)/'?'     /,
+     .  cles(29)/'udunits'/,  def1(29)/'default' /,  def2(29)/'?'     /,
      .  cles(30)/'rlonoff'/,  def1(30)/'?'       /,  def2(30)/'?'     /,
      .  cles(31)/'hyb_pt' /,  def1(31)/'?'       /,  def2(31)/'?'     /,
      .  cles(32)/'hyb_pref'/, def1(32)/'?'       /,  def2(32)/'?'     /,
@@ -232,7 +245,9 @@
      .  cles(43)/'calendar'/, def1(43)/'?'       /,  def2(43)/'?'     /,
      .  cles(44)/'gribcode'/, def1(44)/'?'       /,  def2(44)/'?'     /,
      .  cles(45)/'cell_method'/, def1(45)/'?'    /,  def2(45)/'?'     /,
-     .  cles(46)/'title'  /,  def1(46)/' '       /,  def2(46)/' '     /
+     .  cles(46)/'title'  /,  def1(46)/' '       /,  def2(46)/' '     /,
+     .  cles(47)/'typvar' /,  def1(47)/'NC'      /,  def2(47)/' '     /,
+     .  cles(48)/'etiket' /,  def1(48)/'Netcdf2RPN'/,def2(48)/' '     /
 
       data
      .  def(1) /'(C) Nom du fichier netCDF'                           /, 
@@ -280,12 +295,14 @@
      .  def(43)/'(C) Nom du calendrier (gregorian, 365_day, 360-day)' /,
      .  def(44)/'(I) Code GRIB pour une grille Lambert conforme conic'/,
      .  def(45)/'(C) Cell Method utilisee dans les calculs temporels' /,
-     .  def(46)/'(C) Optional "title" meta-data'                      /
+     .  def(46)/'(C) Optional "title" meta-data'                      /,
+     .  def(47)/'(C) Optional TYPVAR (default = NC)'                  /,
+     .  def(48)/'(C) Optional ETIKET (default = Netcdf2RPN)'          /
 
 ******
 
       integer i,nlen,nis,njs,idate
-      logical ok
+      logical ok,defatt
 
 ***    Champs de travail locaux pour les_arg
 
@@ -293,9 +310,12 @@
       CHARACTER(16),  DIMENSION(:), ALLOCATABLE :: ACLES
       CHARACTER(512), DIMENSION(:), ALLOCATABLE :: ADEF,ADEF1,ADEF2
 
-      INTEGER         NBRCLE,NDATE,NHELP,PART1,PART2
+      CHARACTER(30)   :: DIAG_ATTRIBUT_NETCDF
+      CHARACTER(512)  :: UDUNITS2_DEF,DIAGNOSTIQUE
 
-      INTEGER         NEWDATE,datchek
+      INTEGER         NBRCLE,NDATE,NHELP,PART1,PART2,LL
+
+      INTEGER         NEWDATE,datchek,L_argenv
       EXTERNAL        NEWDATE
 
       COMMON         /ZZDEFPK/ DEF_PKTYP
@@ -304,6 +324,12 @@
       EXTERNAL        IS_ON,IS_OFF
 
 *-----------------------------------------------------------------------
+      udunits2_def = trim( udunits2_def1 ) //
+     .               trim( udunits2_def2 ) //
+     .               trim( udunits2_def3 )
+
+      DIAG_ATTRIBUT_NETCDF = '/man/pdoc/attribut_netcdf.dat'
+
 ***    Allocate LES_ARG work fields.
 
       NBRCLE = NBRGEN + NCLE
@@ -726,14 +752,63 @@
 
       endif
 
-
-      if(def1(25).eq.'?') then
+      if(def1(25) == '?' .or. def1(25) == ' ') then
          write(6,6001) ' Fichier attribut_netcdf.dat ?'
          call                                      xit('lire_arg',  -25)
       else
+
+         defatt = .false.
+
+         if (def1(25) == 'def1at' .or.
+     +       def1(25) == 'def2at') defatt = .true.
+
+         ! Possiblement re-definir la valeur de l'argument -attr si
+         ! celle-ci a ete definie par defaut (primaire ou secondaire)
+         ! et que le fichier correspondant n'existe pas.
+
+         if      (def1(25) == 'def1at') then ; def1(25) = file_attr
+         else if (def1(25) == 'def2at') then ; def1(25) = local
+         endif
+
+         inquire( file=def1(25),exist=ex )
+
+         if (.not.ex .and. defatt) then
+
+             call get_environment_variable('DIAGNOSTIQUE',
+     +                              DIAGNOSTIQUE,L_argenv)
+
+             if (DIAGNOSTIQUE /= ' ') then
+                 write(6,'(/A)') ' '// trim(def1(25))//" n'existe pas !"
+                 def1(25) = trim( DIAGNOSTIQUE ) //
+     +                      trim( DIAG_ATTRIBUT_NETCDF )
+                 inquire( file=def1(25),exist=ex )
+                 if (.not.ex) then
+                     write(6,'(A/)') ' attribut_netcdf indisponible,'
+     +                            // ' on cherchait ' // trim( def1(25))
+                     call                          xit('lire_arg',  -25)
+                 endif
+                 ll = len_trim( trim( def1(25) ) )
+                 if (ll < 100) then
+                     write(6,6100) trim( def1(25) )
+                 else
+                     write(6,6101) def1(25)( max(ll-99,1):ll )
+                 endif
+             else
+                 write(6,'(/A/)') ' attribut_netcdf indisponible,'
+     +                         // ' on cherchait ' // trim( def1(25) )
+                 call                              xit('lire_arg',  -25)
+             endif
+
+         else if (.not.ex) then
+             write(6,'(/A/)') ' attribut_netcdf indisponible,'
+     +                     // ' on cherchait ' // trim( def1(25) )
+             call                                  xit('lire_arg',  -25)
+         endif
+
          attr_file = def1(25)
          IPOS=IPOS+1
          IONAM(IPOS) = def1(25)
+
       endif
 
 
@@ -787,18 +862,20 @@ CCC     endif
 ***    print * , 'dans lire_arg.f CLE 28 def1(28)=======',def1(28) !debug
 ***    print * , 'dans lire_arg.f CLE 28 cle_nhem=======',cle_nhem !debug
 
-      CALL GETENVC( 'UDUNITS2_XML_PATH',EVALUE )
+      call get_environment_variable('UDUNITS2_XML_PATH',evalue,L_argenv)
 
-      if (evalue.eq.' ') then
+      if (L_argenv > 0) then
+         udunits_dat = evalue
+      else
          if(def1(29).eq.'?') then
             write(6,6001) ' Fichier udunits2.xml ?'
             call                                   xit('lire_arg',  -29)
+         else if(def1(29).eq.'default') then
+            udunits_dat = udunits2_def
          else
             udunits_dat = def1(29)
          endif
-      else
-         udunits_dat = EVALUE
-      endif
+      end if
 
       if(cdf2_mode.eq.'cdf2rpn') then
          rlonoff=-1000.0
@@ -877,10 +954,12 @@ CCC     endif
             read(def1(42),9004,err=300) dtsize
             goto 400
   300       dtsize = -1.0
-  400       if (dtsize < -0.00001) then
+  400       if (dtsize < 0) then
                write(6,6001)' -dtsize "delta accumul" '//trim( def1(42))
                call                                xit('lire_arg',  -42)
-            else if (dtsize < 0.00001) then
+            else if (nint( dtsize*3600. ) < 1) then
+               if (dtsize > 0.0_8)
+     .            write(6,6007) 'Warning: dtsize reset to 0.0'
                dtsize = 0.0
             endif
          else
@@ -943,6 +1022,14 @@ CCC     endif
 * des attributs globaux du fichier NetCDF    
 
       meta_title = def1(46)
+
+* (optionnellement) TYPVAR qui sera insere dans le fichier CMC/RPN
+
+      typvar = 'NC' ; if (def1(47) /= ' ') typvar = def1(47)
+
+* (optionnellement) ETIKET qui sera insere dans le fichier CMC/RPN
+
+      etiket = 'Netcdf2RPN' ; if (def1(48) /= ' ') etiket = def1(48)
 
 * (optionnellement) definir les noms des coordonnees NetCDF
 
@@ -1061,6 +1148,8 @@ c      write(6,*) "grid_desc :", grid_desc                               !debug
  6009 format(34x,a)
  6010 format(/'Mauvaise valeur pour -',a/a)
  6099 format(/"Probleme de lecture d'arguments..."/)
+ 6100 format( ' on utilise ',A/)
+ 6101 format( ' on utilise ... ',A/)
  9003 format(i10)
  9004 format(e20.0)
 *-----------------------------------------------------------------------
@@ -1075,7 +1164,7 @@ c      write(6,*) "grid_desc :", grid_desc                               !debug
 
 ***    Recuperer le nom du programme.
 
-      Call getarg( 0,lnom )
+      Call get_command_argument( 0,lnom )
 
 ***    Enlever tout prefixe (positionel).
 

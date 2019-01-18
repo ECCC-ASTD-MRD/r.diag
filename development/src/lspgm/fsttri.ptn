@@ -1,11 +1,16 @@
+# if !defined (nombre_maximal_de_fichiers)
+#     define   nombre_maximal_de_fichiers 128
+# endif
 #     if defined (AUTO_DOC)
 *
 * Sequence d'appel...
-*  fsttri  -s source       [-dateo  [*]] [-typvar [*]]  \ 
-*          -d destination  [-etiket [*]] [-nomvar [*]]  \ 
-*         [-info [valeur]] [-npas   [*]] [-ip1    [*]]  \ 
-*         [-rnd] [-help]   [-nobox]      [-ip3    [*]]  \ 
-*         [-sqi] [-desc]   [-e] [-f]     [-split]
+*  fsttri  -s source1 [source2 [sources3 ... ]] \ 
+*          -d destination   [-dateo  [*]]       \ 
+*         [-typvar [*]]     [-etiket [*]] [-nomvar [*]]  \ 
+*         [-info  [valeur]] [-npas   [*]] [-ip1    [*]]  \ 
+*         [-rnd]  [-help]   [-nobox]      [-ip3    [*]]  \ 
+*         [-split [valeur]] [-sqi]   [-desc]       [-f]  \ 
+*         [-e     [valeur]]
 *
 *
 * Auteur: B.Dugas, RPN - avril 1991.
@@ -14,40 +19,42 @@
 *
 * Objet:
 * -----
-*  FSTTRI   Trie un fichier standart RPN/RND. Le resultat de
-*           l'operation est par defaut un fichier de type SQI, 
-*           puisque ce sont les seuls garantissant les positions 
-*           des enregistrement. L'ordre du tri se fait selon  
-*           IP3/DATEO/NPAS/TYPVAR/ETIKET/NOMVAR/IP1. Cet ordre ne
-*           peut encore etre modifie mais certaines cles peu-
-*           vent etre desactivees en placant "*" dans la
-*           liste a la position correspondante.
+*  FSTTRI   Trie un ou plusieurs fichiers standarts RPN/RND.
+*           L'ordre du tri se fait selon l'ordre suivant :
+*
+*              IP3/DATEO/NPAS/TYPVAR/ETIKET/NOMVAR/IP1
+*
+*           Cet ordre ne peut etre modifie mais les cles
+*           peuvent etre desactivees en invoquant la cle
+*           elle-meme en argument (ce qui place une "*"
+*           dans la liste a la position correspondante).
 *
 *
 * Parametres d'appel:
 * ------------------
-*  s         Fichier source (doit etre de type RND)
+*  s         Fichiers sources (supporte jusqu'a 128 fichiers)
 *  d         Fichier destination. Celui-ci ne doit pas exister
 *            a l'entree, sauf si la cle f est egalement specifiee.
 *
-*  split     Separer le resultat du tri, une date-time-stamp unuique
-*            par fichier. Option supplementaire "PARJOUR"/"BYDAY"            
+*  split     Separer le resultat du tri, une date-time-stamp unique
+*            par fichier. Valeurs optionnelles: "PARJOUR" ou "BYDAY".
 *
-*  dateo \ 
-*  typvar \  Cles selon laquelle le tri est effectue. Specifier
-*  etiket  > la cle sans valeur (ou avec la valeur "*") desactive
-*  nomvar /  le parametre correspondant de la liste.
-*  npas  / 
-*  ip1  /
-*  ip3 / 
+*  ip3  \ 
+*  dateo \   Cles selon laquelle le tri sera effectue (et ce, dans
+*  npas   \  cet ordre). Specifier une de ces cles sans valeur (ou
+*  typvar  > avec la valeur "*") pour desactiver le tri du
+*  etiket /  parametre correspondant de la liste.
+*  nomvar/ 
+*  ip1  / 
 *  info      Niveau des messages retournes (ERRORS/INFORM/DEBUG).
 *  rnd       Le type du fichier de sortie est RND (def STD2000).
 *  sqi       Le type du fichier de sortie est SQI (def STD1989).
 *  nobox     Ne pas imprimer de boites d'informations.
 *  help      Afficher ce texte sur stdout et quitter.
 *  desc      Ne pas faire le tri sur les enregistrements de renvois.
-*  e         Enlever les enregistrements redondants (identiques).
-*  f         Forcer la re-ecriture du fichier de sortie. 
+*  f         Forcer la re-ecriture du fichier de sortie.
+*  e         Re-ecrire (i.e. etamper) ou non les enregistrements
+*            ayant des descripteurs identiques (DEF = NON)
 *
 *
 * Codes de sortie:
@@ -65,6 +72,8 @@
 *      10 Erreur d'allocation memoire (allocate)
 *      11 Erreur de decodage de date (newdate)
 *      12 Incapable de forcer la re-ecriture
+*      13 Plus d'un type de fichier d'entree
+*      14 Incapable de lier les fichiers d'entree
 *
 #     endif
 #     if defined (RDIAG_LICENCE)
@@ -93,6 +102,45 @@
 ***    Historique des modifications:
 ***   
 *      $Log: fsttri.ptn,v $
+*      Revision 4.46 2017/12/12 12:12:12  dugas
+*      Desallouer l'argument -rewrit (qui avait ete introduit pour
+*      traiter les variables de renvois) et plutot utiliser le code
+*      associe a la valeur logique Elim pour eliminer les doublons pour
+*      les  variables regulieres. L'utilisation de rewrit=Vrai semble ne
+*      pas fonctionner correctement (par exemple, ne tenant pas compte
+*      de differentes valeurs de dateo). Par contre, pour les variables
+*      de renvois, on definit maintenant rewrit=Elim lors de l'appel
+*      a FSTECR.
+*
+*      Revision 4.45 2017/10/25 12:12:12  dugas
+*      Verifier que IP2 ne contient pas un niveau avant de tenter
+*      un recodage de l'echeance de prevision lorsqu'on detecte
+*      une echeance sous la forme "heures.minutes".
+*
+*      Revision 4.44 2017/09/28 16:16:16  dugas
+*      - Ajouter l'argument -REWIT (re: argument de FSTECR).
+*      - Tenir compte des minutes et des secondes dans le tri
+*        des dates. Ces dates etendues sont maintenant placees
+*        dans un INTEGER(8) avant l'appel a CSORTL.
+*      - Sauver IP2 en KIND_HOURS si on detecte la presence
+*        d'echantillons valides a l'interieur d'une heure.
+*      - Ajouter un tri prealable selon le type de donnees
+*        verticales (i.e. KIND) lorsqu'on decide d'effectuer
+*        in tri selon IP1 (i.e. separer les M et les Hy).
+*
+*      Revision 4.43 2017/08/31 08:08:08  dugas
+*      - Le nombre de fichier d'entree passe de 1 a 128
+*        et ajouter les messages d'erreurs 13 et 14.
+*      - Ajouter des messages descriptifs lors de l'execution.
+*      - La variable REWRIT0 est initialiseea .TRUE. ce qui
+*        force la re-ecriture (etamper) des enregistrements
+*        ayant les memes descripteurs.
+*
+*      Revision 4.42 2017/08/01 17:17:17  dugas
+*      - Utiliser des structures "do while" dans la section de tris.
+*      - Re-organiser la documentation en specifiant l'ordre
+*        dans lequel les cles seront considerees.
+*
 *      Revision 4.41  2014/09/25 20:20:47  dugas
 *      Inserer le texte de la licence LPGPL 2.1 pour R.DIAG.
 *
@@ -181,25 +229,31 @@
 ***    ... Le 18 mars 1992, B. Dugas, RPN (V1.10)  -  On ajoute la cle
 ***        HELP (appellant) la routine QQQDOC et le bloc AUTO_DOC.
 
+      use           diag_convert_ip123, only: KIND_HOURS
+
       implicit      none
 
 ***   *****
 
-      integer,      parameter :: NBRCLE = 20
+      integer,      parameter :: NBRFICH = nombre_maximal_de_fichiers
+      integer,      parameter :: NBRARGS = 19, NBRCLE = NBRFICH+NBRARGS+1
 
       integer    :: NMAX = 20000
 
       real*8        heur8
-      integer       anne,mois,jour,heur
+!**   integer       anne,mois,jour,heur
 
-      real          press
-      integer       YYYYMMDD,YYYYMMDD0,HHMMSSHH,valnum, kind,bidon
+      real          press,heures,HOLD
+      integer       YYYYMMDD,YYYYMMDD0,HHMMSShh,valnum, kind,bidon
       real,         allocatable,dimension(:) :: niveau1
-      integer,      allocatable,dimension(:) :: niveau2,
-     +              liste,  date1, date2, delt, listerenv,
-     +              sindex, fset1, fset2,
-     +              heure,  pas1,  pas2
+      integer,      allocatable,dimension(:) :: niveau2, 
+     +              sindex, liste, heure, delt, listerenv,
+     +              fset1, fset2, kind1, pas1, pas2, date2
+      integer(8),   allocatable,dimension(:) :: date18 
 
+      integer(8) :: dateo8 ,valnum8
+
+      character(len=4)   nuls
       character(len=24)  exempl
       character(len=24), allocatable, dimension(:) :: chaine1,chaine2
 
@@ -214,20 +268,21 @@ C    +              valnum,kind
       logical              dexit,set_dexit,exist
       common       /dexit/ dexit,set_dexit,diagext
 
-      character*16  cles(NBRCLE),blanc,option
-      character*512 def1(NBRCLE),def2(NBRCLE),nomfich,nomrenv
-      integer       iu1,iu2,iu3, ipos, i,ier,io,j,
+      character*16  cles(2:NBRCLE+1),blanc,option
+      character*512 def1(2:NBRCLE+1),def2(2:NBRCLE+1),nomfich
+      character*512 name1(NBRFICH),name2,nomrenv
+      integer       iu1(NBRFICH),iu2,iu3, ipos,icle, i,ier,io,j,
      +              nil,exfin,   idatm, exdb,
-     +              ind01,ind11,ind21,ind31, i0,i1,i2,i3,
-     +              ind02,ind12,ind22,ind32,
+     +              ind01,ind11,ind21,ind31,ind41, i0,i1,i2,i3,i4,
+     +              ind02,ind12,ind22,ind32,ind42,
      +              nwds ,nwds0,cmpl
 
       logical       Vrai,  Faux,
      +              box,   message, sqi,   Force, Desc,  Elim,
      +              noDAT, noTYP,   noETI, noNOM, noPAS, noIP1,
-     +              noIP3, SplitD,  ByDay
+     +              noIP3, SplitD,  ByDay, Message_Heures
 
-      integer       elimin, nw, nbrrenv, infonbr
+      integer    :: elimin, nw, nbr, nbrrenv, infonbr,nbro=0
 
       real,         allocatable, dimension(:) :: buff
       integer,      allocatable, dimension(:) :: ibuf
@@ -247,7 +302,7 @@ C    +              valnum,kind
 
       integer   datev0,datevm3h
 
-      logical   rewrit,rewrit0
+      logical   rewrit,minutes
 
 ***    Variable utilisee par le mode Elim.
 
@@ -258,21 +313,21 @@ C    +              valnum,kind
      +          ig1b,ig2b,ig3b,ig4b,       deetb,npasb,
      +          ip1b,ip2b,ip3b
 
-      logical,  external ::     is_off, is_on
+      logical,  external ::     is_off, is_on, diag_is_a_level
 
 ***    Declarations pour les fonctions FST/RMN
 
       integer,  external ::     fstfrm, fstecr,
      +          fstprm, fstopc, fstopl, xdfopt,
-     +          fstluk, fstinl, fstouv,
+     +          fstluk, fstinl, fstouv, fstlnk,
      +          fnom,   fclos,  wkoffit,newdate
       external  csortc, csorte, exfin,  exdb,
-     +          csortd, csortr, ccard,  quit,  
-     +          getenvc,convpr, incdatr
+     +          csortd, csortr, csortl, ccard,
+     +          getenvc,convpr, incdatr,quit
 
-      integer   ifrm,   iecr,   iprm,   iopt,
-     +          inf,    infl,   inbr1,  inbr2, inbr3, 
-     +          ierr1,  ierr2,  ftyp1,  ftyp2
+      integer :: ifrm,  iecr,  iprm,  iopt,  ilnk,
+     +           inf,   infl,  inbr3, inbr2, inbr, inbr1=0,
+     +           ierr1, ierr2, ftyp0, ftyp1, ftyp2
 
       character nomprg*256
       common   /PROGNAM/ nomprg
@@ -282,15 +337,15 @@ C    +              valnum,kind
 ***    Parametres d'appel:
 ***    ------------------
 
-      data cles(1) / 'S.'     /,def1(1)/ ' '      /,def2(1)/ 'TAPE1'  /,
-     +     cles(2) / 'D.'     /,def1(2)/ ' '      /,def2(2)/ 'TAPE2'  /,
-     +     cles(3) / 'DATEO'  /,def1(3)/ 'DATEO'  /,def2(3)/ '*'      /,
-     +     cles(4) / 'TYPVAR' /,def1(4)/ 'TYPVAR' /,def2(4)/ '*'      /,
-     +     cles(5) / 'ETIKET' /,def1(5)/ 'ETIKET' /,def2(5)/ '*'      /,
-     +     cles(6) / 'NOMVAR' /,def1(6)/ 'NOMVAR' /,def2(6)/ '*'      /,
-     +     cles(7) / 'IP1'    /,def1(7)/ 'IP1'    /,def2(7)/ '*'      /,
-     +     cles(8) / 'NPAS'   /,def1(8)/ 'NPAS'   /,def2(8)/ '*'      /,
-     +     cles(9) / 'INFO'   /,def1(9)/ 'ERRORS' /,def2(9)/ 'INFORM' /,
+     ! NBRARGS=(2:20), i.e. 19 Arguments generaux
+      data cles(02)/ 'D.'     /,def1(02)/' '      /,def2(02)/'TAPE2'  /,
+     +     cles(03)/ 'DATEO'  /,def1(03)/'DATEO'  /,def2(03)/'*'      /,
+     +     cles(04)/ 'TYPVAR' /,def1(04)/'TYPVAR' /,def2(04)/'*'      /,
+     +     cles(05)/ 'ETIKET' /,def1(05)/'ETIKET' /,def2(05)/'*'      /,
+     +     cles(06)/ 'NOMVAR' /,def1(06)/'NOMVAR' /,def2(06)/'*'      /,
+     +     cles(07)/ 'IP1'    /,def1(07)/'IP1'    /,def2(07)/'*'      /,
+     +     cles(08)/ 'NPAS'   /,def1(08)/'NPAS'   /,def2(08)/'*'      /,
+     +     cles(09)/ 'INFO'   /,def1(09)/'ERRORS' /,def2(09)/'INFORM' /,
      +     cles(10)/ 'RND'    /,def1(10)/'NON'    /,def2(10)/'OUI'    /,
      +     cles(11)/ 'NOBOX'  /,def1(11)/'NON'    /,def2(11)/'OUI'    /,
      +     cles(12)/ 'HELP'   /,def1(12)/'NON'    /,def2(12)/'OUI'    /,
@@ -301,22 +356,25 @@ C    +              valnum,kind
      +     cles(17)/ 'SQI'    /,def1(17)/'NON'    /,def2(17)/'OUI'    /,
      +     cles(18)/ 'IP3'    /,def1(18)/'IP3'    /,def2(18)/'*'      /,
      +     cles(19)/ 'SPLIT'  /,def1(19)/'NON'    /,def2(19)/'OUI'    /,
-     +     cles(20)/ '-.'     /,def1(20)/' '      /,def2(20)/' '      /
+     +     cles(20)/ 'REWRIT' /,def1(20)/'EXUQ0W0QUXE' /,def2(20)/'*' /
 
+      ! +1 Argument positionel (nom du module r.diag)
+      data cles(NBRCLE+1) / '-.' /,
+     +     def1(NBRCLE+1) / ' ' /,
+     +     def2(NBRCLE+1) / ' ' /
       data blanc / ' ' / 
 
-      data message, box        /    2*.false.   /,
-     +     Force, Desc, Elim   /    3*.false.   /
+      data message,box,Minutes /    3*.false.   /,
+     +     Force, Desc, Elim   /    3*.false.   /,
+     +     Message_Heures      /      .true.    /
       data noDAT, noTYP, noETI,
      +     noNOM, noPAS, noIP1,
      +     SplitD,ByDay, noIP3 /    9*.false.   /
-      data Vrai,Faux, rewrit0  /.true.,2*.false./
-      data sqi / .false. /
+      data Vrai, Faux, sqi   / .true.,2*.false. /
 
 ***    Numeros d'E/S, etc...
 
-      data   iu1 / 1 /,
-     +       iu2 / 2 /
+      data   iu2 / 2 /
 
 ***    Initialiser les pointeurs de tri.
 
@@ -324,9 +382,15 @@ C    +              valnum,kind
      +       ind02,ind12,ind22,ind32 / 4*2 /
 
 *----------------------------------------------------------------------
-      diagext = 'DIAGNOSTIC_EXIT'
+      diagext = 'DIAGNOSTIC_EXIT' ; iu1 = 0
 
-***    First, check for a non-empty DIAGNOSTIC_EXIT file.
+      ! Initialisation explicite des +NBRFICH
+      ! arguments de noms de fichiers d'entree
+      do  i=(NBRARGS+1)+1,(NBRARGS+1)+NBRFICH
+          cles(i) = 'S.' ; def1(i) = ' ' ; def2(i) = '****'
+      end do
+
+***    Check for a non-empty DIAGNOSTIC_EXIT file.
 
           dexit = Faux
       set_dexit = Faux
@@ -369,12 +433,11 @@ C    +              valnum,kind
 ***    Aller chercher les noms des deux fichiers d'E/S et
 ***    traiter les differents parametres d'entrees.
 
-  025 ipos = -1
+  025 ipos = -1  ; icle = NBRCLE
       call ccard( cles,def2,def1,NBRCLE,ipos )
 
       if (is_on( def1(12) ) .or.
-     +   (def1(1).eq.' '    .and.
-     +    def1(2).eq.' ' ))                                    then
+     +   (def1((NBRARGS+1)+1).eq.' ' .and. def1(2).eq.' ' ))    then
           nomprg = 'fsttri.ptn'
           call qqqdoc( )
           stop 0
@@ -430,11 +493,16 @@ C    +              valnum,kind
       end if
 
       if (Elim)                     elimin  = 0
-!!!   if (Force)                    rewrit0 = Vrai
       if (SplitD)                   Desc    = Vrai 
 
-      if (def1(1).eq.blanc .or.
-     +   (def1(2).eq.blanc .and. .not.Splitd))                 then
+      if (def1(20) /= 'EXUQ0W0QUXE')                           then
+          write(6,6300) ! L'argument -rewrit a ete retire
+          if (box) nil = exfin( 'FstTRI', 'Erreur 99', 'NON' )
+          call quit( ' FstTri ',99 )
+      end if
+
+      if (def1((NBRARGS+1)+1) == blanc .or.
+     +   (def1(2)             == blanc .and. .not.Splitd))     then
           if (box) nil = exdb ( 'FstTRI', 'Rev. 1.0', 'NON' )
           write(6,6001)
           if (box) nil = exfin( 'FstTRI', 'Erreur 1', 'NON' )
@@ -445,39 +513,19 @@ C    +              valnum,kind
 
       if (box) idatm = exdb( 'FstTRI', 'Rev. 4.39', 'NON' )
 
-***    Verifier l'existence et le type des fichiers I/O.
+      name1(1:NBRFICH) = def1((NBRARGS+1)+1:(NBRARGS+1)+NBRFICH)
+      name2 = def1(2)
 
-      ftyp1 = wkoffit( '+' // trim( def1(1) ) )
-
-      if (.not.SplitD)
-     +ftyp2 = wkoffit( '+' // trim( def1(2) ) )
-
-***    Verifier que le premier fait reference a un fichier de 
-***    type valide. Si le second existe deja (i.e. n'est pas
+***    Verifier si le ficher de sortie existe deja (i.e. n'est pas
 ***    vide) en aviser l'usager et quitter.
 
-      if (ftyp1.lt.-1)                                         then
-
-***        Le premier fichier est vide ou inexistant.
-
-          write(6,6003)
-          if (box) nil = exfin( 'FstTRI','Erreur 3','NON' )
-          call quit( ' FstTri ',3 )
-
-      else if (ftyp1.ne.1 .and. ftyp1.ne.33)                   then
-
-***        Ce fichier n'est pas un fichier RND.
-
-          write(6,6006)
-          if (box) nil = exfin( 'FstTRI','Erreur 6','NON' )
-          call quit( ' FstTri ',6 )
-
-      end if
+      if (.not.SplitD)
+     +ftyp2 = wkoffit( '+' // trim( name2 ) )
 
       if (.not.Splitd)                                         then
       if (ftyp2.gt.-2)                                         then
 
-***        Le second fichier n'est pas vide.
+***        Le fichier de sortie n'est pas vide.
 
           if (.not.Force)                                      then
 
@@ -489,8 +537,8 @@ C    +              valnum,kind
 
 ***            On l'efface ...
 
-              Call system( 'rm -rf '// trim( def1(2) ) )
-              ftyp2 = wkoffit(  '+' // trim( def1(2) ) )
+              Call system( 'rm -rf '// trim( name2 ) )
+              ftyp2 = wkoffit(  '+' // trim( name2 ) )
 
               if (ftyp2.gt.-2)                                 then
                   write(6,6012)
@@ -503,50 +551,131 @@ C    +              valnum,kind
       end if
       end if
 
-***    Associer des unites I/O aux noms de fichiers.
+      do nbr=1,NBRFICH
 
-      ierr1 = fnom( iu1, '+' // trim( def1(1) ),'STD+RND+R/O',0 )
+          ! Verifier l'existence et le type des fichiers d'entree
+
+          ftyp1 = wkoffit( '+' // trim( name1(nbr) ) )
+
+          ! Verifier que le premier fait reference a un fichier de 
+          ! type valide. Si les autres existent deja (i.e. ne sont pas
+          ! vides, et possiblement) en aviser l'usager et quitter.
+
+          if (ftyp1 < -1)                                      then
+
+              ! Le premier fichier est vide ou inexistant.
+ 
+              write(6,6003) trim( name1(nbr) )
+              if (box) nil = exfin( 'Fsttri','Erreur 3','NON' )
+              call quit( ' Fsttri ',3 )
+
+          end if
+
+          if (nbr == 1 .and. def1(2) == def1((NBRARGS+1)+1))
+     +        name2 = name1(nbr) ! Re-Definir name2
+
+          if (ftyp1 /= 1 .and. ftyp1 /= 33)                    then
+
+              ! Ce fichier n'est pas un fichier RND.
+
+              write(6,6006)
+              if (box) nil = exfin( 'Fsttri','Erreur 6','NON' )
+              call quit( ' Fsttri ',6 )
+
+          end if
+
+          if (nbr > 1 .and. ftyp0 /= ftyp1)                    then
+
+              ! Plus d'un type de fichier d'entree.
+
+              write(6,6013)
+              if (box) nil = exfin( 'Fsttri','Erreur 13','NON' )
+              call quit( ' Fsttri ',13 )
+
+          end if
+
+          ftyp0 = ftyp1
+
+          if (nbr < NBRFICH .and.
+     +       (name1(nbr+1) == ' ' .or. name1(nbr+1) == '****')) exit
+
+      end do
+
+      if (nbr == NBRFICH+1) nbr = NBRFICH ! Nombre de fichiers d'Input
+
+***    Associer des unites I/O aux fichiers d'I/O et les ouvrir.
 
       if (.not.SplitD)                                         then
-      if (sqi)                                                 then
-          ierr2 = fnom( iu2, '+' // trim( def1(2) ),'STD+SEQ',0 )
-      else
-          ierr2 = fnom( iu2, '+' // trim( def1(2) ),'STD+RND',0)
-      end if
-      else
+          if (sqi)                                             then
+             ierr2 = fnom( iu2, '+' // trim( name2 ),'STD+SEQ',0 )
+          else
+             ierr2 = fnom( iu2, '+' // trim( name2 ),'STD+RND',0)
+          end if
+       else
           ierr2  = 0; iu2 = 0 ; iu3 = 0
-      end if
-
-      if (ierr1.ne.0 .or. ierr2.ne.0)                          then
-          if (ierr1 /= 0) write(6,6002) trim( def1(1) )
-          if (ierr2 /= 0) write(6,6002) trim( def1(2) )
-          if (box) nil = exfin( 'FstTRI', 'Erreur 2', 'NON' )
-          call quit( ' FstTri ',2 )
-      end if
-
-***    Ouvrir les fichiers.
-
-      inbr1  = fstouv( iu1, ' ' )
-
-      if (inbr1 < 1 )                                          then
-
-***        Le premier fichier est vide.
-
-          write(6,6003)
-          if (box) nil = exfin( 'FstTRI','Erreur 3','NON' )
-          call quit( ' FstTri ',3 )
-
-      end if
+       end if
 
       if (.not.SplitD)                                         then
-      if (sqi)                                                 then
-          inbr2  = fstouv( iu2,'SEQ' )
-      else
-          inbr2  = fstouv( iu2,'RND' )
+          if (sqi)                                             then
+              inbr2  = fstouv( iu2,'SEQ' )
+          else
+              inbr2  = fstouv( iu2,'RND' )
+          end if
       end if
-      end if
+
+      do i=1,nbr
+ 
+          ierr1 = fnom( iu1(i), '+' // trim( name1(i) ), 'STD+R/O',0 )
+  
+          if (ierr1 /= 0)                                      then
+             write(6,6002)
+             if (box) nil = exfin( 'Fstmdiag', 'Erreur 2', 'NON' )
+             call quit( ' Fsttri ',2 )
+          end if
+
+          ! Ouvrir les fichiers.
+
+          inbr  = fstouv( iu1(i),'RND' ) ; inbr1 = inbr + inbr1
+
+          if (inbr <= 0)                                       then
+             write(6,'(A,I6,A)') 'Erreur FSTOUV ',inbr,' sur unit '
+     +                         // trim( name1(i) )
+             if (box) nil = exfin( 'Fsttri', 'Erreur 3', 'NON' )
+             call quit( ' Fsttri ',3 )
+
+          end if
+
+      end do
 
       NMAX = max( NMAX, inbr1+1 )
+
+      ilnk = 0 ; if (nbr > 1) ilnk = fstlnk( iu1,nbr )
+
+      if (ilnk > 0)                                            then
+          write(6,6014) nbr,ilnk
+          if (box) nil = exfin( 'Fsttri', 'Erreur 14', 'NON' )
+          call quit( ' Fstmdiag ',14 )
+      end if
+
+      if (.not.SplitD)                                         then
+          if (nbr == 1)                                        then
+              write(6,6202) trim( name1(1) ),trim( name2 )
+          else if (nbr == 2)                                   then
+              write(6,6203) nbr,trim( name1(1) ),trim( name1(nbr) ),
+     +                          trim( name2 )
+          else
+              write(6,6204) nbr,trim( name1(1) ),trim( name1(nbr) ),
+     +                          trim( name2 )
+          end if
+      else
+          if (nbr == 1)                                        then
+              write(6,6202) trim( name1(1) )
+          else if (nbr == 2)                                   then
+              write(6,6203) nbr,trim( name1(1) ),trim( name1(nbr) )
+          else
+              write(6,6204) nbr,trim( name1(1) ),trim( name1(nbr) )
+          end if
+      end if
 
 *-----------------------------------------------------------------------
 ***    Aller lire le directeur. Trouver combien de IP1,NOMVAR,
@@ -560,7 +689,7 @@ C    +              valnum,kind
 
 ***    Allocate the other basic work fields.
 
-      allocate( date1  (infon+1),   date2  (infon+1),
+      allocate( date18 (infon+1),   date2  (infon+1),   kind1 (infon+1),
      +          niveau1(infon+1),   niveau2(infon+1),   delt  (infon+1), 
      +          pas1   (infon+1),   pas2   (infon+1),   heure (infon+1),
      +          fset1  (infon+1),   fset2  (infon+1),   sindex(infon+1),
@@ -606,10 +735,10 @@ C    +              valnum,kind
      +        nomvar.eq.'HY' )  )                              then
 
               if (SplitD .and. iu2 == 0)                       then
-                  if (def1(2) == blanc)                        then
-                      write(nomrenv,6660) trim( def1(1) )
+                  if (name2 == blanc)                          then
+                      write(nomrenv,6660) trim( name1(1) )
                   else
-                      write(nomrenv,6660) trim( def1(2) )
+                      write(nomrenv,6660) trim( name2 )
                   end if
                   if (fnom( iu2,trim( nomrenv ),'STD',0) == 0) then
                       inbr2 = fstouv( iu2,'RND' )
@@ -625,7 +754,7 @@ C    +              valnum,kind
                   end if
                   rewrit = Vrai
               else
-                  rewrit = rewrit0
+                  rewrit = Elim
               end if
 
 ***            Les enregistrements de renvois sont sauves immediatement.
@@ -681,7 +810,7 @@ C    +              valnum,kind
               if (press > 0. .and. (kind == 0 .or. kind == 4))
      +            press = 1./press
           else
-              press = ip1
+              press = ip1 ; kind = -1
           end if
 
           niveau2(i)  = ip1
@@ -693,14 +822,14 @@ C    +              valnum,kind
 
           if (noDAT)                                           then
 
-              dateo = -1
+              dateo8 = -1
 
           else if (dateo /= 0)                                 then
 
 ***            Extraire l'annee, le mois, le
 ***            jour et l'heure correspondante.
 
-              ier = newdate( dateo, YYYYMMDD,HHMMSSHH, -3 )
+              ier = newdate( dateo, YYYYMMDD,HHMMSShh, -3 )
 
               if (ier /= 0)                                    then
 
@@ -710,17 +839,15 @@ C    +              valnum,kind
                   
               end if
 
-              heur = HHMMSSHH/1000000
-              anne = YYYYMMDD/10000
-              jour = mod(YYYYMMDD,100)
-              mois = mod(YYYYMMDD/100,100)
+              if (mod( HHMMSShh/100,10000 ) /= 0) Minutes = Vrai
 
-              dateo = ((anne*100+mois)*100+jour)*100+heur
+              dateo8 = (YYYYMMDD*1000000_8)+(HHMMSShh/100)
 
           end if
 
           if (noPAS) npas   = -1
           if (noIP1) press  = -1.
+          if (noIP1) kind   = -1.
           if (noIP3) ip3    = -1
 
           if (noTYP) typvar = ' '
@@ -729,9 +856,14 @@ C    +              valnum,kind
 
           write(chaine1(i),0001) typvar,etiket,nomvar
           niveau1(i) = press
-          pas1(i)    = npas
-          date1(i)   = dateo
-          fset1(i)   = ip3
+          kind1  (i) = kind
+          pas1   (i) = npas
+          date18 (i) = dateo8
+          fset1  (i) = ip3
+
+          if (.not.Minutes)                                    then
+              Minutes = ( mod( npas*(deet*1_8),3600_8 ) /= 0_8 )
+          end if
 
       end do
 
@@ -739,106 +871,148 @@ C    +              valnum,kind
 
       call csorte( fset1,sindex,infon )
 
-  050 valnum = fset1(sindex(ind01))
+      do while (ind01 < infon)
 
-***    Passer au niveau suivant ...
+         valnum = fset1(sindex(ind01))
 
-          do  i0=ind02,infon
-             if (fset1(sindex(i0)).ne.valnum) goto 051
-          end do
+***       Passer au niveau suivant ...
 
-***        I0 contient le debut du prochain groupe IP3.
-***        Trier la section courante, ... selon DATEO.
+         do  i0=ind02,infon
+            if (fset1(sindex(i0)) /= valnum) exit
+         end do
 
-  051     if (i0-ind02.gt.0)                                   then
+***       I0 contient le debut du prochain groupe IP3.
+***       Trier la section courante, ... selon DATEO.
 
-             call csorte( date1,sindex(ind01),i0-ind01 )
+         if (i0-ind02 > 0)                                     then
 
-***           Passer au niveau suivant ... 
+            call csortl( date18,sindex(ind01),i0-ind01 )
 
-             ind11  = ind01
-             ind12  = ind11+1
-  100        valnum = date1(sindex(ind11))
+***          Passer au niveau suivant ... 
 
-             do  i1=ind12,i0-1
-                if (date1(sindex(i1)).ne.valnum) goto 101
-             end do
+            ind11  = ind01
+            ind12  = ind11+1
 
-***           I1 contient le debut du prochain groupe DATEO.
-***           Trier la section courante, ... selon NPAS.
+            do while (ind11 < i0)
 
-  101        if (i1-ind12.gt.0)                                   then
+               valnum8 = date18(sindex(ind11))
 
-                call csorte( pas1,sindex(ind11),i1-ind11 )
+               do  i1=ind12,i0-1
+                  if (date18(sindex(i1)) /= valnum8) exit
+               end do
 
-***              Passer au niveau suivant ...
+***             I1 contient le debut du prochain groupe DATEO.
+***             Trier la section courante, ... selon NPAS.
 
-                ind21  = ind11
-                ind22  = ind21+1
-  200           valnum = pas1(sindex(ind21))
+               if (i1-ind12 > 0)                               then
 
-                do  i2=ind22,i1-1
-                   if (pas1(sindex(i2)).ne.valnum) goto 201
-                end do
+                  call csorte( pas1,sindex(ind11),i1-ind11 )
 
-***              I2 contient le debut du prochain groupe NPAS.
-***              Trier la section courante ... selon chaine
-***              (i.e. selon TYPVAR/ETIKET/NOMVAR).
+***                Passer au pas de temps suivant ...
 
-  201           if (i2-ind22.gt.0)                               then
+                  ind21  = ind11
+                  ind22  = ind21+1
+
+                  do while (ind21 < i1)
+
+                     valnum = pas1(sindex(ind21))
+
+                     do  i2=ind22,i1-1
+                        if (pas1(sindex(i2)) /= valnum) exit
+                     end do
+
+***                   I2 contient le debut du prochain groupe NPAS.
+***                   Trier la section courante ... selon chaine
+***                   (i.e. selon TYPVAR/ETIKET/NOMVAR).
+
+                     if (i2-ind22 > 0)                         then
  
-                   call csortc( chaine1,sindex(ind21),i2-ind21 )
+                        call csortc( chaine1,sindex(ind21),i2-ind21 )
 
-***                 Passer au niveau suivant ...
+***                      Passer au TYPVAR/ETIKET/NOMVAR suivant ...
 
-                   ind31  = ind21
-                   ind32  = ind31+1
-  300              exempl = chaine1(sindex(ind31))
+                        ind31  = ind21
+                        ind32  = ind31+1
 
-                   do  i3=ind32,i2-1
-                      if (chaine1(sindex(i3)).ne.exempl) goto 301
-                   end do
+                        do while ( ind31 < i2 )
 
-***                 I3 contient le debut du prochain groupe
-***                 TYPVAR/ETIKET/NOMVAR. Trier la section
-***                 courante, ... selon la pression/sigma.
+                           exempl = chaine1(sindex(ind31))
 
-  301              if (i3-ind32.gt.0)
-     +                call csortr( niveau1,sindex(ind31),i3-ind31 )
+                           do  i3=ind32,i2-1
+                              if (chaine1(sindex(i3)) /= exempl) exit
+                           end do
 
-                   ind31 = i3
-                   ind32 = ind31+1
+***                         I3 contient le debut du prochain groupe
+***                         TYPVAR/ETIKET/NOMVAR. Trier la section
+***                         courante, ... selon le type de niveau
+***                         vertical (pression/sigma/etc).
 
-***                 Passer au prochain bloc de (TYPVAR/ETIKET/NOMVAR).
+                           if (i3-ind32 > 0)                   then
 
-                   if (ind31.lt.i2) goto 300
+                              call csorte( kind1,sindex(ind31),i3-ind31 )
 
-                end if
+***                            Passer au niveau vertical suivant ...
 
-                ind21 = i2
-                ind22 = ind21+1
+                              ind41  = ind31
+                              ind42  = ind41+1
 
-***              Passer au prochain bloc de NPAS.
+                              do while (ind41 < i3 )
 
-                if (ind21.lt.i1) goto 200
+                                 valnum = kind1(sindex(ind41))
 
-             end if
+                                 do  i4=ind42,i3-1
+                                    if (kind1(sindex(i4)) /= valnum) exit
+                                 end do
 
-             ind11 = i1
-             ind12 = ind11+1
+***                               I4 contient le debut du prochain groupe
+***                               KIND. Trier la section courante,
+***                               ... selon la pression/sigma.
 
-***           Passer au prochain bloc de DATEO.
+                                 if (i4-ind42 > 0)
+     +                           call csortr( niveau1,sindex(ind41),i4-ind41 )
 
-             if (ind11.lt.i0) goto 100
+***                               Passer au prochain bloc de KIND.
 
-          endif
+                                 ind41 = i4
+                                 ind42 = ind41+1
 
-          ind01 = i0
-          ind02 = ind01+1
+                              end do
 
-***        Passer au prochain bloc de IP3.
+                           end if
 
-          if (ind01.lt.infon) goto 050
+***                         Passer au prochain bloc de (TYPVAR/ETIKET/NOMVAR).
+
+                           ind31 = i3
+                           ind32 = ind31+1
+
+                        end do
+
+                     end if
+
+***                   Passer au prochain bloc de NPAS.
+
+                     ind21 = i2
+                     ind22 = ind21+1
+
+                  end do
+
+               end if
+
+***             Passer au prochain bloc de DATEO.
+
+               ind11 = i1
+               ind12 = ind11+1
+
+            end do
+
+         endif
+
+***       Passer au prochain bloc de IP3.
+
+         ind01 = i0
+         ind02 = ind01+1
+
+      end do
 
       if (message)                                             then
 
@@ -904,7 +1078,7 @@ C    +              valnum,kind
 
       end if
 
-      rewrit = rewrit0 ; YYYYMMDD0 = -1 ; datev0 = -1 ; nomfich = blanc
+      rewrit = Elim ; YYYYMMDD0 = -1 ; datev0 = -1 ; nomfich = blanc
 
       do i=1,infon
 
@@ -938,14 +1112,14 @@ C    +              valnum,kind
               datev = dateo
           end if
 
-          ier = newdate( datev, YYYYMMDD,HHMMSSHH, -3 )
+          ier = newdate( datev, YYYYMMDD,HHMMSShh, -3 )
 
           if (ByDay)                                           then
               ! Notons que 00Z est plutot traite
               ! comme 24Z, i.e. dans le jour precedent
-              if (HHMMSSHH == 0)                               then
+              if (HHMMSShh == 0)                               then
                   heur8 = -3.; call incdatr( datevm3h,datev,heur8 )
-                  ier = newdate( datevm3h, YYYYMMDD,HHMMSSHH, -3 )
+                  ier = newdate( datevm3h, YYYYMMDD,HHMMSShh, -3 )
               end if
               datev0 = datev
           else
@@ -979,21 +1153,23 @@ C    +              valnum,kind
 
                   end if
 
+                  nbro = nbro+1
+
 ***                Construire le nouveau nom avec datev ou YYYYMMDD.
 
                   if (ByDay)                                   then
-                      if (def1(2) == blanc)                        then
-                          write(nomfich,6666) trim(def1(1)),YYYYMMDD
+                      if (def1(2) == blanc)                    then
+                          write(nomfich,6666) trim( name1(1) ),YYYYMMDD
                       else
-                          write(nomfich,6666) trim(def1(2)),YYYYMMDD
+                          write(nomfich,6666) trim( name2 ),YYYYMMDD
                       end if
                   else
-                      if (def1(2) == blanc)                        then
-                          write(nomfich,6666) trim(def1(1)),
-     +                                        YYYYMMDD,HHMMSSHH
+                      if (def1(2) == blanc)                    then
+                          write(nomfich,6666) trim( name1(1) ),
+     +                                        YYYYMMDD,HHMMSShh
                       else
-                          write(nomfich,6666) trim(def1(2)),
-     +                                        YYYYMMDD,HHMMSSHH
+                          write(nomfich,6666) trim( name2 ),
+     +                                        YYYYMMDD,HHMMSShh
                       end if
                   end if
 
@@ -1002,15 +1178,17 @@ C    +              valnum,kind
                   if (fnom( iu2,trim( nomfich ),'STD',0) == 0) then
                       inbr2 = fstouv( iu2,'RND' )
                   else
-                      write(6,6002) trim( nomfich )
+                      write(6,6002) trim( nomfich(2:512) )
                       if (box) nil = exfin( 'FstTRI', 'Erreur 2', 'NON' )
                       call quit( ' FstTri ',2 )
                   end if
                   if (inbr2 < 0)                               then
-                      write(6,6222) inbr2,trim( nomfich )
+                      write(6,6222) inbr2,trim( nomfich(2:512) )
                       if (box) nil = exfin( 'FstTRI', 'Erreur 2', 'NON' )
                       call quit( ' FstTri ',2 )
                   end if
+
+                  write(6,6205) nbro, trim( nomfich(2:512) )
 
 ***                Sauver les valeurs courantes de datev et YYYYMMDD.
 
@@ -1098,13 +1276,33 @@ C    +              valnum,kind
               ip1 = 0
           end if
 
-***        Ecrire les donnees.
+!**        A-t'on detecte des intervals aux minutes ?
+
+          if (Minutes)                                         then
+              heures = npas*(dble( deet )/3600.)
+              if (heures <= 1000000.)                          then
+                  ! Verifier que IP2 ne contient pas un niveau.
+                  call Diag_CONVIP_plus( ip2,hold,kind,-2,nuls,Faux )
+                  if (.not.diag_is_a_level( kind ))            then
+                      if (Message_Heures)                      then
+                          write(6,6250) KIND_HOURS
+                          Message_Heures = Faux
+                      end if
+                      CALL Diag_CONVIP_plus( ip2,heures,KIND_HOURS,
+     +                                       +2,nulS,Faux )
+                  end if
+              end if
+          end if
+
+***        Ecrire les donnees. Notons qu'ici, rewrit=Faux,
+***        puisqu'on s'est explicitement occupe des doublons
+***        avec le "if (Elim)" precedent.
 
           iecr = fstecr( buff,ibuf,
      +                  -nbits, iu2, dateo,deet,npas,
      +                   ni,nj,nk, ip1,ip2,ip3, typvar,nomvar,
      +                   etiket,grtyp, ig1,ig2,ig3,ig4,
-     +                   datyp, rewrit )
+     +                   datyp, Faux )
 
 ***        Verifier que l'operation s'est bien deroulee.
 
@@ -1131,7 +1329,7 @@ C    +              valnum,kind
      +                      -nbits, iu2, dateo,deet,npas,
      +                       ni,nj,nk, ip1,ip2,ip3, typvar,nomvar,
      +                       etiket,grtyp, ig1,ig2,ig3,ig4,
-     +                       datyp, rewrit )
+     +                       datyp, Faux )
 
 ***            On ne fait ceci qu'une seule fois.
 
@@ -1146,7 +1344,7 @@ C    +              valnum,kind
           ! Copier tous les enregistrements de renvois
           !  avant de fermer ce dernier fichier
 
-          if (nomfich /= blanc)                        then
+          if (nomfich(2:512) /= blanc)                         then
               do j=1,nbrrenv
                   inf  = fstluk( buff, listerenv(j),ni,nj,nk )
                   iprm = fstprm( inf, dateo,deet,npas, ni,nj,nk,
@@ -1188,14 +1386,23 @@ CCC   if (ier.ne.0) print *,'erreur dans hpcheck=',ier
  6100 format(/14x,'Typ Nom',8x,'Ip1',3x,'IP3',3x,'Npas',
      +        3x,'Etiket',10x,'Dateo'/)
  6101 format( 5x,i4,1x,i4,1x,a2,1x,a4,2x,i8,i6,i7,2x,a12,1x,i10)
- 6102 format( '   Elimination de ',I4,' enregistrements redondants.'/)
+ 6102 format( '   Elimination de ',I6,' enregistrements redondants.'/)
  6103 format( '   Enregistrements de renvois sauves dans...'/
      +        '   ', A/)
 
+ 6202 format(/6x,   ' Source... ',10x,A/:,3x,'Destination... ',A/)
+ 6203 format(/3x,I3,' Fichiers Sources... ',A/27x,A/:,
+     +        6x,   ' Destination... ',5x,A/)
+ 6204 format(/3x,I3,' Fichiers Sources... ',A/27x,'...'/27x,A/:,
+     +        6x,   ' Destination... ',5x,A/)
+ 6205 format( 6x,   ' Destination... ',I3,2x,A/)
+ 6250 format(/'   Codage des IP2 en heures (IP type ',I2,')'/)
+ 6300 format(/"   L'argument -rewrit n'est plus supporte."/)
+
  6001 format(/'   Deux noms de fichiers sont requis a l''entree...'/)
- 6002 format(/"   Impossible d'associer un nom a une unite d'E/S"/3x,A/)
- 6222 format(/'   Erreur ',i5," durant l'ouverture (fstouv) "/3x,A/)
- 6003 format(/'   Le fichier source doit exister au depart...'/)
+ 6002 format(/"   Impossible d'associer un nom a une unite d'E/S"/:3x,A/)
+ 6222 format(/'   Erreur ',i5," durant l'ouverture (fstouv) "/:3x,A/)
+ 6003 format(/'   Un fichier source doit exister au depart...'/:3x,A)
  6004 format(/'   Le fichier destination existe deja...'/)
  6005 format(/'   Erreur ',i5,' durant ecriture (fstecr).'/)
  6006 format(/"   Le fichier source n'est pas de type RND."/)
@@ -1205,6 +1412,9 @@ CCC   if (ier.ne.0) print *,'erreur dans hpcheck=',ier
  6010 format(/"   Erreur d'allocation memoire (allocate) ",I4/)
  6011 format(/'   Erreur de decodage de date (newdate) ',2I8/)
  6012 format(/'   Incapable de forcer la re-ecriture.'/)
+ 6013 format(/"   Plus d'un type de fichier d'entree."/)
+ 6014 format(/'   Incapable de lier les ',I3.3," fichiers d'entree."/
+     +        '   Erreur (fstlnk) =',I3/)
 
  6660 format(A,'_renvois')
  6666 format('+',A,'_',I8.8,:,'-',I8.8)

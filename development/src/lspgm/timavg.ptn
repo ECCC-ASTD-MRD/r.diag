@@ -1,10 +1,10 @@
 #     if defined (AUTO_DOC)
 *
 *     CALL SEQUENCE...
-*      accumul NEW  ACCUM [MISSACC] [MISSING] OUTPUT [ -mvalue VAL1 -kind VAL2 ]
-*      timavg  SERA AVGA  [MISSOUT] [MISSING] OUTPUT [ -mvalue VAL1 -kind VAL2 -def VAL3 -npg VAL4 ]
-*      timmax  SERA MAXA  [MISSOUT] [MISSING] OUTPUT [ -mvalue VAL1 -def  VAL2 -npg VAL3 ]
-*      timmin  SERA MINA  [MISSOUT] [MISSING] OUTPUT [ -mvalue VAL1 -def  VAL2 -npg VAL3 ]
+*      accumul NEW  ACCUM [MISSACC] [MISSING] OUTPUT [ -mvalue VAL1 -def [NOMODTYP] -kind VAL2 ]
+*      timavg  SERA AVGA  [MISSOUT] [MISSING] OUTPUT [ -mvalue VAL1 -def [NOMODTYP] [KEEPTIME] -kind VAL2 -npg VAL3 ]
+*      timmax  SERA MAXA  [MISSOUT] [MISSING] OUTPUT [ -mvalue VAL1 -def [NOMODTYP] [KEEPTIME] -npg  VAL2 ]
+*      timmin  SERA MINA  [MISSOUT] [MISSING] OUTPUT [ -mvalue VAL1 -def [NOMODTYP] [KEEPTIME] -npg  VAL2 ]
 *
 *
 *     DESCRIPTIONS...
@@ -80,25 +80,34 @@
 *      at startup will remove any ambiguity and may in fact be required.
 *
 *
-*     Notes: 1) Specifying the "-npg" command-line parametre with a valid
+*     Notes: 1) All timesteps are assumed to have the same variable/level
+*               structure. However, the different variables within a timestep
+*               may be defined on different sets of variables. In orher words,
+*               the input files are assumed to have been sorted 'a la' FSTTRI.
+*            2) Specifying the "-npg" command-line parametre with a valid
 *               value forces TIMAVG/TIMMIN/TIMMAX to use this packing density
 *               on output.
-*            2) The first file's sample size may also be used by ACCUMUL to
+*            3) The first file's sample size may also be used by ACCUMUL to
 *               correctly build the ensemble mean. This will always occurr
-*               with RPN Standard files, but will only occurr with CCRN
-*               files when the command-line parameter sequence "-kind SAMPLES"
+*               with RPN/CMC files, but will only occurr with CCRN files
+*               when the command-line parameter sequence "-kind SAMPLES"
 *               is specified. In the latter case, the number in IBUF(2) will
 *               be assumed to be a sample size and not a date/step number.
-*            3) Each record in a file can also be representative of several
+*            4) Each record in a file can also be representative of several
 *               samples. Specifying the same "-kind SAMPLES" arguments with
 *               TIMAVG will correctly account for the sample sizes.
-*            4) When dealing with RPN Standard files, accumul and timavg modify
+*            5) When dealing with RPN/CMC files, accumul and timavg modify
 *               the file's time descriptors such that the earliest sample time
 *               is saved in DATEO, while the latest can be reconstructed from
 *               new values of DATEO, NPAS and DEET. In addition, IP3 will then
 *               contain the number of time samples used to construct the average.
 *               Other R.DIAG modules such as TIMGEN and the statistical testing
 *               modules (FTEST, ...) can then use this information directly.
+*            6) The NOMODTYP -def optional value, if set, disallows applying
+*               the TYPVAR-specific signatures for time averages, minimums and
+*               maximums that can be used in RPN/CMC files. Note that if the
+*               KEEPTIME option is activated, NOMODTYP will also be set.
+*               
 *
 *    ************************************************************************
 *   *** All of the above descriptor modifications can be avoided in timavg ***
@@ -147,6 +156,37 @@
 *     ------------------------------------------------
 
 *     $Log: timavg.ptn,v $
+*     Revision 4.45 2018/07/31 13:13  dugas
+*     - Description explicite de la structure requise des
+*       fichiers dans une note de la documentation automatique
+*     - Utiliser ZNAME lorsque NSET=1
+*     - Initialiser H0 a 0
+*
+*     Revision 4.44 2018/04/16 15:15  dugas
+*     Tenir compte des jeux incomplets de moyennes
+*      lors des calculs des NPAS et DEET en sortie
+*
+*     Revision 4.43 2017/11/02 19:19  dugas
+*     Ajouter une signature de moyennes (time_mean_signature) ou
+*      de minimums (timmin_signature) ou de maximums (timmax_signature)
+*      dans le deuxieme caractere du TYPVAR. Cette fonctionalite peut
+*      etre desactivee a la  sortie via l'argument '-def NOMODTYP'.
+*      Ces signatures sont fournies via le nouveau module
+*      stats_signatures
+*
+*     Revision 4.42 2017/08/10 10:10  dugas
+*     Ajouter le traitement d'echantillons d'analyses pour
+*      lesquelles DEET=0. Le resultat est similaire a ceux
+*      obtenus avec les autres type de donnees... IP2/IP3
+*      contient alors l'interval des heures d'analyses, etc.
+*
+*     Revision 4.41 2017/07/28 17:17  dugas
+*     - Correction aux codages des (HIVAL,LOVAL) de moyennes de
+*       fichiers OLD-STYLE pour les rendre identiques aux autres
+*       codages: Ajouter un offset de DEET/3600 a ces variables.
+*     - Modifications pour supporter des intervals
+*       de sauvetages plus petits qu'une heure
+*
 *     Revision 4.40  2016/10/28 17:46  dugas
 *     Tenir compte des nouvelles options de codages des IP1/2/3.
 *     Ceci a de tres grandes incidences sur la facon dont les
@@ -319,6 +359,7 @@
 
 *---------------------------------------------------------------------------
       use         diag_convert_ip123, only : KIND_HOURS, KIND_SAMPLES
+      use         stats_signatures
 
       IMPLICIT    none
  
@@ -330,8 +371,9 @@
       CHARACTER(4) TYPE,ACCSTAT,ACCMISS,PREMISS
       LOGICAL     MODTIM,MVALUE,MISSOUT,SQUARE,AVGDATA,
      +            OK,OK2,ACCUM,TIMAX,TIMIN,SAMPLES,ACCOK,
-     +            OLDIP3
-      REAL(8)     FNI,HEURE,MISFLAG,EPSILON,EPS,tdiff
+     +            OLDIP3,NoModT,Vrai,Faux
+      REAL(8)     FNI,HEURE,HEUREO,MISFLAG,
+     +            EPSILON,EPS,tdiff,H0
       REAL        ZERO, HIVALi,LOVALi,
      +            HIVALA(MAXLEV),LOVALA(MAXLEV),
      +            HIVALB(MAXLEV),LOVALB(MAXLEV),
@@ -341,8 +383,8 @@
      +            RKINDB(MAXLEV),RKM(MAXLEV)
       INTEGER     I,K,NF,MEM,NWDS,LEN,IER,IER2,MAXW,
      +            LPAK,NWDS2,DATEV,NR,NSET,NSET2,
-     +            NRECS,DEET,DEETA,DEETB,NPG,IO,
-     +            NLEV,NLEV2,KPAK,IPMi,IPM,NPASA,
+     +            NRECS,DEET,DEETA,DEETB,DEETO,NPG,
+     +            IO,NLEV,NLEV2,KPAK,IPMi,IPM,NPASA,
      +            DATEI,DATEF,DATEO,DATEAI,DATEAF,
      +            MAXW2,LEN2,NPAS,HOLD,M0,M1,KIND,
      +            KBUF(HEAD),LBUF(HEAD),MBUF(HEAD),
@@ -358,7 +400,8 @@
       REAL*8,     DIMENSION(:), ALLOCATABLE :: F,AVG,MF,MA
 
 #     include "machtype.cdk" 
-
+#     include "zlabel.cdk"
+      
       LOGICAL,    EXTERNAL :: SETIO64,RPBLOC
       CHARACTER(4), EXTERNAL :: GETYP,GETHIC
       INTEGER,    EXTERNAL :: GETSIZ4,GETHIGH,GETIPMODE
@@ -369,8 +412,9 @@
       CHARACTER   NOMPRG*256
       COMMON     /PROGNAM/ NOMPRG
 
-      DATA        NPG/ 999 /, MODTIM,OK,OK2/ 3*.TRUE. /
-      DATA        AVGDATA,MISSOUT,OLDIP3,SAMPLES,SQUARE/ 5*.FALSE. /
+      DATA        NPG/ 999 /, MODTIM,OK,OK2,Vrai/ 4*.TRUE. /
+      DATA        AVGDATA,Faux,MISSOUT,NoModT,OLDIP3,SAMPLES,SQUARE
+     +           /7*.FALSE. /
 *====================================================================
 
       NOMPRG =
@@ -409,48 +453,45 @@
 
 ***    SETUP FOR 64-BIT I/O.
 
-      OK = SETIO64(.TRUE.)
+      OK = SETIO64(Vrai)
 
 ***    WHAT OPERATING MODE: STANDARD, ACCUMULATOR OR MAX/MIN ?
 
-                              TIMAX = .FALSE.
-                              TIMIN = .FALSE.
-                              ACCUM = .FALSE.
-      IF (VERBE.EQ.'accumul') ACCUM = .TRUE.
-      IF (VERBE.EQ.'timmin' ) TIMIN = .TRUE.
-      IF (VERBE.EQ.'timmax' ) TIMAX = .TRUE.
+                              TIMAX = Faux
+                              TIMIN = Faux
+                              ACCUM = Faux
+      IF (VERBE.EQ.'accumul') ACCUM = Vrai
+      IF (VERBE.EQ.'timmin' ) TIMIN = Vrai
+      IF (VERBE.EQ.'timmax' ) TIMAX = Vrai
 
       IF (RPBLOC( ' ',VALEUR ))                                THEN
 
 ***        CHECK PARAMETRE BLOCK
 
-          IF (     (TIMIN .OR. TIMAX)
-     +        .AND.(PKTYP .EQ. 'SQ' ))                         THEN
+          IF (.NOT.ACCUM .AND.(PKTYP .EQ. 'SQ' ))              THEN
 
-***            (CASE 1: TIMMIN/TIMMAX modes with standard files).
-
-              OK = RPBLOC('NPG',VALEUR )
-              IF (OK) READ( VALEUR,0005,ERR=900,IOSTAT=IO ) NPG
-
-              OK = RPBLOC('DEFAUT',VALEUR )
-              CALL LOW2UP(  VALEUR,VALEUR )
-              IF (OK) MODTIM = (VALEUR.NE.'KEEPTIME')
-
-              IF (.NOT.MODTIM) WRITE(6,6000) trim( VERBE )
-
-          ELSE IF (.NOT.(ACCUM .OR. TIMIN .OR. TIMAX)
-     +             .AND.(PKTYP .EQ. 'SQ' ))                    THEN
-
-***            (CASE 2: TIMAVG mode with standard files).
+***            (CASE 1: TIMAVG/TIMMIN/TIMMAX/ modes with standard files).
 
               OK = RPBLOC('NPG',VALEUR )
               IF (OK) READ( VALEUR,0005,ERR=900,IOSTAT=IO ) NPG
 
               OK = RPBLOC('DEFAUT',VALEUR )
-              CALL LOW2UP(  VALEUR,VALEUR )
-              IF (OK) MODTIM = (VALEUR.NE.'KEEPTIME')
+              CALL LOW2UP( VALEUR ,VALEUR )
+              IF (OK)                                          THEN
+                  IF (VALEUR /= ' ') CALL LEADBLK( VALEUR )
+                  IF (VALEUR /= '-1' .AND. VALEUR /= ' ')      THEN
+                      IF (index( VALEUR,'KEEPTIME') <=0) MODTIM = Faux
+                      IF (index( VALEUR,'NOMODTYP') > 0) NoModT = Vrai
+                  END IF
+              END IF
 
-              IF (.NOT.MODTIM) WRITE(6,6000) trim( VERBE )
+              IF (.NOT.MODTIM)                                 THEN
+                  WRITE(6,6000) trim( VERBE )
+                  IF (.NOT.NoModT)                             THEN
+                      WRITE(6,6600)
+                      NoModT = Vrai
+                  END IF
+              END IF
 
               OK = RPBLOC('KIND',VALEUR )
               CALL LOW2UP(  VALEUR,VALEUR )
@@ -461,7 +502,16 @@
 
           ELSE IF (ACCUM)                                      THEN
 
-***            (CASE 3: ACCUMUL).
+***            (CASE 2: ACCUMUL).
+
+              OK = RPBLOC('DEFAUT',VALEUR )
+              CALL LOW2UP( VALEUR ,VALEUR )
+              IF (OK)                                          THEN
+                  IF (VALEUR /= ' ') CALL LEADBLK( VALEUR )
+                  IF (VALEUR /= '-1' .AND. VALEUR /= ' ')      THEN
+                      IF (index( VALEUR,'NoModTYP') > 0) NoModT = Vrai
+                  END IF
+              END IF
 
               OK = RPBLOC('KIND',VALEUR )
               CALL LOW2UP(  VALEUR,VALEUR )
@@ -479,7 +529,7 @@
                   SQUARE  = (VALEUR.EQ.'SQUARE')
 
                   IF (SQUARE .AND. MVALUE)                     THEN
-                      SQUARE = .FALSE.
+                      SQUARE = Faux
                       WRITE(6,6550)
                   END IF
 
@@ -500,7 +550,7 @@
 
 ***        CHECK FILES USED BY MISSING VALUE PROCESSING.
 
-          IF (NF.GT.2) MISSOUT = .TRUE.
+          IF (NF.GT.2) MISSOUT = Vrai
 
           IF (NF.GT.3)                                         THEN
 
@@ -538,7 +588,7 @@
           NPAS  = GETHIGH('NPAS' ,KBUF )
           DATEO = GETHIGH('DATEO',KBUF )
 
-***        SAVE ORIGINAL TYPVAR.
+***        SAVE ORIGINAL TYPVAR AND CHECK FOR TYPVAR MEAN/VARIANCE CODING.
 
           TYPVAR = GETHIC('TYPVAR',KBUF )
 
@@ -555,8 +605,10 @@
 
           IPMi = GETIPMODE( KBUF ) ! Check for IP1/2/3 coding
 
-          IF (IPMi == 0) OLDIP3 = .TRUE.
+          IF (IPMi == 0) OLDIP3 = Vrai
           
+          IF (NSET == 1) ZNAME = VARIAB( NSET )(1:4)
+
       ELSE IF (MAXW.LE.0)                                      THEN
 
           WRITE(6,6100) VERBE,NSET,MAXLEV
@@ -773,7 +825,7 @@
 
 ***    DO THE WORK.
 
-      ACCOK = .TRUE.
+      ACCOK = Vrai
 
       IF (NSETS.EQ.0)                                          THEN
 
@@ -903,7 +955,7 @@
               NRECS  = NRECS+SET(NSET)
               NSETS  = 1
 
-              IF (MAXVAL( NSAMP(1:NSET) ) > 1) AVGDATA = .TRUE.
+              IF (MAXVAL( NSAMP(1:NSET) ) > 1) AVGDATA = Vrai
 
               IF (PKTYP.EQ.'SQ')                               THEN
 
@@ -934,6 +986,13 @@
                       DO  K=1,NSET
                           IF (RKIND(K) == -1)                  THEN
                               LOVAL(K) = HEURE ; HIVAL(K) = LOVAL(K)
+                          END IF
+                      END DO
+                  ELSE
+                      ! Initialize the active (HIVAL,LOVAL).
+                      DO  K=1,NSET
+                          IF (RKIND(K) == -1)                  THEN
+                              LOVAL(K) = 0.0 ; HIVAL(K) = LOVAL(K)
                           END IF
                       END DO
                   END IF
@@ -1037,7 +1096,7 @@
           IF (.NOT.OK) GOTO 300
 
           IF (NSETS == 0)                                      THEN
-              IF (MAXVAL( NSAMPB(1:NSET) ) > 1) AVGDATA = .TRUE.
+              IF (MAXVAL( NSAMPB(1:NSET) ) > 1) AVGDATA = Vrai
           ELSE
      +    IF (AVGDATA .NEQV. MAXVAL( NSAMPB(1:NSET) ) > 1)     THEN
               ! Mixing averages and samples in input data
@@ -1083,26 +1142,42 @@
                           LOVALB(K) = HEURE ; HIVALB(K) = LOVALB(K)
                       END IF
                   END DO
+              ELSE
+                  ! Possibly redefine DATEI and/or DATEF.
+                  IF (DATEO /= DATEI)                          THEN
+                      CALL DIFDATR( DATEO,DATEI,tdiff )
+                      IF (TDIFF < 0._8) DATEI = DATEO
+                  END IF
+                  IF (DATEO /= DATEF)                          THEN
+                      CALL DIFDATR( DATEO,DATEF,tdiff )
+                      IF (TDIFF > 0._8) DATEF = DATEO
+                  END IF
+                  CALL DIFDATR( DATEF,DATEI,tdiff )
+                  ! Set HIVALB-LOVALB = DATEF-DATEI
+                  DO  K=1,NSET
+                      IF (RKIND(K) == -1) LOVALB(K) = 0
+                      IF (RKIND(K) == -1) HIVALB(K) = tdiff
+                  END DO
               END IF
-              IF (AVGDATA)                                 THEN
+              IF (AVGDATA)                                     THEN
                   ! Possibly redefine DATEAI and/or DATEAF.
-                  IF (DATEO /= DATEAI)                     THEN
+                  IF (DATEO /= DATEAI)                         THEN
                       CALL DIFDATR( DATEO,DATEAI,tdiff )
                       IF (TDIFF < 0._8) DATEAI = DATEO
                   END IF
                   IF (HEURE > 0.0_8) CALL INCDATR(DATEV,DATEO,HEURE )
-                  IF (DATEV /= DATEAF)                     THEN
+                  IF (DATEV /= DATEAF)                         THEN
                       CALL DIFDATR( DATEV,DATEAF,tdiff )
                       IF (TDIFF > 0._8) DATEAF = DATEV
                   END IF
-              ELSE
+              ELSE IF (DEETB /= 0)                             THEN
                   ! Possibly redefine DATEI and/or DATEF.
                   IF (HEURE > 0.0_8) CALL INCDATR( DATEV,DATEO,HEURE )
-                  IF (DATEV /= DATEI)                     THEN
+                  IF (DATEV /= DATEI)                          THEN
                       CALL DIFDATR( DATEV,DATEI,tdiff )
                       IF (TDIFF < 0._8) DATEI = DATEV
                   END IF
-                  IF (DATEV /= DATEF)                     THEN
+                  IF (DATEV /= DATEF)                          THEN
                       CALL DIFDATR( DATEV,DATEF,tdiff )
                       IF (TDIFF > 0._8) DATEF = DATEV
                   END IF
@@ -1203,7 +1278,7 @@
 
       NSAMP(1:NSET) = NSAMP(1:NSET)+NSAMPB(1:NSET)
 
-      IF (DEETB /= 0)                                          THEN
+    ! IF (DEETB /= 0)                                          THEN
           IF (NSETS == 0)                                      THEN
               HIVAL(1:NSET) = HIVALB(1:NSET)
               LOVAL(1:NSET) = LOVALB(1:NSET)
@@ -1211,7 +1286,7 @@
               HIVAL(1:NSET) = MAX( HIVAL(1:NSET),HIVALB(1:NSET) )
               LOVAL(1:NSET) = MIN( LOVAL(1:NSET),LOVALB(1:NSET) )
           END IF
-      END IF
+    ! END IF
 !     DO  K=1,NSET
 !         IF (DEETB /= 0)                                      THEN
 !             HIVAL(K) = MAX( HIVAL(K),HIVALB(K) )
@@ -1247,7 +1322,7 @@
       NSAMP(1:NSET) = NSAMP(1:NSET)+NSAMPA(1:NSET)
       NSETS         = NSAMP(1)
 
-      IF (NSETS == 1)                                          THEN
+      IF (MAXVAL( NSAMP(1:NSET) ) == 1)                        THEN
 
           ! Nothing to do. Save data and exit !
 
@@ -1317,13 +1392,10 @@
               END IF
           END IF
 
-          CALL DIFDATR( DATEAF,DATEAI,HEURE )
+          CALL DIFDATR( DATEAF,DATEAI,HEURE ) ; H0 = 0
 
-          IF (OLDIP3 .AND. AVGDATA)                            THEN
-              HIVAL = HEURE ; LOVAL = 0.
-          END IF
-
-          IF (DEET.NE.0)                                       THEN
+        ! IF (DEET.NE.0)                                       THEN
+          IF (HEURE /= 0.0_8)                                  THEN
 
 ***            PUT VALIDITY DATE OF FIRST SET IN DATEO. THE
 ***            SAMPLE SIZE SAVED NPAS+1 AND THE NUMBER OF
@@ -1332,21 +1404,38 @@
 ***            SAVED ON THE FILE WILL CORRESPOND TO THAT
 ***            THE LATEST SAMPLE.
 
-              NPAS = NSETS-1
-              DEET = NINT( (HEURE*3600._8)/NPAS )
+              HEUREO = (NSETS-1)*((DBLE( DEET )/60.)/60.)
+
+              IF (HEUREO /= HEURE)                             THEN
+                ! Tentative de determiner si
+                ! l'ensemble est COMPLET. Il
+                ! semble qu'il ne l'est pas.
+                  NPAS  = NINT( HEURE )
+                  DEETO = 3600
+                  HIVAL = HEURE
+                  LOVAL = 0
+              ELSE
+                  NPAS  = NSETS-1
+                  DEETO = NINT( (HEURE*3600._8)/NPAS )
+                  H0    =        DEET /3600._8
+              END IF
 
           ELSE
 
 ***            RESET DEET TO AN HOUR AND DO THE
 ***            SAME THING AS IN THE PREVIOUS CASE.
 
-              NPAS = HEURE
-              DEET = 3600
+              NPAS  = NINT( HEURE )
+              DEETO = 3600
 
           END IF
 
+          IF (OLDIP3 .AND. AVGDATA)                            THEN
+              HIVAL = HEURE+H0 ; LOVAL = H0
+          END IF
+
           CALL PUTHIGH( DATEAI,'DATEO',IBUF )
-          CALL PUTHIGH( DEET  ,'DEET' ,IBUF )
+          CALL PUTHIGH( DEETO ,'DEET' ,IBUF )
           CALL PUTHIGH( NPAS  ,'NPAS' ,IBUF )
 
           IBUF(2) = NPAS
@@ -1357,9 +1446,22 @@
 
       END IF
 
-***    MAKE SURE TYPVAR HAS ITS ORIGINAL VALUE.
+***    MAKE SURE TYPVAR HAS ITS ORIGINAL VALUE (or not)...
 
-      IF (PKTYP.EQ.'SQ') CALL PUTHIC( TYPVAR,'TYPVAR',IBUF )
+      IF (PKTYP.EQ.'SQ')                                       THEN
+          IF (NoModT)                                          THEN
+              CALL PUTHIC( TYPVAR          ,'TYPVAR',IBUF )
+          ELSE
+              ! Apply the appropriate TYPVAR signatures
+              IF      (TIMAX)                                  THEN
+                  CALL PUTHIC( TYPVAR(1:1)//timmax_signature,'TYPVAR',IBUF )
+              ELSE IF (TIMIN)                                  THEN
+                  CALL PUTHIC( TYPVAR(1:1)//timmin_signature,'TYPVAR',IBUF )
+              ELSE
+                  CALL PUTHIC( TYPVAR(1:1)//time_mean_signature,'TYPVAR',IBUF )
+              END IF
+          END IF
+      END IF
 
 ***    SAVE AVERAGES.
 
@@ -1424,6 +1526,8 @@
  6502 FORMAT(/' Accumul assumes IBUF(2) contains sample sizes.'/)
  6550 FORMAT(/' Option SQUARE unavalable with missing values.'/)
  6551 FORMAT(/' Option SQUARE active...'/)
+ 6600 FORMAT( ' And option NOMODTYP activated (as it',
+     +        ' requires KEEPTIME=false)'/)
 
       END
 #     endif

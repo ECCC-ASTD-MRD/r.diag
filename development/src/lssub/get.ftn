@@ -24,6 +24,20 @@
 !---------------------------------- LICENCE END ---------------------------------
 #     endif
 C     $Log: get.ftn,v $
+C     Revision 3.100 2018/07/31 14:14  dugas
+C     Deplacer les appels a GETIO64 dans les routines
+C      GETMSET* et GETSET2 hors de la boucle temporelle
+C
+C     Revision 3.99  2018/04/16 13:13  dugas
+C     Tenir compte des TYPVAR utilises par le programme de
+C      moyennes temporelles de MFV dans la routine GETSAMPLZ.
+C
+C     Revision 3.98  2017/11/02 02:02  dugas
+C     Tenir compte des differentes signatures d'operations temporelles
+C      qui pourraient se retrouver dans le deuxieme caracteres du TYPVAR
+C      lors du traitement de la routine GETSAMPLZ. Ces signatures sont
+C      fournies via le nouveau module stats_signatures
+C
 C     Revision 3.97  2016/10/26 15:32  dugas
 C     - La variable HEAD passe de 28 a 32
 C     - Modifications syntaxiques de type F77 --> F90
@@ -1038,13 +1052,11 @@ CCC   CHARACTER*4   TYPE,NOM
       REAL             PR
       POINTER    ( IP, PR(1) )
 
-      CHARACTER*4  GETYP
-      INTEGER      GETHIGH,GETPARI
-      LOGICAL      GETIO64,SETIO64
-      EXTERNAL     GETYP,GETBUF2,READF,PRECEDE, 
-     +             LVCODE,SKIPREC,GETIO64,SETIO64,
-     +             CONVPR,GETHIGH,PUTPARI,ISMOV,
-     +             GETPARI
+      CHARACTER(4),EXTERNAL :: GETYP
+      INTEGER,     EXTERNAL :: GETHIGH,GETPARI
+      LOGICAL,     EXTERNAL :: GETIO64,SETIO64
+      EXTERNAL     GETBUF2,READF,PRECEDE,LVCODE,
+     +             SKIPREC,CONVPR,PUTPARI,ISMOV
 
 ***    VARIABLES UTILISEES DANS LA TENTATIVE DE
 ***    RECHERCHE FORCEE D'UN ENREGISTREMENT ++.
@@ -1463,14 +1475,14 @@ C     END IF
       COMMON     /ZZVERBO/ INFO
       COMMON     /ZZZSNGL/      SINGLZ
 
-      LOGICAL     GETIO64
-      EXTERNAL    GETIO64,GETSET2,GETFLD2,GETRABT,XIT,CMPLBL,RECGET
+      LOGICAL,    EXTERNAL :: GETIO64
+      EXTERNAL    GETSET2,GETFLD2,GETRABT,XIT,CMPLBL,RECGET
 
       SAVE        MESSAG
       DATA        MESSAG / 'AUCUN' /
 
 *-------------------------------------------------------------------
-      NR = 0 ; MVALUE = .FALSE.
+      NR = 0 ; MVALUE = .FALSE. ; IO64B = GETIO64( IO64B )
 
       CALL GETRABT( RECABT )
 
@@ -1497,7 +1509,6 @@ C     END IF
      +        KIND.EQ.'FOUR' .OR.
      +        KIND.EQ.'SPEC') NWDS = NWDS * 2
 
-              IO64B     = GETIO64( IO64B )
           IF (IO64B) PG = LOC( G(1) )
 
           CALL PRECEDE( NF,1 )
@@ -1686,7 +1697,6 @@ C     END IF
 
           IF (.NOT.ORDER) RETURN
 
-              IO64B     = GETIO64( IO64B )
           IF (IO64B) PG = LOC( G(1) )
 
           NWDS = IBUF(5)*IBUF(6)
@@ -1819,15 +1829,15 @@ C     END IF
 
 #     include    "zlabel.cdk"
 
-      LOGICAL     GETIO64
-      EXTERNAL    GETIO64,GETSET2,GETFLD2,GETRABT,XIT,CMPLBL,RECGET
+      LOGICAL,    EXTERNAL :: GETIO64
+      EXTERNAL    GETSET2,GETFLD2,GETRABT,XIT,CMPLBL,RECGET
       EXTERNAL    GET_IP1_STRING
 
       SAVE        MESSAG
       DATA        MESSAG / 'AUCUN' /
 *-------------------------------------------------------------------
 
-      NR = 0 ; MVALUE = .FALSE.
+      NR = 0 ; MVALUE = .FALSE. ; IO64B = GETIO64( IO64B )
 
       CALL GETRABT( RECABT )
 
@@ -1854,7 +1864,6 @@ C     END IF
      +        KIND.EQ.'FOUR' .OR.
      +        KIND.EQ.'SPEC') NWDS = NWDS * 2
 
-              IO64B     = GETIO64( IO64B )
           IF (IO64B) PG = LOC( G(1) )
 
           CALL PRECEDE( NF,1 )
@@ -1948,7 +1957,6 @@ C     END IF
 ***        MODE DE FONCTIONNEMENT "SERIES TEPORELLES" N'EST PAS
 ***        SUPPORTE...
 
-              IO64B     = GETIO64( IO64B )
           IF (IO64B) PG = LOC( G(1) )
 
           NWDS = IBUF(5)*IBUF(6)
@@ -2114,7 +2122,7 @@ C     END IF
       DATA        MESSAG / 'AUCUN' /
 *-------------------------------------------------------------------
 
-      NR = 0 ; MVALUE = .FALSE.
+      NR = 0 ; MVALUE = .FALSE. ; IO64B = GETIO64( IO64B )
 
       ALLOCATE( INT_LEV(SET(NSET)) )
 
@@ -2154,7 +2162,6 @@ C     END IF
      +        KIND.EQ.'FOUR' .OR.
      +        KIND.EQ.'SPEC') NWDS = NWDS * 2
 
-              IO64B     = GETIO64( IO64B )
           IF (IO64B) PG = LOC( G(1) )
 
           CALL PRECEDE( NF,1 )
@@ -2304,7 +2311,6 @@ C     END IF
 ***        MODE DE FONCTIONNEMENT "SERIES TEPORELLES" N'EST PAS
 ***        SUPPORTE...
 
-              IO64B     = GETIO64( IO64B )
           IF (IO64B) PG = LOC( G(1) )
 
           NWDS = IBUF(5)*IBUF(6)
@@ -2487,7 +2493,7 @@ C     END IF
       DATA        MESSAG / 'AUCUN' /
 *-------------------------------------------------------------------
 
-      NR = 0 ; MVALUE = .FALSE.
+      NR = 0 ; MVALUE = .FALSE. ; IO64B = GETIO64( IO64B )
 
       ALLOCATE( INT_LEV(SET(NSET)) )
 
@@ -2527,7 +2533,6 @@ C     END IF
      +        KIND.EQ.'FOUR' .OR.
      +        KIND.EQ.'SPEC') NWDS = NWDS * 2
 
-              IO64B     = GETIO64( IO64B )
           IF (IO64B) PG = LOC( G(1) )
 
           CALL PRECEDE( NF,1 )
@@ -2679,7 +2684,6 @@ C     END IF
 ***        MODE DE FONCTIONNEMENT "SERIES TEPORELLES" N'EST PAS
 ***        SUPPORTE...
 
-              IO64B     = GETIO64( IO64B )
           IF (IO64B) PG = LOC( G(1) )
 
           NWDS = IBUF(5)*IBUF(6)
@@ -2850,7 +2854,7 @@ CCC   INTEGER     MEMOIRC,IER
 CCC   EXTERNAL    MEMOIRC
 
 *-------------------------------------------------------------------
-      CALL GETRABT( RECABT )
+      IO64B = GETIO64( IO64B ) ; CALL GETRABT( RECABT )
 
       DO  I=1,HEAD
           IB(I)=IBUF(I) 
@@ -2896,7 +2900,6 @@ C 100 IER = MEMOIRC( 0 )
 
           ELSE
 
-                  IO64B     = GETIO64( IO64B )
               IF (IO64B) PG = LOC( G(1) )
 
               KIND   = IBUF(1)
@@ -3846,7 +3849,7 @@ CCC   MAXWRD0 = MAX( NWDS*NLEV , MAXWRD0 , MAXSWRD0 )
      +            LEVELK /  0  /
 
 *-------------------------------------------------------------------
-      CALL GETRABT( RECABT )
+      IO64B = GETIO64( IO64B ) ; CALL GETRABT( RECABT )
 
       MAXB  = MAXWRD0
       PKTYP = GETYP( NF )
@@ -3857,7 +3860,6 @@ CCC   MAXWRD0 = MAX( NWDS*NLEV , MAXWRD0 , MAXSWRD0 )
   100 CALL RECGET( NF, 'ZONL',-1,' ',-1, IBUF,MAXPK,OK )
       IF (.NOT.OK) RETURN
 
-          IO64B     = GETIO64( IO64B )
       IF (IO64B) PZ = LOC( ZX(1) )
 
       INITT = IBUF(2) 
@@ -4316,9 +4318,22 @@ CCC   MAXWRD0 = MAX( NWDS*NLEV , MAXWRD0 , MAXSWRD0 )
       
       ! Auteur: B. Dugas (UQAM/RPN)
 
-      ! Revision: version original, septembre 2016. 
+      ! Revision: version original, septembre 2016.
+      ! 
+      ! Revision 1 2017/07/28 17:17  dugas
+      ! - Supporter l'implementation des sorties GEM 4.8+ codees avec
+      !   les nouvelles options de codages des IP1/2/3. Celles-ci sont
+      !   maintenant correctement identifiees comme des echantillons.
+      ! - Correction aux codages des (HIVAL,LOVAL) de moyennes de
+      !   fichiers OLD-STYLE pour les rendre identiques aux autres
+      !   codages: Ajouter un offset de DEET aux deux variables.
+      !      
+      ! Revision 2 2017/10/20 20:20  dugas
+      !  Tenir compte de la signature de moyennes (/) ou de
+      !  variances (%) dans le deuxieme caracteres du TYPVAR
 
       use          diag_convert_ip123, only : KIND_HOURS, KIND_SAMPLES
+      use          stats_signatures
 
       IMPLICIT     none
 
@@ -4331,12 +4346,13 @@ CCC   MAXWRD0 = MAX( NWDS*NLEV , MAXWRD0 , MAXSWRD0 )
       ! Variables locales
 
       REAL(8)      TDIFF
+      LOGICAL      lMeanVar,vMeanVar
       REAL         VIP2,VIP3,HEURES
       INTEGER(8)   TIME_RANGE,VIP2_5,
      +             NPAS_DEET,  NPAS_DEET60,  NPAS_DEET3600,
      +             NPASP1_DEET,NPASP1_DEET60,NPASP1_DEET3600
       INTEGER      IP1,IP2,IP3, NPAS,DEET,IKIND, NSAMPZ, DATEO,DATEV, IPM
-      CHARACTER(2) NULS,PKTYP
+      CHARACTER(2) NULS,PKTYP,typvar
 
       CHARACTER(4),EXTERNAL :: GETHIC
       INTEGER,     EXTERNAL :: GETHIGH
@@ -4346,7 +4362,7 @@ CCC   MAXWRD0 = MAX( NWDS*NLEV , MAXWRD0 , MAXSWRD0 )
       NSAMPZ = 1 ! Initialiser au cas on le decodage ne donne rien
       IPMODE =-1
 
-      PKTYP = GETHIC('PKTYP',IBUF )
+      PKTYP  = GETHIC('PKTYP' ,IBUF )
 
       IF (PKTYP /= 'SQ')                                       THEN
           ! Comparer IBUF(2) a la plus petite valeur
@@ -4355,6 +4371,21 @@ CCC   MAXWRD0 = MAX( NWDS*NLEV , MAXWRD0 , MAXSWRD0 )
           RKIND = -1
           RETURN
       END IF
+
+      typvar = GETHIC('TYPVAR',IBUF )
+
+      ! Signature d'une operation temporelle ?
+      lMeanVar = .FALSE. ; vMeanVar = .FALSE.
+      if (typvar(2:2) == time_mean_signature .OR.
+     +    typvar(2:2) == variance_signature .OR.
+     +    typvar(2:2) == median_signature .OR.
+     +    typvar(2:2) == stdev_signature .OR.
+     +    typvar(2:2) == timmax_signature .OR.
+     +    typvar(2:2) == timmin_signature ) lMeanVar = .true.
+
+      if (.not.lMeanVar)                                       THEN
+          if (typvar == 'MN' .OR. typvar == 'VA') vMeanVar =  .TRUE.
+      end if
 
       ! Verifier si on a un interval temporel OU VERTICAL encode
       !  dans ibuf et retoruner les valeurs correspondantes
@@ -4387,7 +4418,52 @@ CCC   MAXWRD0 = MAX( NWDS*NLEV , MAXWRD0 , MAXSWRD0 )
           
       IF (RKIND >=0) IPMODE = 1
 
-      IF (RKIND == KIND_HOURS)                                 THEN
+      IF (lMeanVar)                                            THEN
+
+          ! Signature de moyennes (/) ou de variances (%) detectees.
+          ! IP3 devrait alors contenir le nombre d'echantillons
+          ! NSAMPZ (KIND_SAMPLES), DATEO la date de validitee du
+          ! premier echantillon et DATEV celle du dernier. De
+          ! plus, si NSAMPZ=NPAS+1, on a alors un ensemble complet
+          ! et IP2 pourrait alors contenir l'heure absolue de
+          ! prevision (KIND_HOURS).
+
+          IP3   = MAX( 1, GETHIGH('IP3' ,IBUF ) )
+
+          CALL Diag_CONVIP_plus( IP3,VIP3,IKIND,-2,NULS,.FALSE. )
+
+          IF (IKIND == KIND_SAMPLES)                           THEN
+              IPMODE = 1 ; NSAMPZ = NINT( VIP3 )
+          ELSE
+              GOTO 999
+          END IF
+
+          IP2   = GETHIGH('IP2' ,IBUF )
+
+          IF (IP2*720_8 == NPAS_DEET)                          THEN
+              ! ip2 = npas*deet a 5 secondes pres ==>
+              VIP2 = IP2 ; IKIND = KIND_HOURS
+          ELSE
+              CALL Diag_CONVIP_plus( IP2,VIP2,IKIND,-2,NULS,.FALSE. )
+          END IF
+
+          IF (IKIND == KIND_HOURS)                             THEN
+              HIVAL = VIP2
+              LOVAL = HIVAL-(NPAS_DEET/720.0_8)
+          ELSE
+              HIVAL = NPAS_DEET/720.0_8
+              LOVAL = 0.0
+          END IF
+              
+      ELSE IF (vMeanVar)                                       THEN
+
+          ! Codage utilise par les routines
+          ! de traitement temporel de MFV.
+
+         NSAMPZ = MAX( 1, GETHIGH('IP3' ,IBUF ) )
+         LOVAL = 0.0 ; HIVAL = HEURES ; IPMODE = 0
+          
+      ELSE IF (RKIND == KIND_HOURS)                            THEN
 
           ! Interval de temps.
           !  On suppose que c'est le debut d'un interval deja
@@ -4406,6 +4482,13 @@ CCC   MAXWRD0 = MAX( NWDS*NLEV , MAXWRD0 , MAXSWRD0 )
               NSAMPZ = (NPAS/3600)+1
           END IF
 
+          IF (NSAMPZ == 1)                                     THEN
+              ! On a probablement trouve un
+              ! echantillon d'accumulateur
+              IPMODE = -1  ; RKIND = -1
+              HIVAL  = -1. ; LOVAL = -1.
+          END IF
+
       ELSE IF (RKIND /= -1)                                    THEN
 
           ! Interval de coordonee verticale.
@@ -4413,7 +4496,14 @@ CCC   MAXWRD0 = MAX( NWDS*NLEV , MAXWRD0 , MAXSWRD0 )
           !  ou bien en un nombre d'echantillons ?
 
           IP2 = GETHIGH( 'IP2',IBUF )
-          CALL Diag_CONVIP_plus( IP2,VIP2,IKIND,-2,NULS,.FALSE. )
+
+          IF (IP2*720_8 == NPAS_DEET)                          THEN
+              ! ip2 = npas*deet a 5 secondes pres ==>
+              VIP2 = IP2 ; IKIND = KIND_HOURS
+          ELSE
+              CALL Diag_CONVIP_plus( IP2,VIP2,IKIND,-2,NULS,.FALSE. )
+          END IF
+
           VIP2_5 = NINT( VIP2*720._8, 8 )
 
           IF (IKIND == KIND_HOURS)                             THEN
@@ -4457,7 +4547,7 @@ CCC   MAXWRD0 = MAX( NWDS*NLEV , MAXWRD0 , MAXSWRD0 )
            !  KIND_SAMPLES. Sinon, on ignore tout codage et
            !  on est en mode de compatibilite arriere
 
-          IP3 = MAX( 1, GETHIGH( 'IP3',IBUF ) )
+          IP3 = GETHIGH( 'IP3',IBUF )
 
           IF (IP3 > 32767)                                     THEN
 
@@ -4467,19 +4557,21 @@ CCC   MAXWRD0 = MAX( NWDS*NLEV , MAXWRD0 , MAXSWRD0 )
                   NSAMPZ = NINT( VIP3 ) ; IPMODE = 1
               ELSE
                   ! Mode compatibilite arriere (partie 1)
-                  NSAMPZ = IP3 ; LOVAL = 0. ; HIVAL = HEURES ; IPMODE = 0
+                  NSAMPZ = IP3 ; IPMODE = 0
+                  LOVAL = DEET ; HIVAL = HEURES+DEET
               END IF
 
           ELSE IF (IP3 > 1)                                    THEN
 
               ! Mode compatibilite arriere (partie 2)
-              NSAMPZ = IP3 ; LOVAL = 0. ; HIVAL = HEURES ; IPMODE = 0
+              NSAMPZ = IP3 ; IPMODE = 0
+              LOVAL = DEET ; HIVAL = HEURES+DEET
 
           END IF
 
       END IF
 
-      GETSAMPLZ = NSAMPZ
+  999 GETSAMPLZ = NSAMPZ
 
       RETURN
 !------------------------------------------------------------------------------

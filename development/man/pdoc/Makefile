@@ -1,5 +1,5 @@
 .SUFFIXES :
-.SUFFIXES : .ptn90 .ptn .ftn .txt
+.SUFFIXES : .F90 .ptn90 .ptn .ftn .txt
 
 # Description: Makefile de MAN/PDOC
 ifeq "$(BAtail -f ../../Resultats.make.pgi13xx.ST1SE_ARCH)" "$(EC_ARCH)"
@@ -27,7 +27,10 @@ CDF2C  = $(DIAGS)/src/cdf2ccc
 
 FTNT   = $(CPPT) -DNO_SOURCE -DAUTO_DOC
 
-DIAG_VERSION = 6.3.1
+DIAG_VERSION = 6.4.2
+
+HOSTWEB =
+DIAGWEB =
 
 default:  document
 
@@ -99,7 +102,7 @@ lssub.txt	:	$(LSSUB)/lssub.ftn
 	if ( test "$(HOSTWEB):$(DIAGWEB)" != ":" ) then \
 	rsync -av $@ $(HOSTWEB):$(DIAGWEB) ; fi
 
-cdf2ccc.txt	:	$(CDF2C)/cdf2ccc.ftn
+cdf2ccc.txt	:	$(CDF2C)/cdf2ccc.F90
 	cd  $(CDF2C) ; $(MAKE) $@
 	if ( test "$(HOSTWEB):$(DIAGWEB)" != ":" ) then \
 	rsync -av $@ $(HOSTWEB):$(DIAGWEB) ; fi
@@ -113,3 +116,7 @@ info.lspgm	:	$(LSPGM)/driver.ptn
 	if [[ "$(HOSTWEB):$(DIAGWEB)" != ":" ]] ; then \
 	rsync -av lspgm_$$i.txt lspgm_$$i.html $(HOSTWEB):$(DIAGWEB) ; fi \
 	done
+
+web_document:
+	if ( test "$(HOSTWEB):$(DIAGWEB)" != ":" ) then \
+	rsync -av * $(HOSTWEB):$(DIAGWEB) ; fi
