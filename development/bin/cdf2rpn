@@ -27,16 +27,16 @@ case ${1:-*} in
   exit 0
   ;;
 --versions )
-  cd ${Location}/bin/
+  cd ${DIAGNOSTIQUE}/bin/
   ls ${0##*/}_*.*.*
   exit 0
   ;;
 --src )
-  cat ${Location}/bin/revision.txt
+  cat ${DIAGNOSTIQUE}/bin/revision.txt
   exit 0
   ;;
 * )
-  CDF2RPN=${CDF2RPN:-${Location}/bin/cdf2rpn.exe}
+  CDF2RPN=${CDF2RPN:-${DIAGNOSTIQUE}/bin/cdf2rpn.exe}
   if [[ `echo ${CDF2RPN} | cut -c1` != "/" ]]; then CDF2RPN=${DIAGNOSTIQUE}/bin/${BASE_ARCH}/${CDF2RPN} ; fi
   if [[ -x ${CDF2RPN} ]] ; then
     if [[ -z "${launched_by_cdf2rpn_script}" ]]; then
@@ -51,7 +51,7 @@ case ${1:-*} in
       exit 99
     fi
   else
-    ${Location}/bin/cdf2rpn.exe "$@"
+    ${DIAGNOSTIQUE}/bin/cdf2rpn.exe "$@"
     exit $?
   fi
   ;;

@@ -37,6 +37,7 @@ DIAGS    = $(DIAGNOSTIQUE)
 BINDIR   = $(DIAGS)/bin/$(BASE_ARCH)
 LIBDIR   = $(DIAGS)/lib/$(EC_ARCH)
 MANDIR   = $(DIAGS)/share/pdoc
+INCLUDES = $(DIAGS)/include
 MODDIR   = $(INCLUDES) $(INCLUDES)/$(EC_ARCH) $(EXTRAS)/include
 
 CONV_VERSION = 2.3.3
@@ -73,16 +74,7 @@ VGDLIB   = descrip
 lNetCDF  = netcdff_s netcdf_s hdf5_hl_s hdf5_s dl sz_s z
 UDUNITS  = udunits2f_s udunits2_s
 
-LIBPATH  = $(LIBDIR)
-
-# Shared load via the netcdff SSM package
-#lNetCDF  = netcdff
-#UDUNITS  = udunits2f udunits2
-
-# Other/outdated items
-#UDUNITS  = udunits2 expat
-#lNetCDF  = netcdff netcdf hdf5_hl hdf5 dl z
-#LIBPATH  = $(LIBDIR) $(EXTRAS)/lib
+LIBPATH  = $(LIBDIR) $(EXTRAS)/lib
 
 # les programatheques externes
 

@@ -1,3 +1,6 @@
+#     if !defined (taille_entete)
+#         define   taille_entete 32
+#     endif
 !
 !---------------------------------- LICENCE BEGIN -------------------------------
 ! R.DIAG - Diagnostic tool kit for the GEM numerical atmospheric model
@@ -31,55 +34,60 @@
       integer ncid,funit,lat_unit,lon_unit
 
 
-******
-*
-*AUTEUR Guy Bergeron         juillet  2003
-*
-*
-*     Traduction : netCDF -> CCCma
-*
-*
-*REVISIONS 
-*
-*  Bernard Dugas octobre 2014 :
-*  - Corriger la sequence d'appel a def_spectral_truncation
-*  Bernard Dugas juillet 2013 :
-*  - Deplacer l'appel a MISPAR vers CDF2CCC (main)
-*  Bernard Dugas mai 2012 :
-*  - Introduit le support de 'time_bnds'
-*  Bernard Dugas novembre 2009 :
-*  - Correction pour max1d > maxlen, donc
-*    petites grilles et beaucoup d'echantillons
-*  Bernard Dugas octobre 2008 :
-*  Initialiser jbuf == 0 (requis sous IRIX64)
-*  Bernard Dugas hiver 2007 :
-*  - Enlever l'include de 'machtyp.h'.
-*  - Nouveaux arguments lat_unit,lon_unit passe a wrlalo.
-*    Donc, le nom de la routine devient vers_cccma2
-*  - Allocation de memoire avec allocate/deallocate
-*  - Allouer la memoire pour les grilles tournees
-*  - On n'utilise plus main_memory.h
-*  - Initialiser ibuf a zero au depart
-*  Guy Bergeron ??? 200? : initialisation de maxpk
-*
-******
+!*****
+!
+!AUTEUR Guy Bergeron         juillet  2003
+!
+!
+!     Traduction : netCDF -> CCCma
+!
+!
+!REVISIONS 
+!
+!  Bernard Dugas mai 2017 : 
+!  - Convertir en fichier .F90 pour traiter
+!    le macro taille_entete avec s.f90
+!  Bernard Dugas octobre 2014 :
+!  - Corriger la sequence d'appel a def_spectral_truncation
+!  Bernard Dugas juillet 2013 :
+!  - Deplacer l'appel a MISPAR vers CDF2CCC (main)
+!  Bernard Dugas mai 2012 :
+!  - Introduit le support de 'time_bnds'
+!  Bernard Dugas novembre 2009 :
+!  - Correction pour max1d > maxlen, donc
+!    petites grilles et beaucoup d'echantillons
+!  Bernard Dugas octobre 2008 :
+!  Initialiser jbuf == 0 (requis sous IRIX64)
+!  Bernard Dugas hiver 2007 :
+!  - Enlever l'include de 'machtyp.h'.
+!  - Nouveaux arguments lat_unit,lon_unit passe a wrlalo.
+!    Donc, le nom de la routine devient vers_cccma2
+!  - Allocation de memoire avec allocate/deallocate
+!  - Allouer la memoire pour les grilles tournees
+!  - On n'utilise plus main_memory.h
+!  - Initialiser ibuf a zero au depart
+!  Guy Bergeron ??? 200? : initialisation de maxpk
+!
+!*****
 
-******CCCma
+      integer, parameter :: head = taille_entete
+
+!*****CCCma
 
       integer nwds,length,jbuf(head),la,lrlmt,nhem,opack
 
-******netCDF
+!*****netCDF
 
       integer ii,i,id,status,ngatts
       integer ndim,nvar,ngatt,unlimd
 
-*-----------------------------------------------------------------------
+!-----------------------------------------------------------------------
                         opack = npack
       if (opack.eq.999) opack =-64
 
       jbuf = 0
 
-*     Ouverture du fichier netCDF:
+!     Ouverture du fichier netCDF:
 
       status=nf_open(netcdf_file,nf_nowrite,ncid)
       call handle_err2(status,'vers_cccma2')
@@ -87,15 +95,15 @@
       status=nf_inq(ncid,ndims,nvars,ngatt,unlimdimid)
       call handle_err2(status,'vers_cccma2')
 
-*     Allocation de memoire (dim,coord,var,list):
+!     Allocation de memoire (dim,coord,var,list):
 
       maxdim=ndims +4
       maxvar=nvars +3
-*
-      allocate( dim  (maxdim) , coord(maxdim) ,
-     .          var  (maxvar) , list (maxvar) )
+!
+      allocate( dim  (maxdim) , coord(maxdim) , &
+                var  (maxvar) , list (maxvar) )
 
-*     Les parametres dimensionnelles :
+!     Les parametres dimensionnelles :
 
       call init_dim
 
@@ -106,16 +114,16 @@
          if(max1d.lt.dim(i)%len)max1d=dim(i)%len
       enddo      
 
-*     Etablir la liste des variables du fichier netCDF :
+!     Etablir la liste des variables du fichier netCDF :
 
       call define_list(ncid,nvars)
 
 
-*     Identifier les variables coordonnees :
+!     Identifier les variables coordonnees :
 
       call get_coord2(ncid)
 
-*     Longueur maximale
+!     Longueur maximale
 
       if (spec) then
 
@@ -129,23 +137,23 @@
 
          call test_dim ()
             
-         if (coord(xid)%dimid(1).eq.-1 .or.
-     .       coord(yid)%dimid(1).eq.-1) then
+         if (coord(xid)%dimid(1).eq.-1 .or. &
+             coord(yid)%dimid(1).eq.-1) then
             write(6,6001)
             call xit('vers_cccma2',-1 )
          endif
 
-         maxlen=(dim(coord(xid)%dimid(1))%len+1)
-     .                                    *dim(coord(yid)%dimid(1))%len
-     .                                    *dim(coord(zid)%dimid(1))%len
+         maxlen=(dim(coord(xid)%dimid(1))%len+1) &
+                *dim(coord(yid)%dimid(1))%len    &
+                *dim(coord(zid)%dimid(1))%len
 
          do i=1,project%len
             if(project%nampar(i).eq.'nhem')nhem=int(project%value(i))
          enddo
 
-         call setlab(jbuf,'GRID',0,'TOTO',1,
-     .      dim(coord(xid)%dimid(1))%len+1,dim(coord(yid)%dimid(1))%len,
-     .                                                       nhem,opack)
+         call setlab(jbuf,'GRID',0,'TOTO',1, &
+            dim(coord(xid)%dimid(1))%len+1,dim(coord(yid)%dimid(1))%len, &
+                                                             nhem,opack)
 
       endif
 
@@ -156,35 +164,35 @@
       call lblchk(length,nwds,opack,jbuf)
       maxpk=length-head                    !longueur (maxpk) du buffer (ibuf)
 
-      allocate ( variable   (  maxlen,maxvar ) ,
-     .           dcoordonne (  max1d ,maxdim ) ,
-     +           time_bnds  (  2     ,max1d  ) )
+      allocate ( variable   (  maxlen,maxvar ) , &
+                 dcoordonne (  max1d ,maxdim ) , &
+                 time_bnds  (  2     ,max1d  ) )
 
-      allocate ( ibuf       (  maxlen+head ),
-     .           i1val      (  maxlen ) ,
-     .           i2val      (  maxlen ) ,
-     .           ival       (  maxlen ) ,
-     .           dval       (2*maxlen ) ,
-     .           rtime      (  maxlen ) ,
-     .           rval       (  maxlen ) )
+      allocate ( ibuf       (  maxlen+head ), &
+                 i1val      (  maxlen ) ,     &
+                 i2val      (  maxlen ) ,     &
+                 ival       (  maxlen ) ,     &
+                 dval       (2*maxlen ) ,     &
+                 rtime      (  maxlen ) ,     &
+                 rval       (  maxlen ) )
 
-      allocate(  alon       (  maxlen ) ,
-     +           alat       (  maxlen ) ,
-     +           lonr       (  maxlen ) ,
-     +           latr       (  maxlen ) )
+      allocate(  alon       (  maxlen ) , &
+                 alat       (  maxlen ) , &
+                 lonr       (  maxlen ) , &
+                 latr       (  maxlen ) )
 
-      allocate ( add_offset (  maxlev*maxtime ) ,
-     .           scale_fact (  maxlev*maxtime ) ,
-     .           mean       (2*maxlev*maxtime ) )
+      allocate ( add_offset (  maxlev*maxtime ) , &
+                 scale_fact (  maxlev*maxtime ) , &
+                 mean       (2*maxlev*maxtime ) )
 
       ibuf = 0
       ibuf(1:head) = jbuf(1:head)
 
-*     Lire les valeurs de variables coordonnees :
+!     Lire les valeurs de variables coordonnees :
 
       call get_coordonne(ncid)
 
-*     Faire le tri dans les variables :
+!     Faire le tri dans les variables :
 
       call trier (ncid)
 
@@ -197,15 +205,15 @@
          call rdlatlon2(ncid,funit)
       end if
 
-*     Relacher la memoire
+!     Relacher la memoire
 
-      deallocate( add_offset,scale_fact,mean,
-     .            ibuf,i1val,i2val,ival,dval,rtime,rval,
-     .            list,var,coord,dim )
+      deallocate( add_offset,scale_fact,mean,            &
+                  ibuf,i1val,i2val,ival,dval,rtime,rval, &
+                  list,var,coord,dim )
 
       deallocate( alon,alat,lonr,latr )
 
       return
-*-----------------------------------------------------------------------
+!-----------------------------------------------------------------------
  6001 format(/' Definition manquante des coordonnees X et/ou Y'/)
       end

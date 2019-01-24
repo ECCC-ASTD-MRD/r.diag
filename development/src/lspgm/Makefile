@@ -51,12 +51,7 @@ CODEBETA=
 #OBJ    = $(LIBDIR)/stubs.o
 OBJ     =
 
-ifeq "$(BASE_ARCH)" "AIX-powerpc7"
-    BLAS    = essl
-else
-    BLAS    = blas
-endif
-
+BLAS    = blas
 DDFUN90 = ddfun90
 DIAGLIB = diag_sq$(STD)
 GRAFLIB =

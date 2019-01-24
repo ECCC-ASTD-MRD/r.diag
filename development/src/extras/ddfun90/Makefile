@@ -9,7 +9,7 @@ C_SRC = x86.c
 
 C_OBJ = x86.o
 
-RMNLIB = rmn_015.2
+RMNLIB = rmn_016.2
 
 LIB = libddfun90.a
 

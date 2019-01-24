@@ -51,8 +51,8 @@ GRAFLIB =
 
 # WEB Host Server for the documentation
 
-HOSTWEB = pascal
-DIAGWEB = public_html
+#HOSTWEB = pascal
+#DIAGWEB = public_html
 
 # RMN and Vgrid_Descriptor library names
 
