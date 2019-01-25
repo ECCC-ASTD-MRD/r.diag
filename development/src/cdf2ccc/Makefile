@@ -31,7 +31,7 @@ DIAGNOSTIQUE  = $(CURDIR)/../..
 # IGNORE_ERRORS = set -e
 # MAKE     = $(IGNORE_ERRORS) ; make DIAGNOSTIQUE=$(DIAGNOSTIQUE)
 
-#EXTRAS   = $(DIAGNOSTIQUE)/../extras/NetcdfUdunits/$(EC_ARCH)
+EXTRAS   = $(DIAGNOSTIQUE)/../extras/NetcdfUdunits/$(EC_ARCH)
 
 DIAGS    = $(DIAGNOSTIQUE)
 BINDIR   = $(DIAGS)/bin/$(BASE_ARCH)
@@ -82,9 +82,6 @@ LIBPATH  = $(LIBDIR) $(EXTRAS)/lib
 default:  $(LIBP)
 
 .PRECIOUS: $(LIBP)
-
-.DEFAULT:
-	cvs checkout $@
 
 .F90.o:
 	$(FF90) $<

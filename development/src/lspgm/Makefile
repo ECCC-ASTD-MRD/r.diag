@@ -84,9 +84,6 @@ default:  $(LIBP)
 
 .PRECIOUS: $(LIBP)
 
-.DEFAULT:
-	cvs checkout $@
-
 .ptn.a:
 	sed s/'      PROGRAM '/'      SUBROUTINE '/ $< > $*.ftn ;\
 	$(FC) $*.ftn

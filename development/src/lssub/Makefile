@@ -28,7 +28,7 @@ ZIP     = $(shell which zip)
 
 LSSDIR  = $(CURDIR)
 DIAGNOSTIQUE = $(LSSDIR)/../..
-MAKE    = $(MAKE) DIAGNOSTIQUE=$(DIAGNOSTIQUE)
+MAKEOVERRIDES += DIAGNOSTIQUE=$(DIAGNOSTIQUE)
 
 CFLAGS  =
 FFLAGS  =
@@ -66,9 +66,6 @@ ARCH    = $(EC_ARCH)
 default: $(ARCH)
 
 .PRECIOUS: $(LIBS)
-
-.DEFAULT:
-	cvs checkout $@
 
 .cdk90.a:
 	/bin/rm -f $*.f90
