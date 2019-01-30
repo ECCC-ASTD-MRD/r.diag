@@ -38,7 +38,7 @@ BINDIR   = $(DIAGS)/bin/$(BASE_ARCH)
 LIBDIR   = $(DIAGS)/lib/$(EC_ARCH)
 MANDIR   = $(DIAGS)/share/pdoc
 INCLUDES = $(DIAGS)/include
-MODDIR   = $(INCLUDES) $(INCLUDES)/$(EC_ARCH) $(EXTRAS)/include
+MODDIR   = $(INCLUDES)/$(EC_ARCH)
 
 CONV_VERSION = 2.3.3
 
