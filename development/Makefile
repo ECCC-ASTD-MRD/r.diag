@@ -67,9 +67,8 @@ DDFUN90  = ddfun90
 #lNetCDF  = netcdff
 #UDUNITS  = udunits2f udunits2
 
-# Static (_s) load via symlinks in the netcdff-4.4 SSM package
-lNetCDF  = netcdff_s netcdf_s hdf5_hl_s hdf5_s dl sz_s z
-UDUNITS  = udunits2f_s udunits2_s expat
+lNetCDF  = netcdff netcdf hdf5_hl hdf5 dl sz z
+UDUNITS  = udunits2f udunits2 expat
 
 
 DIAG_VERSION = 6.4.3
