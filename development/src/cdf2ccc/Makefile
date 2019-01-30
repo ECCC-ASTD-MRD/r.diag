@@ -39,6 +39,7 @@ LIBDIR   = $(DIAGS)/lib/$(EC_ARCH)
 MANDIR   = $(DIAGS)/share/pdoc
 INCLUDES = $(DIAGS)/include
 MODDIR   = $(INCLUDES)/$(EC_ARCH)
+MODDIR_EXTRAS = $(EXTRAS)/include
 
 CONV_VERSION = 2.3.3
 
@@ -52,8 +53,8 @@ TXT      = -DNO_SOURCE -DAUTO_DOC
 DEFINE   = -Dtaille_entete=$(ENTETE)
 
 COMPILE  = s.compile
-FF90     = s.f90 -c $$(s.prefix -I "$(INCLUDES) $(MODDIR)") -g -O0 $(DEFINE)
-FC       = $(COMPILE) -includes "$(INCLUDES) $(MODDIR)" -defines "=$(DEFINE)" -O $(OPTIL) -optf "$(FFLAGS)" -bindir $(LCLPO) $(COMPF) $(FCOMPF) -src
+FF90     = s.f90 -c $$(s.prefix -I "$(INCLUDES) $(MODDIR) $(MODDIR_EXTRAS)") -g -O0 $(DEFINE)
+FC       = $(COMPILE) -includes "$(INCLUDES) $(MODDIR) $(MODDIR_EXTRAS)" -defines "=$(DEFINE)" -O $(OPTIL) -optf "$(FFLAGS)" -bindir $(LCLPO) $(COMPF) $(FCOMPF) -src
 FTNC     = $(COMPILE) -includes "$(INCLUDES)" -defines "=$(DEFINE)" -P -src
 FTNT     = $(CPPT) $(TXT)
 
@@ -345,7 +346,7 @@ cdf2ccc: initial cdf2ccc.F90
 #	s.f90 -Wl,-rpath,$$(nf-config --runpath) -src $@.F90
 	$(DIAGNOSTIQUE)/bin/command-change-date.sh $@.F90 cdf2ccc2 ; \
 	s.f90 -src cdf2ccc2.F90 \
-	-o $@ $$(s.prefix -L $(LIBPATH)) $$(s.prefix -I "$(INCLUDES) $(MODDIR)") \
+	-o $@ $$(s.prefix -L $(LIBPATH)) $$(s.prefix -I "$(INCLUDES) $(MODDIR) $(MODDIR_EXTRAS)") \
 	$$(s.prefix -l $(MALIB) $(lNetCDF) $(UDUNITS) $(DIAGLIB) $(VGDLIB) \
 	$(RMNLIB) $(DDFUN90)) $(DEFINE) lire_arg.o $(OBJ) $(CODEBETA)
 	if [ -x $@ ] ; then \
