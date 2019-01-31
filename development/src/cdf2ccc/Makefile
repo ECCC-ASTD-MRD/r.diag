@@ -72,7 +72,7 @@ RMNLIB   = rmn_016.3
 VGDLIB   = descrip
 
 lNetCDF  = netcdff netcdf hdf5_hl hdf5 dl sz z
-UDUNITS  = udunits2f udunits2
+UDUNITS  = udunits2
 
 LIBPATH  = $(LIBDIR) $(EXTRAS)/lib
 

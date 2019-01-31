@@ -29,7 +29,7 @@ DESTINATION = $(DIAGNOSTIQUE)/..
 # same libraries as provided by the netcdff-4.4 SSM package.
 # As of May 2017, the second option is always used.
 EXTRAS  = $(DESTINATION)/extras
-#EXTLIB  = $(EXTRAS)/NetcdfUdunits/$(EC_ARCH)/lib
+EXTLIB  = $(EXTRAS)/NetcdfUdunits/$(EC_ARCH)/lib
 
 # Directories used/created by this Makefile
 
@@ -68,7 +68,7 @@ DDFUN90  = ddfun90
 #UDUNITS  = udunits2f udunits2
 
 lNetCDF  = netcdff netcdf hdf5_hl hdf5 dl z
-UDUNITS  = udunits2f udunits2 expat
+UDUNITS  = udunits2 expat
 
 
 DIAG_VERSION = 6.4.3
