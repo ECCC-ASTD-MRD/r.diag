@@ -91,7 +91,7 @@ export:
 	rsync -av $(DIAGNOSTIQUE)/lib/$(EC_ARCH) $(DESTINATION)/lib/$(EC_ARCH)/.. ;\
 	rsync -avH $(DIAGNOSTIQUE)/bin $(DESTINATION)/ ;\
 	rsync -lptgoDv $(DIAGNOSTIQUE)/bin/* $(DESTINATION)/bin ;\
-	rsync -av $(DIAGNOSTIQUE)/include $(DESTINATION)/ ;\
+	rsync -av --exclude='Makefile*' $(DIAGNOSTIQUE)/include $(DESTINATION)/ ;\
 	[ -d $(DIAGNOSTIQUE)/share ] && rsync -av $(DIAGNOSTIQUE)/share $(DESTINATION)/ ;\
 	rsync -av $(DIAGNOSTIQUE)/man/pdoc/*.html $(DESTINATION)/share/pdoc/ ;\
 	rsync -av $(DIAGNOSTIQUE)/man/pdoc/udunits $(DESTINATION)/share/pdoc || true
