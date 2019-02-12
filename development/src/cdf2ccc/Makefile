@@ -3,6 +3,12 @@
 
 # Description: Makefile de CDF2CCC
 
+# Revision 2019/02/12 14:14  dugas
+# - Remplacer les instances de MAKE par des MYMAKE
+#
+# revision 2018/08/16 16:16  dugas
+# - Passer a la version 2.3.4 du binaire CDF2CCC
+#
 # revision 2018/01/28 17:17  dugas
 # - Appel a command-change-date.sh lors de la generation du binaire CDF2CCC
 #
@@ -28,8 +34,8 @@ FCOMPF   =  -debug -O 0
 COMPF    = 
 
 DIAGNOSTIQUE  = $(CURDIR)/../..
-# IGNORE_ERRORS = set -e
-# MAKE     = $(IGNORE_ERRORS) ; make DIAGNOSTIQUE=$(DIAGNOSTIQUE)
+IGNORE_ERRORS = set -e
+MYMAKE   = $(IGNORE_ERRORS) ; $(MAKE) DIAGNOSTIQUE=$(DIAGNOSTIQUE)
 
 EXTRAS   = $(DIAGNOSTIQUE)/../extras/NetcdfUdunits/$(EC_ARCH)
 
@@ -73,6 +79,8 @@ VGDLIB   = descrip
 
 lNetCDF  = netcdff netcdf hdf5_hl hdf5 dl sz z
 UDUNITS  = udunits2
+
+LIBPATH  = $(LIBDIR)
 
 LIBPATH  = $(LIBDIR) $(EXTRAS)/lib
 

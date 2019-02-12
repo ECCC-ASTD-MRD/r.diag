@@ -3,6 +3,20 @@
 
 # Description: Makefile de LSPGM
 
+# Revision 4.157 2019/02/12 14:14  dugas
+# - Remplacer les instances de MAKE par des MYMAKE
+#
+# revision 4.156 2019/01/10 16:16  dugas
+# - Specifier les dependances de la cible gshumh.o
+# - Ajouter les dependances aux nouveaux comdecks
+#   toc_gest_formats.cdk et set_a_b_formats.cdk
+#
+# revision 4.155 2018/11/16 17:17  dugas
+# - Ajouter la dependance au module diag_toc a la cible windowf.o
+#
+# revision 4.154 2018/08/16 16:16  dugas
+# - Passer a la version 6.4.4 du binaire r.diag (driver.Abs)
+#
 # revision 4.153 2018/07/21 13:13  dugas
 # - Ajouter la dependance a zlabel.cdk pour la cible timavg.o
 #
@@ -29,6 +43,7 @@ CPPT    = r.gppf -chop_bang -gpp -F
 ZIP     = `which tar` -jcf
 
 DIAGNOSTIQUE = $(CURDIR)/../..
+MYMAKE  = $(MAKE) DIAGNOSTIQUE=$(DIAGNOSTIQUE)
 
 FFLAGS  =  
 
@@ -466,7 +481,7 @@ document: driver.ptn info.lspgm $(TXTDECKS)
 #Section de creation de la documentation pour lspgm
 	if [[ "$(HOSTWEB):$(DIAGWEB)" != ":" ]] ; then \
 	rsync -av $(HTMLDECKS) $(HOSTWEB):$(DIAGWEB) ; fi
-	$(MAKE) driver.txt
+	$(MYMAKE) driver.txt
 
 driver: driver.ptn $(LIBP) $(LIBS)
 #Section de creation du binaire proprement dit
@@ -494,29 +509,29 @@ info.lspgm: driver.ptn
 	done
 
 AIX: #Section appropriee pour les fichiers STD saveur 1998 sur IBM AIX
-	$(MAKE) driver OBJ="$(OBJ)" RMNLIB=$(RMNLIB)  DDFUN90=" " \
+	$(MYMAKE) driver OBJ="$(OBJ)" RMNLIB=$(RMNLIB)  DDFUN90=" " \
 	NOPLOT="-DNOPLOT" GRAFLIB=" " VGDLIB=$(VGDLIB) \
 	MANDIR=$(MANDIR)
 
 AIX-powerpc7: #Section appropriee pour les fichiers STD saveur 1998 sur AIX-powerpc7
-	$(MAKE) driver OBJ="$(OBJ)" RMNLIB=$(RMNLIB) DDFUN90=" " \
-	NOPLOT=$(NOPLOT) GRAFLIB=$(GRAFLIB) LAPACK=lapack-3.4.0 \
+	$(MYMAKE) driver OBJ="$(OBJ)" RMNLIB=$(RMNLIB) DDFUN90=" " \
+	NOPLOT=$(NOPLOT) GRAFLIB=$(GRAFLIB) LAPACK=lapack_340 \
 	VGDLIB=$(VGDLIB) MANDIR=$(MANDIR)
 
 Linux:
 #Section appropriee pour les fichiers STD saveur 1998 sur Linux INTEL
-	$(MAKE) driver OBJ="$(OBJ)" RMNLIB=$(RMNLIB) MANDIR=$(MANDIR) \
+	$(MYMAKE) driver OBJ="$(OBJ)" RMNLIB=$(RMNLIB) MANDIR=$(MANDIR) \
 	NOPLOT=$(NOPLOT) GRAFLIB=$(GRAFLIB) VGDLIB=$(VGDLIB)
 
 Linux_x86-64:
 #Section appropriee pour les fichiers STD saveur 1998 sur Linux INTEL 64 bits
-	$(MAKE) driver OBJ="$(OBJ)" RMNLIB=$(RMNLIB) MANDIR=$(MANDIR) \
+	$(MYMAKE) driver OBJ="$(OBJ)" RMNLIB=$(RMNLIB) MANDIR=$(MANDIR) \
 	NOPLOT=$(NOPLOT) VGDLIB=$(VGDLIB) GRAFLIB=$(GRAFLIB)
 
 NoPlot:
 #Section appropriee pour les fichiers STD saveur 1998 sur Linux 64 bits
 # mais sans les modules graphiques
-	$(MAKE) driver OBJ="$(OBJ)" RMNLIB=$(RMNLIB) MANDIR=$(MANDIR) \
+	$(MYMAKE) driver OBJ="$(OBJ)" RMNLIB=$(RMNLIB) MANDIR=$(MANDIR) \
 	NOPLOT="-DNOPLOT" GRAFLIB=" " VGDLIB=$(VGDLIB)
 
 clean:
