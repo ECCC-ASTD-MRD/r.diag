@@ -14,7 +14,6 @@ CCOMP = cc
 # lib/$(EC_ARCH) and share/pdoc directory trees
 
 DIAGNOSTIQUE = $(CURDIR)
-MAKEOVERRIDES += DIAGNOSTIQUE=$(DIAGNOSTIQUE)
 
 # Destination that the current working binaries and libraries
 # will be exported to, as well as where to find the EXTRAS
