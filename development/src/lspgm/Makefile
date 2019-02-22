@@ -521,7 +521,7 @@ AIX: #Section appropriee pour les fichiers STD saveur 1998 sur IBM AIX
 
 AIX-powerpc7: #Section appropriee pour les fichiers STD saveur 1998 sur AIX-powerpc7
 	$(MAKE) driver OBJ="$(OBJ)" RMNLIB=$(RMNLIB) DDFUN90=" " \
-	NOPLOT=$(NOPLOT) GRAFLIB=$(GRAFLIB) LAPACK=lapack_340 \
+	NOPLOT=$(NOPLOT) GRAFLIB=$(GRAFLIB) LAPACK=lapack-3.4.0 \
 	VGDLIB=$(VGDLIB) MANDIR=$(MANDIR)
 
 Linux:

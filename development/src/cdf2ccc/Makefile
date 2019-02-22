@@ -42,7 +42,6 @@ CFLAGS   =
 FCOMPF   =  -debug -O 0
 COMPF    = 
 
-IGNORE_ERRORS = set -e
 DIAGNOSTIQUE  = $(CURDIR)/../..
 EXTRAS   = $(DIAGNOSTIQUE)/../extras/NetcdfUdunits/$(EC_ARCH)
 
@@ -86,8 +85,6 @@ VGDLIB   = descrip
 
 lNetCDF  = netcdff netcdf hdf5_hl hdf5 dl sz z
 UDUNITS  = udunits2
-
-LIBPATH  = $(LIBDIR)
 
 LIBPATH  = $(LIBDIR) $(EXTRAS)/lib
 
