@@ -19,10 +19,12 @@
 !
 ! http://web-mrb.cmc.ec.gc.ca/mrb/si/eng/si/howto-si/doku.php?id=netcdf
 !
-! In Dorval, the different Linux binaries can be
-! obtained with the command
+! In Dorval, the Linux binary can be obtained with these commands
+!    - On the Science network:
+!         . r.load.dot /fs/ssm/eccc/mrd/rpn/diag/<rev>
 !
-! . r.load.dot rpn/diag/<rev>; e.g. . r.load.dot rpn/diag/16.3
+!    - On the EC network:
+!         . r.load.dot /ssm/net/rpn/diag/<rev>
 !
 ! You will also need to define a UDUNITS2 environment variable.
 !
