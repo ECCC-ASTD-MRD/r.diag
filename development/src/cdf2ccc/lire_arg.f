@@ -310,7 +310,7 @@
       CHARACTER(16),  DIMENSION(:), ALLOCATABLE :: ACLES
       CHARACTER(512), DIMENSION(:), ALLOCATABLE :: ADEF,ADEF1,ADEF2
 
-      CHARACTER(30)   :: DIAG_ATTRIBUT_NETCDF
+      CHARACTER(31)   :: DIAG_ATTRIBUT_NETCDF
       CHARACTER(512)  :: UDUNITS2_DEF,DIAGNOSTIQUE
 
       INTEGER         NBRCLE,NDATE,NHELP,PART1,PART2,LL
@@ -328,7 +328,7 @@
      .               trim( udunits2_def2 ) //
      .               trim( udunits2_def3 )
 
-      DIAG_ATTRIBUT_NETCDF = '/man/pdoc/attribut_netcdf.dat'
+      DIAG_ATTRIBUT_NETCDF = '/share/pdoc/attribut_netcdf.dat'
 
 ***    Allocate LES_ARG work fields.
 
