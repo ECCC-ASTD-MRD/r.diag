@@ -80,7 +80,7 @@ STD     = 98
 
 default: allbin
 
-allbin: initial_base initial_cdf rdiag cdf2conv 
+allbin: initial_base initial_cdf rdiag 
 
 all: allbin document
 
