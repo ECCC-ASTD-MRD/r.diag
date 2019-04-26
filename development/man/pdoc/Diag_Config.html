@@ -1,7 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
   <head>
-    <meta content="text/html; charset=windows-1252" http-equiv="content-type">
+    <meta http-equiv="content-type" content="text/html; charset=windows-1252">
     <title>Variables de Configuration R.DIAG</title>
   </head>
   <body> <big><big style="font-family: Helvetica,Arial,sans-serif;"><span style="font-weight: bold;"><big>Variables
@@ -52,7 +52,7 @@ de
     </big>
     <div style="margin-left: 40px; font-family: Helvetica,Arial,sans-serif;"><big>(Demande
         de reconstruire une copie de la ligne de commande et de l'afficher sur
-        stdout. Valeur par défaut: <b style="font-style: italic;">non</b>)<br>
+        stdout. Valeurs par défaut: <b style="font-style: italic;">no/non</b>)<br>
       </big></div>
     <big><br style="font-family: Helvetica,Arial,sans-serif;">
       <b style="font-family: Helvetica,Arial,sans-serif;">DEFAULT_PACKING_TYPE</b><span
@@ -99,10 +99,19 @@ de
         lequel se retrouveront les scripts et binaires du package, les codes
         sources de ces binaires et toutes les pages de documentation en format
         html et textuelle. Cette variable devrait être automatiquement définie
-        lors de l'activation SSM du package. Valeur par défaut: <b style="font-style: italic;">nil/aucune</b>)<br>
-      </big></div>
+        lors de l'activation SSM du package. Valeur par défaut: <b style="font-style: italic;">nil/aucune</b>)</big></div>
     <big><br style="font-family: Helvetica,Arial,sans-serif;">
-    </big><big><b style="font-family: Helvetica,Arial,sans-serif;">INFORM</b><span
+    </big><big><b style="font-family: Helvetica,Arial,sans-serif;">FREE_FORMAT_LEVEL_IO</b><span
+        style="font-family: Helvetica,Arial,sans-serif;"> </span><br style="font-family: Helvetica,Arial,sans-serif;">
+    </big>
+    <div style="margin-left: 40px; font-family: Helvetica,Arial,sans-serif;"><big>(Indique
+        que la lecture des niveaux verticaux dans le modules concernés tels que
+        <a style="font-family: Helvetica,Arial,sans-serif;" href="gsapl.txt">gsapl</a>
+        et <a style="font-family: Helvetica,Arial,sans-serif;" href="gpasg.txt">gpasg</a>
+        se fera en format libre "*"</big><big>. Valeurs par défaut: <b style="font-style: italic;">no/non</b>)</big></div>
+    <div style="margin-left: 40px; font-family: Helvetica,Arial,sans-serif;"><big></big></div>
+    <big><br>
+    </big><big> </big><big><b style="font-family: Helvetica,Arial,sans-serif;">INFORM</b><span
         style="font-family: Helvetica,Arial,sans-serif;"> </span><br style="font-family: Helvetica,Arial,sans-serif;">
     </big>
     <div style="margin-left: 40px; font-family: Helvetica,Arial,sans-serif;"><big>(Activer
@@ -335,7 +344,7 @@ typiquement
         la présence de messages d'erreurs des sous-routines. Par défaut, ceux-ci
         ne sont pas imprimés. La valeur du paramètre peu indiquer le niveau de
         sévérité des messages dans le cas des fichiers standards RPN, tel que
-        documenté par <a href="../../libraries/rmnlib/fstd89/fstopc.html">fstopc</a>)<br>
+        documenté par <a href="../../libraries/fstd89/fstopc.html">fstopc</a>)<br>
       </big></div>
     <big><b style="font-family: Helvetica,Arial,sans-serif;">-vers</b><br style="font-family: Helvetica,Arial,sans-serif;">
     </big>
@@ -410,13 +419,12 @@ est
     </big>
     <div style="margin-left: 40px; font-family: Helvetica,Arial,sans-serif;"><big>(Lors
         du traitement de fichiers CMC/RPN, <b>r.diag</b> tente toujours de se
-        conformer aux conventions associées aux cles temporelles, documentées <a
-          href="../../libraries/rmnlib/fstd/main.html#RTFToC14">ici</a>.
-        Certains fichiers, tels que les fichiers de climatologie, peuvent ne pas
-        adhérer à cette convention. Lorsque cette cle est specifiée, une partie
-        de cette convention est ignorée, i.e. lorsque le descripteur interne
-        deet est nul. Dans ce cas, les ip2 sont conservés tels quels à la
-        sortie) <br>
+        conformer aux conventions associées aux clés temporelles, documentées <a
+          href="../../libraries/fstd/main.html#RTFToC14">ici</a>. Certains
+        fichiers, tels que les fichiers de climatologie, peuvent ne pas adhérer
+        à cette convention. Lorsque cette cle est specifiée, une partie de cette
+        convention est ignorée, i.e. lorsque le descripteur interne deet est
+        nul. Dans ce cas, les ip2 sont conservés tels quels à la sortie) <br>
       </big></div>
     <big><br style="font-family: Helvetica,Arial,sans-serif;">
       <b style="font-family: Helvetica,Arial,sans-serif;">-singlz</b><br style="font-family: Helvetica,Arial,sans-serif;">
@@ -438,13 +446,21 @@ est
       <span style="font-family: Helvetica,Arial,sans-serif;"> Enfin, certaines
         commandes peuvent être invoquées avec un mode de fonctionnement
         particulier en utilisant la clé </span><b style="font-family: Helvetica,Arial,sans-serif;">-def</b><span
-        style="font-family: Helvetica,Arial,sans-serif;">. Cette clé signifie
-        que la commande devra soit d'utiliser ses valeurs par défaut (e.g. </span><a
-        style="font-family: Helvetica,Arial,sans-serif;" href="xlin.txt">xlin</a><span
-        style="font-family: Helvetica,Arial,sans-serif;">), soit d'utiliser un
-        mode de fonctionnement alternatif (e.g. </span><a style="font-family: Helvetica,Arial,sans-serif;"
-        href="timcov.txt">timcov</a><span style="font-family: Helvetica,Arial,sans-serif;">).</span><br
         style="font-family: Helvetica,Arial,sans-serif;">
+        [Valeur1][...][ValeursN]. Cette clé signifie que la commande devra soit
+        d'utiliser ses valeurs par défaut (e.g. </span><a style="font-family: Helvetica,Arial,sans-serif;"
+        href="xlin.txt">xlin</a><span style="font-family: Helvetica,Arial,sans-serif;">),
+        soit d'utiliser un mode de fonctionnement alternatif (e.g. </span><a style="font-family: Helvetica,Arial,sans-serif;"
+        href="timcov.txt">timcov</a><span style="font-family: Helvetica,Arial,sans-serif;">).
+        Dans tous les cas, la présence de cette clé empêchera la lecture d'un
+        premier groupe d'arguments qui pourraient être définis via un
+        enregistrement (ligne) STDIN et ce, tel que décrit dans la documentation
+        des différents modules. Si d'autres variables sont normalement définies
+        via des enregistrements STDIN supplémentaires, celles-ci pourraient
+        également ne plus l'être ou l'être différemment, dépendant des valeurs
+        qui auront été définies avec cette clé (e.g. la liste de niveaux
+        verticaux qui seront utilisés dans <a href="gsapl.txt">gsapl</a> et <a
+          href="pgen.txt">pgen</a>) .</span> <br style="font-family: Helvetica,Arial,sans-serif;">
       <br style="font-family: Helvetica,Arial,sans-serif;">
       <br style="font-family: Helvetica,Arial,sans-serif;">
       <big style="font-family: Helvetica,Arial,sans-serif;"><span style="font-weight: bold;">
@@ -498,16 +514,39 @@ est
     </big>
     <ul style="font-family: Helvetica,Arial,sans-serif;">
       <big> </big>
-      <li><big>Il n'est généralement pas permis d'utiliser dans un même appel
-          des fichiers <b style="font-style: italic;">SQxx</b> et des fichier
-          de type <b style="font-style: italic;">PKxx</b>. La seule exception
-          concerne le module <a href="convert.txt">convert</a> qui en plus de
-          convertir d'un type de fichier à l'autre (et vice versa), tente
-          d'effectuer une traduction des noms de variables et de leurs unités
-          afin que ces variables se conforment aux standards appropriés.</big></li>
+      <li><big>Il n'est pas permis d'utiliser dans un même appel des fichiers <b
+            style="font-style: italic;">SQxx</b> et des fichier de type <b style="font-style: italic;">PKxx</b>.
+          La seule exception concerne le module <a href="convert.txt">convert</a>
+          qui en plus de convertir d'un type de fichier à l'autre (et vice
+          versa), tente d'effectuer une traduction des noms de variables et de
+          leurs unités afin que ces variables se conforment aux standards
+          appropriés.</big></li>
+      <li><big><b>Sauf exceptions</b>, et seulement lorsqu'il est question de
+          fichiers CMC/RPN, les modules qui effectuent des traitement temporels
+          tels que <a href="accumul.txt">accumul</a>, <a href="timavg.txt">timavg</a>,
+          <a href="timcov.txt">timcov</a> et <a href="fstmdiag.txt">fstmdiag</a>
+          (entre autres), modifient les descripteurs internes de ces fichiers de
+          telle sorte que la plus ancienne date d'échantillonnage sera sauvée
+          dans DATEO, tandis que la plus récente pourra être reconstruite à
+          partir des valeurs finales des paramètres DATEO, NPAS and DEET (i.e
+          dans DATEV). Le paramètre IP3 indiquera alors le nombre d'échantillons
+          temporels utilisés lors des calculs effectués dans les différents
+          modules. Lorsque l'ensemble des échantillons est complet (i.e.sans
+          trou), l'intervalle d'échantillonnage sera sauvé dans le paramètre
+          DEET. De plus, le second caractère du&nbsp; paramètre TYPVAR indiquera
+          le type de données temporelles en présence: <b>/</b> pour les
+          moyennes, <b>%</b> pour les variances, <b>1</b> pour les minimums, <b>5</b>
+          pour les médianes, <b>7</b> pour les écarts types et <b>9</b> pour
+          les maximums. Les autres modules tels que <a href="timegen.txt">timegem</a>
+          et les différents modules de tests statistiques tels que <a href="ftest.txt">ftest</a>
+          et <a href="ttesta.txt">ttesta</a> peuvent directement utiliser ces
+          informations. Notez que tous ces comportements peuvent par contre être
+          désalloués. Voir la documentation des différents modules pour plus de
+          détails.<br>
+        </big></li>
       <big> </big>
       <li><big>Les types de grilles CMC/RPN supportées par <b>r.diag</b> sont:
-          <b>A,B,G,L,N,S,Y,Z</b>,#.<br>
+          <b>A,B,G,L,N,S,U,Y,Z</b>,#.<br>
         </big></li>
       <big> </big>
     </ul>
@@ -519,8 +558,8 @@ est
           style="font-family: Helvetica,Arial,sans-serif;">Contact :
           Dugas.Bernard@uqam.ca</span></big><br>
       <big><span style="font-family: Helvetica,Arial,sans-serif;"></span></big><big><span
-          style="font-family: Helvetica,Arial,sans-serif;">&nbsp;Dernière mise à
-          jour : janvier 2018<br>
+          style="font-family: Helvetica,Arial,sans-serif;">&nbsp;Dernière
+          mise-à-jour : décembre 2018<br>
         </span></big><big><span style="font-family: Helvetica,Arial,sans-serif;">
           ------------------------------------------------</span></big><br style="font-family: Helvetica,Arial,sans-serif;">
       <big> <span style="font-family: Helvetica,Arial,sans-serif;"></span></big><big><span

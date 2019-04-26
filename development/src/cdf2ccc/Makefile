@@ -42,6 +42,7 @@ CFLAGS   =
 FCOMPF   =  -debug -O 0
 COMPF    = 
 
+IGNORE_ERRORS = set -e
 DIAGNOSTIQUE  = $(CURDIR)/../..
 EXTRAS   = $(DIAGNOSTIQUE)/../extras/NetcdfUdunits/$(EC_ARCH)
 
@@ -53,7 +54,7 @@ INCLUDES = $(DIAGS)/include
 MODDIR   = $(INCLUDES)/$(EC_ARCH)
 MODDIR_EXTRAS = $(EXTRAS)/include
 
-CONV_VERSION = 2.3.3
+CONV_VERSION = 2.3.4
 
 HOSTWEB =
 DIAGWEB =
@@ -84,12 +85,12 @@ RMNLIB   = rmn_016.3
 VGDLIB   = descrip
 
 # UQUM:  Static (_s) load via symlinks in the netcdff-4.4 SSM package
-#lNetCDF  = netcdff netcdf hdf5_hl hdf5 dl sz z
-#UDUNITS  = udunits2
+#lNetCDF  = netcdff_s netcdf_s hdf5_hl_s hdf5_s dl sz_s z
+#UDUNITS  = udunits2f_s udunits2_s expat
 #
 # CMC:   compile udunits with r.diag
 lNetCDF  = netcdff netcdf hdf5_hl hdf5 dl z
-UDUNITS  = udunits2 expat
+UDUNITS  = udunits2f udunits2 expat
 
 LIBPATH  = $(LIBDIR) $(EXTRAS)/lib
 
@@ -111,21 +112,21 @@ default:  $(LIBP)
 
 .f.a:
 	$(FC) $<
-	$(AR) rv $@ $*.o
+	$(AR) rUv $@ $*.o
 	/bin/rm -f $*.o
 
 .F90.a:
 	$(FF90) $<
-	$(AR) rv $@ $*.o
+	$(AR) rUv $@ $*.o
 	/bin/rm -f $*.o
 
 .f90.a:
 	$(FC) $<
-	$(AR) rv $@ $*.o
+	$(AR) rUv $@ $*.o
 	/bin/rm -f $*.o
 
 .o.a:
-	$(AR) rv $@ $*.o
+	$(AR) rUv $@ $*.o
 
 .F90.txt:
 	$(FTNT) $< | sed s/'^[!*]'/' '/ > $(MANDIR)/$@ ;\
@@ -281,7 +282,7 @@ obj: $(OBJECTS)
 
 genlib: $(OBJECTS)
 #	Creer une programmatheque ayant pour nom $LIBP et incluant TOUS les fichiers objets
-	$(AR) rv $(LIBP) $(OBJECTS)
+	$(AR) rUv $(LIBP) $(OBJECTS)
 
 #Descriptions des recettes personnelles
 

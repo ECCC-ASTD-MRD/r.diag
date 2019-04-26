@@ -157,7 +157,7 @@ endif
 .f.a:
 	$(FCOMP) $<
 	if [ -f $@ ]; then /bin/chmod 644 $@ ; fi
-	$(AR) rv $@ $*.o
+	$(AR) rUv $@ $*.o
 	/bin/cp -p $*.f $(SOURCES)
 	/bin/rm -f $*.o
 
@@ -167,12 +167,12 @@ endif
 .f90.a:
 	$(FCOMP) $<
 	if [ -f $@ ]; then /bin/chmod 644 $@ ; fi
-	$(AR) rv $@ $*.o
+	$(AR) rUv $@ $*.o
 	/bin/cp -p $*.f90 $(SOURCES)
 	/bin/rm -f $*.o
 
 .o.a:
-	$(AR) rv $@ $*.o
+	$(AR) rUv $@ $*.o
 
 %.o: %.mod
 
@@ -385,6 +385,7 @@ $(ARCH): initial
 # Make en trois etapes: 1) Le premier $(MAKE) mets a jour les modules.
 # 2) Les deux suivant $(MAKE) mettent a jour les sources dans $(SOURCES),
 # tandis que 3) les deux derniers generent les librairies (ver. debug et
+# et ver. ordinaire, respectivement)
 	cd $(MODDIR)  ; $(MAKE) ;\
 	cd $(LSSDIR)  ; $(MAKE) $(LIBS) ; $(MAKE) clean ;\
 	cd $(SOURCES) ; $(MYMAKE) ; $(MYMAKE) DIAGLIB=diag_sq$(STD) OPTIM='-O 2' OPTIM90='-O 2'

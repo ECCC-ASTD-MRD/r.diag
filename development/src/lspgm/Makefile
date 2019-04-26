@@ -85,7 +85,7 @@ LIBP    = $(LIBDIR)/lib$(PROGLIB).a
 LIBS    = $(LIBDIR)/lib$(DIAGLIB).a
 ZIPFILE = $(LIBDIR)/lspgm_STD$(STD).f.tar.bz2
 
-DIAG_VERSION = 6.4.3
+DIAG_VERSION = 6.4.4
 
 HOSTWEB =
 DIAGWEB =
@@ -109,7 +109,7 @@ default:  $(LIBP)
 	sed s/'      PROGRAM '/'      SUBROUTINE '/ $< > $*.ftn ;\
 	$(FC) $*.ftn
 	if [ -f $@ ]; then chmod 644 $@ ; fi
-	$(AR) rv $@ $*.o
+	$(AR) rUv $@ $*.o
 	$(ZIP) $(ZIPFILE) $*.f
 ifndef DO_DEBUG
 	/bin/rm -f $*.o $*.f $*.ftn
@@ -119,7 +119,7 @@ endif
 	sed s/' PROGRAM $*'/' SUBROUTINE $*'/ $< > $*.ftn90 ;\
 	$(FC) $*.ftn90
 	if [ -f $@ ]; then chmod 644 $@ ; fi
-	$(AR) rv $@ $*.o
+	$(AR) rUv $@ $*.o
 	$(ZIP) $(ZIPFILE) $*.f90
 ifndef DO_DEBUG
 	/bin/rm -f $*.o $*.f90 $*.ftn90
@@ -291,7 +291,8 @@ $(LIBP)(diftim.o)  : diftim.ptn \
 	$(INCLUDE)/zlabel.cdk
 $(LIBP)(dxdp.o)    : dxdp.ptn \
 	$(INCLUDE)/toc_gest_1.cdk	$(INCLUDE)/toc_gest_2.cdk \
-	$(INCLUDE)/set_a_b_from_AABB.cdk	$(MODDIR)/diag_toc.mod
+	$(INCLUDE)/toc_gest_formats.cdk	$(INCLUDE)/set_a_b_from_AABB.cdk \
+	$(INCLUDE)/set_a_b_formats.cdk	$(MODDIR)/diag_toc.mod
 $(LIBP)(expone.o)  : expone.ptn \
 	$(INCLUDE)/diagmacros.cdk
 $(LIBP)(fcats.o)   : fcats.ptn \
@@ -308,32 +309,43 @@ $(LIBP)(ggatim.o)  : ggatim.ptn \
 $(LIBP)(ggplot.o)  : ggplot.ptn \
 	$(INCLUDE)/char2int.cdk
 $(LIBP)(gpasg.o) : gpasg.ptn \
-	$(INCLUDE)/toc_gest_1.cdk	$(MODDIR)/diag_toc.mod
+	$(INCLUDE)/toc_gest_1.cdk	$(INCLUDE)/toc_gest_formats.cdk \
+	$(INCLUDE)/set_a_b_from_AABB.cdk	$(INCLUDE)/set_a_b_formats.cdk \
+	$(MODDIR)/diag_toc.mod
 $(LIBP)(gpdpd.o)   : gpdpd.ptn \
 	$(INCLUDE)/consdia.cdk	$(INCLUDE)/dintern.cdk \
 	$(INCLUDE)/fintern.cdk	$(INCLUDE)/set_a_b_from_AABB.cdk \
-	$(INCLUDE)/toc_gest_1.cdk	$(INCLUDE)/toc_gest_2.cdk \
+	$(INCLUDE)/set_a_b_formats.cdk	$(INCLUDE)/toc_gest_1.cdk \
+	$(INCLUDE)/toc_gest_2.cdk	$(INCLUDE)/toc_gest_formats.cdk \
 	$(MODDIR)/diag_toc.mod
 $(LIBP)(gphum.o)   : gphum.ptn \
 	$(INCLUDE)/consdia.cdk $(INCLUDE)/dintern.cdk \
 	$(INCLUDE)/fintern.cdk	$(INCLUDE)/toc_gest_1.cdk \
 	$(INCLUDE)/toc_gest_2.cdk	$(INCLUDE)/set_a_b_from_AABB.cdk \
-	$(MODDIR)/diag_toc.mod
+	$(INCLUDE)/set_a_b_formats.cdk	$(MODDIR)/diag_toc.mod
 $(LIBP)(gpvtat.o)  : gpvtat.ptn \
 	$(INCLUDE)/consdia.cdk $(INCLUDE)/dintern.cdk \
 	$(INCLUDE)/fintern.cdk
 $(LIBP)(gsapl.o) : gsapl.ptn \
 	$(INCLUDE)/toc_gest_1.cdk	$(INCLUDE)/toc_gest_2.cdk \
-	$(INCLUDE)/set_a_b_from_AABB.cdk	$(MODDIR)/diag_toc.mod
+	$(INCLUDE)/toc_gest_formats.cdk	$(INCLUDE)/set_a_b_from_AABB.cdk \
+	$(INCLUDE)/set_a_b_formats.cdk	$(MODDIR)/diag_toc.mod
 $(LIBP)(gsapzl.o) : gsapzl.ptn \
 	$(INCLUDE)/toc_gest_1.cdk	$(INCLUDE)/toc_gest_2.cdk \
-	$(INCLUDE)/set_a_b_from_AABB.cdk	$(MODDIR)/diag_toc.mod
+	$(INCLUDE)/toc_gest_formats.cdk	$(INCLUDE)/set_a_b_from_AABB.cdk \
+	$(INCLUDE)/set_a_b_formats.cdk	$(MODDIR)/diag_toc.mod
 $(LIBP)(gsathl.o) : gsathl.ptn \
 	$(INCLUDE)/toc_gest_1.cdk	$(INCLUDE)/toc_gest_2.cdk \
-	$(INCLUDE)/set_a_b_from_AABB.cdk	$(MODDIR)/diag_toc.mod
+	$(INCLUDE)/toc_gest_formats.cdk	$(INCLUDE)/set_a_b_from_AABB.cdk \
+	$(INCLUDE)/set_a_b_formats.cdk	$(MODDIR)/diag_toc.mod
+$(LIBP)(gshumh.o) : gshumh.ptn \
+	$(INCLUDE)/consdia.cdk $(INCLUDE)/dintern.cdk \
+	$(INCLUDE)/fintern.cdk	$(INCLUDE)/toc_gest_1.cdk \
+	$(INCLUDE)/toc_gest_formats.cdk	$(MODDIR)/diag_toc.mod
 $(LIBP)(gsmslph.o) : gsmslph.ptn \
 	$(INCLUDE)/toc_gest_1.cdk	$(INCLUDE)/toc_gest_2.cdk \
-	$(INCLUDE)/set_a_b_from_AABB.cdk	$(MODDIR)/diag_toc.mod
+	$(INCLUDE)/toc_gest_formats.cdk	$(INCLUDE)/set_a_b_from_AABB.cdk \
+	$(INCLUDE)/set_a_b_formats.cdk	$(MODDIR)/diag_toc.mod
 $(LIBP)(hovplot.o) : hovplot.ptn \
 	$(INCLUDE)/char2int.cdk
 $(LIBP)(inttim.o)  : inttim.ptn \
@@ -352,7 +364,8 @@ $(LIBP)(mtrace.o)  : mtrace.ptn \
 	$(INCLUDE)/diagmacros.cdk
 $(LIBP)(pgen.o) : pgen.ptn \
 	$(INCLUDE)/toc_gest_1.cdk	$(INCLUDE)/toc_gest_2.cdk \
-	$(INCLUDE)/set_a_b_from_AABB.cdk	$(MODDIR)/diag_toc.mod
+	$(INCLUDE)/toc_gest_formats.cdk	$(INCLUDE)/set_a_b_from_AABB.cdk \
+	$(INCLUDE)/set_a_b_formats.cdk	$(MODDIR)/diag_toc.mod
 $(LIBP)(psdiv.o)   : psdiv.ptn \
 	$(INCLUDE)/diagmacros.cdk
 $(LIBP)(psmlt.o)   : psmlt.ptn \
@@ -402,7 +415,9 @@ $(LIBP)(txtplot.o) : txtplot.ptn \
 	$(INCLUDE)/char2int.cdk
 $(LIBP)(vsinth.o) : vsinth.ptn \
 	$(INCLUDE)/toc_gest_1.cdk	$(INCLUDE)/toc_gest_2.cdk \
-	$(INCLUDE)/set_a_b_from_AABB.cdk	$(MODDIR)/diag_toc.mod
+	$(INCLUDE)/toc_gest_formats.cdk	$(INCLUDE)/set_a_b_from_AABB.cdk \
+	$(INCLUDE)/set_a_b_formats.cdk	$(MODDIR)/diag_toc.mod
+$(LIBP)(windowf.o) : windowf.ptn	$(MODDIR)/diag_toc.mod
 $(LIBP)(xappend.o) : xappend.ptn \
 	$(INCLUDE)/machtype.cdk
 $(LIBP)(xfind.o)   : xfind.ptn \

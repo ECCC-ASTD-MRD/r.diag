@@ -83,8 +83,8 @@ lNetCDF  = netcdff netcdf curl hdf5_hl hdf5 dl z
 UDUNITS  = udunits2 expat
 
 
-DIAG_VERSION = 6.4.3
-CONV_VERSION = 2.3.3
+DIAG_VERSION = 6.4.4
+CONV_VERSION = 2.3.4
 
 ENTETE  = 32
 STD     = 98
