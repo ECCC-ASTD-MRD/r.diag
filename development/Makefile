@@ -79,7 +79,7 @@ DDFUN90  = ddfun90
 #lNetCDF  = netcdff
 #UDUNITS  = udunits2f udunits2
 
-lNetCDF  = netcdff netcdf curl hdf5_hl hdf5 dl z
+lNetCDF  = netcdff netcdf curl dl z
 UDUNITS  = udunits2 expat
 
 
