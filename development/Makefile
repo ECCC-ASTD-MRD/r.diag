@@ -78,7 +78,7 @@ DDFUN90  = ddfun90
 #UDUNITS  = udunits2f_s udunits2_s expat
 #
 # CMC:  compile udunits with r.diag
-lNetCDF  = netcdff netcdf hdf5_hl hdf5 dl z
+lNetCDF  = netcdff netcdf curl dl z
 UDUNITS  = udunits2 expat
 
 
