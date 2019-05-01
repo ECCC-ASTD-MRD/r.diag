@@ -75,13 +75,6 @@ VGDLIB  = descrip
 
 DDFUN90  = ddfun90
 
-# Shared load via the netcdff SSM package
-#lNetCDF  = netcdff
-#UDUNITS  = udunits2f udunits2
-
-lNetCDF  = netcdff netcdf curl dl z
-UDUNITS  = udunits2 expat
-
 
 DIAG_VERSION = 6.4.4
 CONV_VERSION = 2.3.4
@@ -116,7 +109,6 @@ initial_base:
 	/bin/ln -sf $(INCLUDE)/Makefile_mods $(MODDIR)/Makefile ; fi
 	s.locate --lib $(VGDLIB) 1> /dev/null || { echo -e "\nPLS execute \". s.ssmuse.dot vgriddesc\"\n" ; false ; }
 #	s.locate --lib netcdff_s 1> /dev/null || { echo -e "\nPLS execute \". s.ssmuse.dot netcdff-4.4\"\n" ; false ; }
-#	s.locate --lib $(lNetCDF) 1> /dev/null || { echo -e "\nPLS execute \". s.ssmuse.dot netcdff\"\n" ; false ; }
 #	if [[ ! -f $(EXTLIB)/libnetcdf.a ]]; then cd $(EXTRAS) ; make all ; fi
 	if [[ ! -f $(EXTLIB)/libudunits.a ]]; then cd $(EXTRAS) ; $(MAKE) all ; fi
 	if [[ ! -f $(LIBDIR)/libddfun90.a || -z "$(DDFUN90)" ]]; then \
@@ -131,7 +123,6 @@ initial_base:
 
 initial_cdf:
 #	if [[ ! -f $(EXTLIB)/libnetcdf.a ]]; then cd $(EXTRAS) ; make all ; fi
-#	s.locate --lib $(lNetCDF) 1> /dev/null || { echo -e "\nPLS execute \". s.ssmuse.dot netcdff\"\n" ; false ; }
 #	s.locate --lib netcdff_s 1> /dev/null || { echo -e "\nPLS execute \". s.ssmuse.dot netcdff-4.4\"\n" ; false ; }
 
 # RDIAG Diagnostic toolkit recipe
@@ -156,7 +147,6 @@ cdf2conv: initial_base initial_cdf
 	cd $(DIAGNOSTIQUE)/src/cdf2ccc ;\
 	$(MAKE) cdf2rpn CONV_VERSION=$(CONV_VERSION) \
 	RMNLIB=$(RMNLIB) VGDLIB=$(VGDLIB) OBJ="$(FIXES)" \
-	lNetCDF="$(lNetCDF)" UDUNITS="$(UDUNITS)" \
 	DDFUN90=$(DDFUN90) ENTETE=$(ENTETE) \
 	EXTRAS=$(EXTRAS)/NetcdfUdunits/$(EC_ARCH)
 
