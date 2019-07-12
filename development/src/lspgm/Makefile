@@ -79,7 +79,7 @@ GRAFLIB =
 LAPACK  = lapack
 PROGLIB = prog_sq$(STD)
 RMNLIB  = rmn_016.2
-VGDLIB  = descrip
+VGDLIB  = vgrid
 
 LIBP    = $(LIBDIR)/lib$(PROGLIB).a
 LIBS    = $(LIBDIR)/lib$(DIAGLIB).a
@@ -434,7 +434,7 @@ $(LIBP)(zxplot.o) : zxplot.ptn \
 initial:
 # Setup des repertoires dependants de $(EC_ARCH) et de $(VGDLIB)
 	/bin/mkdir -p $(LIBDIR) $(MANDIR) $(MODDIR) $(BINDIR)
-	s.locate --lib $(VGDLIB) 1> /dev/null || { echo -e \n PLS execute \". s.ssmuse.dot vgriddesc\" \n ; false ; }
+	s.locate --lib $(VGDLIB) 1> /dev/null || { echo -e \n PLS execute \". s.ssmuse.dot vgrid\" \n ; false ; }
 
 # Voir "Managing project with make" de O'Reilly & Associates, 1989,
 # pages 51-53, pour les details de ce qui se passe dans ce qui suit

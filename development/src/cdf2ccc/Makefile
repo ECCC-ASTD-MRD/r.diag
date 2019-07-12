@@ -82,7 +82,7 @@ LIBP     = $(LIBDIR)/lib$(MALIB).a
 DDFUN90  = ddfun90
 DIAGLIB  = diag_sq$(STD)_g
 RMNLIB   = rmn_016.3
-VGDLIB   = descrip
+VGDLIB   = vgrid
 
 # UQUM:  Static (_s) load via symlinks in the netcdff-4.4 SSM package
 #lNetCDF  = netcdff_s netcdf_s hdf5_hl_s hdf5_s dl sz_s z
@@ -289,7 +289,7 @@ genlib: $(OBJECTS)
 initial:
 #	Setup des repertoires dependants de $(EC_ARCH)
 	/bin/mkdir -p $(LIBDIR) $(MANDIR) $(MODDIR) $(BINDIR)
-	s.locate --lib $(VGDLIB) 1> /dev/null || { echo -e \n PLS execute \". s.ssmuse.dot vgriddesc\" \n ; false ; }
+	s.locate --lib $(VGDLIB) 1> /dev/null || { echo -e \n PLS execute \". s.ssmuse.dot vgrid\" \n ; false ; }
 	if [[ ! -f $(EXTRAS)/lib/libudunits.a ]]; then cd $(EXTRAS)/../../.. ; $(MAKE) all ; cd $(DIAGNOSTIQUE)/src ; fi
 
 # Voir "Managing project with make" de O'Reilly & Associates, 1989,

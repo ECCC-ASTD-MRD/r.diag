@@ -62,7 +62,7 @@ SOURCES = $(DIAGS)/src/lssub/sources$(STD)/$(EC_ARCH)
 
 DIAGLIB = diag_sq$(STD)
 LIBS    = $(LIBDIR)/lib$(DIAGLIB).a
-VGDLIB  = descrip
+VGDLIB  = vgrid
 
 TXT     = -DNO_SOURCE -DAUTO_DOC
 DEFINE  = -Dtaille_entete=$(ENTETE) -Dnombre_de_taches=$(NP)
@@ -309,7 +309,7 @@ $(LIBS)(util.o)     : util.ftn \
 initial:
 # Setup des repertoires et liens dependants de $(EC_ARCH)
 	/bin/mkdir -p $(SOURCES) $(LIBDIR) $(MANDIR) $(MODDIR)
-	s.locate --lib $(VGDLIB) 1> /dev/null || { echo -e \n PLS execute \". s.ssmuse.dot vgriddesc\" \n ; false ; }
+	s.locate --lib $(VGDLIB) 1> /dev/null || { echo -e \n PLS execute \". s.ssmuse.dot vgrid\" \n ; false ; }
 	if [[ `/bin/ls -L $(SOURCES)/Makefile ; echo $?` != 0 ]]; then \
 	/bin/ln -sf $(DIAGS)/src/lssub/Makefile_sources$(STD) $(SOURCES)/Makefile ; fi
 	if [[ `/bin/ls -L $(MODDIR)/Makefile ; echo $?` != 0 ]]; then \

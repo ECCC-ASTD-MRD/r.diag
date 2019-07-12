@@ -69,7 +69,7 @@ GRAFLIB =
 # RMN and Vgrid_Descriptor library names
 
 RMNLIB  = rmn_016.3
-VGDLIB  = descrip
+VGDLIB  = vgrid
 
 # DDFUN90, NetCDF4 and UdUnits2 library names
 
@@ -107,7 +107,7 @@ initial_base:
 	/bin/mkdir -p $(BINDIR) $(LIBDIR) $(MANDIR) $(MODDIR) $(SUBDIR)
 	if [[ `/bin/ls -L $(MODDIR)/Makefile ; echo $?` != 0 ]]; then \
 	/bin/ln -sf $(INCLUDE)/Makefile_mods $(MODDIR)/Makefile ; fi
-	s.locate --lib $(VGDLIB) 1> /dev/null || { echo -e "\nPLS execute \". s.ssmuse.dot vgriddesc\"\n" ; false ; }
+	s.locate --lib $(VGDLIB) 1> /dev/null || { echo -e "\nPLS execute \". s.ssmuse.dot vgrid\"\n" ; false ; }
 #	s.locate --lib netcdff_s 1> /dev/null || { echo -e "\nPLS execute \". s.ssmuse.dot netcdff-4.4\"\n" ; false ; }
 #	if [[ ! -f $(EXTLIB)/libnetcdf.a ]]; then cd $(EXTRAS) ; make all ; fi
 	if [[ ! -f $(EXTLIB)/libudunits.a ]]; then cd $(EXTRAS) ; $(MAKE) all ; fi
