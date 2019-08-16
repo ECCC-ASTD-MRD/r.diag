@@ -61,12 +61,13 @@ DIAGLIB  = diag_sq$(STD)_g
 RMNLIB   = rmn_016.2
 VGDLIB   = descrip
 
+
 # UQUM:  Static (_s) load via symlinks in the netcdff-4.4 SSM package
 #lNetCDF  = netcdff_s netcdf_s hdf5_hl_s hdf5_s dl sz_s z
 #UDUNITS  = udunits2f_s udunits2_s
 #
 # CMC:   compile udunits with r.diag
-lNetCDF  = netcdff netcdf curl dl z
+lNetCDF  = netcdff netcdf hdf5 hdf5_hl
 UDUNITS  = udunits2 expat
 
 LIBPATH  = $(LIBDIR) $(EXTRAS)/lib
