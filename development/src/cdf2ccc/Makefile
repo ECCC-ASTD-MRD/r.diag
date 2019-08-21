@@ -86,11 +86,11 @@ VGDLIB   = vgrid
 
 
 # UQUM:  Static (_s) load via symlinks in the netcdff-4.4 SSM package
-#lNetCDF  = netcdff_s netcdf_s hdf5_hl_s hdf5_s dl sz_s z
+#lNetCDF  = netcdff_s netcdf_s hdf5_s hdf5_hl_s dl sz_s z
 #UDUNITS  = udunits2f_s udunits2_s expat
 #
 # CMC:   compile udunits with r.diag
-lNetCDF  = netcdff netcdf hdf5 hdf5_hl curl dl z
+lNetCDF  = netcdff netcdf hdf5_hl hdf5 curl dl z
 UDUNITS  = udunits2 expat
 
 LIBPATH  = $(LIBDIR) $(EXTRAS)/lib
