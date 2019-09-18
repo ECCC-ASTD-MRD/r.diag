@@ -480,7 +480,7 @@
               IF (OK)                                          THEN
                   IF (VALEUR /= ' ') CALL LEADBLK( VALEUR )
                   IF (VALEUR /= '-1' .AND. VALEUR /= ' ')      THEN
-                      IF (index( VALEUR,'KEEPTIME') <=0) MODTIM = Faux
+                      IF (index( VALEUR,'KEEPTIME') > 0) MODTIM = Faux
                       IF (index( VALEUR,'NOMODTYP') > 0) NoModT = Vrai
                   END IF
               END IF
