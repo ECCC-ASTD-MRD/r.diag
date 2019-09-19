@@ -95,7 +95,9 @@ export:
 	rsync -av $(DIAGNOSTIQUE)/include $(DESTINATION)/ ;\
 	[ -d $(DIAGNOSTIQUE)/share ] && rsync -av $(DIAGNOSTIQUE)/share $(DESTINATION)/ ;\
 	rsync -av $(DIAGNOSTIQUE)/man/pdoc/*.html $(DESTINATION)/share/pdoc/ ;\
-	rsync -av $(DIAGNOSTIQUE)/man/pdoc/udunits $(DESTINATION)/share/pdoc || true
+	rsync -av $(DIAGNOSTIQUE)/man/pdoc/udunits $(DESTINATION)/share/pdoc || true ;\
+	/bin/mkdir -p $(DESTINATION)/share/udunits ;\
+	rsync -av $(DIAGNOSTIQUE)/../extras/src/udunits-2.1.24/lib/*.xml $(DESTINATION)/share/udunits
 
 # Ensure initial setup is done
 
