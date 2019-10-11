@@ -1291,7 +1291,7 @@
  
                   CALL PAEL( F,    NWDS,ETA,NSL,
      +                       F,    PRLOG,NPL, 
-     +                       LNSP, RLUP,RLDN, A,B )
+     +                       LNSP, RLUP,RLDN, AO,BO )
  
               END IF
 
