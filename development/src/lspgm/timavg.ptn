@@ -1095,22 +1095,22 @@
 
           IF (.NOT.OK) GOTO 300
 
-          IF (NSETS == 0)                                      THEN
-              IF (MAXVAL( NSAMPB(1:NSET) ) > 1) AVGDATA = Vrai
-          ELSE
-     +    IF (AVGDATA .NEQV. MAXVAL( NSAMPB(1:NSET) ) > 1)     THEN
-              ! Mixing averages and samples in input data
-              WRITE(6,6012)
-              CALL                                 XIT( VERBE ,-12 )
-          END IF
-              
-          IPM = GETIPMODE( IBUF )
+C         IF (NSETS == 0)                                      THEN
+C             IF (MAXVAL( NSAMPB(1:NSET) ) > 1) AVGDATA = Vrai
+C         ELSE
+C    +    IF (AVGDATA .NEQV. MAXVAL( NSAMPB(1:NSET) ) > 1)     THEN
+C             ! Mixing averages and samples in input data
+C             WRITE(6,6012)
+C             CALL                                 XIT( VERBE ,-12 )
+C         END IF
+C             
+C         IPM = GETIPMODE( IBUF )
 
-          IF (IPM /= IPMi)                                     THEN
-              ! Mixing new- and old-mode IP1/2/3 coding in input file
-              WRITE(6,6013) IPMi,IPM
-              CALL                                 XIT( VERBE ,-13 )
-          END IF
+C         IF (IPM /= IPMi)                                     THEN
+C             ! Mixing new- and old-mode IP1/2/3 coding in input file
+C             WRITE(6,6013) IPMi,IPM
+C             CALL                                 XIT( VERBE ,-13 )
+C         END IF
 
 ***        AGAIN CHECK WETHER MISSING VALUES HAVE BEEN DETECTED,
 ***        EVEN THOUGH THE MISSING VALUE MODE IS INACTIVE.
