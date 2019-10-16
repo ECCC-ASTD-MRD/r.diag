@@ -1,9 +1,47 @@
 .SUFFIXES :
 .SUFFIXES : .ptn90 .ptn .txt .f90 .f .c .o .a
 
-# LSPGM Makefile
+# Description: Makefile de LSPGM
 
-ifeq "$(BAtail -f ../../Resultats.make.pgi13xx.ST1SE_ARCH)" "$(EC_ARCH)"
+# Revision 4.158 2019/02/19 13:13  dugas
+# - Enlever toutes re-definitions de MAKE qui pourraient inclure
+#   une revision de la valeur de la variable DIAGNOSTIQUE. Cette
+#   variable est deja correctement definie localement
+#
+# Revision 4.157 2019/02/12 14:14  dugas
+# - Remplacer les instances de MAKE par des MYMAKE
+#
+# revision 4.156 2019/01/10 16:16  dugas
+# - Specifier les dependances de la cible gshumh.o
+# - Ajouter les dependances aux nouveaux comdecks
+#   toc_gest_formats.cdk et set_a_b_formats.cdk
+#
+# revision 4.155 2018/11/16 17:17  dugas
+# - Ajouter la dependance au module diag_toc a la cible windowf.o
+#
+# revision 4.154 2018/08/16 16:16  dugas
+# - Passer a la version 6.4.4 du binaire r.diag (driver.Abs)
+#
+# revision 4.153 2018/07/21 13:13  dugas
+# - Ajouter la dependance a zlabel.cdk pour la cible timavg.o
+#
+# revision 4.152 2018/01/28 17:17  dugas
+# - Appel a command-change-date.sh lors de la generation du binaire r.diag
+#
+# revision 4.151 2017/11/02 15:15  dugas
+# - Modifier/Completer les dependances aux modules de r.diag
+#
+# revision 4.150 2016/10/27 15:49  dugas
+# - Le macro ENTETE passe de 28 a 32
+# - Corriger la syntaxe de la liste de dependances des .o
+# - Ajouter des dependances a toc_gest_1.cdk, toc_gest_2.cdk et set_a_b_from_AABB.cdk
+#   pour DXDP, GPASG, GPDPD, GPHUM, GSAPL, GSAPZL, GSATHL, GSMSLPH, PGEN et VSINTH
+
+ifeq ($(BASE_ARCH),)
+$(error FATAL: BASE_ARCH is not defined or empty, ABORTING)
+endif
+
+ifeq "$(BASE_ARCH)" "$(EC_ARCH)"
 $(error FATAL: EC_ARCH is equal to BASE_ARCH, no compiler architecture is defined, ABORTING)
 endif
 
@@ -17,7 +55,7 @@ DIAGNOSTIQUE = $(CURDIR)/../..
 
 FFLAGS  =  
 
-ENTETE  = 28
+ENTETE  = 32
 NP      = 1
 OPTIL   = 1
 STD     = 98
@@ -26,35 +64,31 @@ ARCH    = $(EC_ARCH)
 
 DIAGS   = $(DIAGNOSTIQUE)
 BINDIR  = $(DIAGS)/bin
-INCLUDE = $(DIAGS)/include
 LIBDIR  = $(DIAGS)/lib/$(EC_ARCH)
 MANDIR  = $(DIAGS)/share/pdoc
+INCLUDE = $(DIAGS)/include
 MODDIR  = $(INCLUDE)/$(EC_ARCH)
 
 CODEBETA=
-#OBJ    = $(LIBDIR)/msg.o
-#OBJ    = $(LIBDIR)/stubs.o
 OBJ     =
 
-ifeq "$(BASE_ARCH)" "AIX-powerpc7"
-    BLAS    = essl
-else
-    BLAS    = blas
-endif
-
+BLAS    = blas
 DDFUN90 = ddfun90
 DIAGLIB = diag_sq$(STD)
 GRAFLIB =
 LAPACK  = lapack
 PROGLIB = prog_sq$(STD)
-RMNLIB  = rmn_015.2
-VGDLIB  = descrip
+RMNLIB  = rmn_016.2
+VGDLIB  = vgrid
 
 LIBP    = $(LIBDIR)/lib$(PROGLIB).a
 LIBS    = $(LIBDIR)/lib$(DIAGLIB).a
 ZIPFILE = $(LIBDIR)/lspgm_STD$(STD).f.tar.bz2
 
-DIAG_VERSION = 6.3.1
+DIAG_VERSION = 6.4.4
+
+HOSTWEB =
+DIAGWEB =
 
 NOPLOT  = -DNOPLOT
 DINTERP = -DNEW_INTERP
@@ -71,24 +105,25 @@ default:  $(LIBP)
 
 .PRECIOUS: $(LIBP)
 
-.DEFAULT:
-	cvs checkout $@
-
 .ptn.a:
 	sed s/'      PROGRAM '/'      SUBROUTINE '/ $< > $*.ftn ;\
 	$(FC) $*.ftn
 	if [ -f $@ ]; then chmod 644 $@ ; fi
-	$(AR) rv $@ $*.o
+	$(AR) rUv $@ $*.o
 	$(ZIP) $(ZIPFILE) $*.f
+ifndef DO_DEBUG
 	/bin/rm -f $*.o $*.f $*.ftn
+endif
 
 .ptn90.a:
 	sed s/' PROGRAM $*'/' SUBROUTINE $*'/ $< > $*.ftn90 ;\
 	$(FC) $*.ftn90
 	if [ -f $@ ]; then chmod 644 $@ ; fi
-	$(AR) rv $@ $*.o
+	$(AR) rUv $@ $*.o
 	$(ZIP) $(ZIPFILE) $*.f90
+ifndef DO_DEBUG
 	/bin/rm -f $*.o $*.f90 $*.ftn90
+endif
 
 .ptn.o:
 	sed s/'      PROGRAM '/'      SUBROUTINE '/ $< > $*.ftn ;\
@@ -107,18 +142,16 @@ default:  $(LIBP)
 	$(FTNC) $*.ftn90 ; /bin/rm -f $*.ftn90
 
 .ptn.txt:
-	/bin/rm -f $(MANDIR)/$*.txt $*.txt
-	$(FTNT) $< | sed s/'^[*]'/' '/ > $(MANDIR)/$*.txt
-	rsync -av $(MANDIR)/$*.txt .
+	$(FTNT) $< | sed s/'^[*]'/' '/ > $(MANDIR)/$@ ;\
+	$(DIAGNOSTIQUE)/bin/command-origin-document.sh $< $(MANDIR)/$@ ;\
 	if ( test "$(HOSTWEB):$(DIAGWEB)" != ":" ) then \
-	rsync -av $(MANDIR)/$*.txt $(HOSTWEB):$(DIAGWEB) ; fi
+	rsync -av $(MANDIR)/$@ $(HOSTWEB):$(DIAGWEB) ; fi
 
 .ptn90.txt:
-	/bin/rm -f $(MANDIR)/$*.txt $*.txt
-	$(FTNT) $< | sed s/'^[!]'/' '/ > $(MANDIR)/$*.txt
-	rsync -av $(MANDIR)/$*.txt .
+	$(FTNT) $< | sed s/'^[!]'/' '/ > $(MANDIR)/$@ ;\
+	$(DIAGNOSTIQUE)/bin/command-origin-document.sh $< $(MANDIR)/$@ ;\
 	if ( test "$(HOSTWEB):$(DIAGWEB)" != ":" ) then \
-	rsync -av $(MANDIR)/$*.txt $(HOSTWEB):$(DIAGWEB) ; fi
+	rsync -av $(MANDIR)/$@ $(HOSTWEB):$(DIAGWEB) ; fi
 
 .c.o:
 	$(CC) $*.c
@@ -238,113 +271,170 @@ TXTDECKS = \
 
 #LISTE DES MODULES AYANT DES DEPENDANCES
 
-addf.f    : addf.ptn \
-	 $(INCLUDE)/diagmacros.cdk
-adjust.f  : adjust.ptn \
-	 $(INCLUDE)/machtype.cdk
-binach.f  : binach.ptn \
-	 $(INCLUDE)/machtype.cdk
-chabin.f  : chabin.ptn \
-	 $(INCLUDE)/machtype.cdk
-convert.f : convert.ptn \
-	 $(INCLUDE)/machtype.cdk
-cosf.f    : cosf.ptn \
-	 $(INCLUDE)/diagmacros.cdk
-crvplot.f : crvplot.ptn \
-	 $(INCLUDE)/char2int.cdk
-dertim.f  : dertim.ptn \
-	 $(INCLUDE)/diagmacros.cdk  $(INCLUDE)/machtype.cdk 
-diftim.f  : diftim.ptn \
-	 $(INCLUDE)/zlabel.cdk
-expone.f  : expone.ptn \
-	 $(INCLUDE)/diagmacros.cdk
-fcats.f   : fcats.ptn \
-	 $(INCLUDE)/machtype.cdk
-gadd.f    : gadd.ptn \
-	 $(INCLUDE)/diagmacros.cdk
-ggatim.f  : ggatim.ptn \
-	 $(INCLUDE)/diagmacros.cdk
-ggplot.f  : ggplot.ptn \
-	 $(INCLUDE)/char2int.cdk
-gpdpd.f   : gpdpd.ptn \
-	 $(INCLUDE)/consdia.cdk $(INCLUDE)/dintern.cdk $(INCLUDE)/fintern.cdk
-gphum.f   : gphum.ptn \
-	 $(INCLUDE)/consdia.cdk $(INCLUDE)/dintern.cdk $(INCLUDE)/fintern.cdk
-gpvtat.f  : gpvtat.ptn \
-	 $(INCLUDE)/consdia.cdk $(INCLUDE)/dintern.cdk $(INCLUDE)/fintern.cdk
-hovplot.f : hovplot.ptn \
-	 $(INCLUDE)/char2int.cdk
-inttim.f  : inttim.ptn \
-	 $(INCLUDE)/diagmacros.cdk $(INCLUDE)/machtype.cdk 
-invntry.f : invntry.ptn \
-	 $(INCLUDE)/machtype.cdk
-joiner.f  : joiner.ptn \
-	 $(INCLUDE)/machtype.cdk
-meofvec.f : meofvec.ptn \
-	 $(INCLUDE)/diagmacros.cdk $(INCLUDE)/machtype.cdk 
-minvers.f : minvers.ptn \
-	 $(INCLUDE)/diagmacros.cdk $(INCLUDE)/machtype.cdk 
-mmult.f   : mmult.ptn \
-	 $(INCLUDE)/diagmacros.cdk
-mtrace.f  : mtrace.ptn \
-	 $(INCLUDE)/diagmacros.cdk
-psdiv.f   : psdiv.ptn \
-	 $(INCLUDE)/diagmacros.cdk
-psmlt.f   : psmlt.ptn \
-	 $(INCLUDE)/diagmacros.cdk
-select.f  : select.ptn \
-	 $(INCLUDE)/zlabel.cdk
-select2.f : select2.ptn \
-	 $(INCLUDE)/zlabel.cdk
-shiftf.f  : shiftf.ptn \
-	 $(INCLUDE)/diagmacros.cdk $(INCLUDE)/machtype.cdk 
-sinf.f    : sinf.ptn \
-	 $(INCLUDE)/diagmacros.cdk
-sortf.f   : sortf.ptn \
-	 $(INCLUDE)/diagmacros.cdk $(INCLUDE)/machtype.cdk 
-spplot.f : spplot.ptn \
-	 $(INCLUDE)/char2int.cdk
-spvdgx.f  : spvdgx.ptn \
-	 $(INCLUDE)/machtype.cdk 
-tfilter.f : tfilter.ptn \
-	 $(INCLUDE)/diagmacros.cdk $(INCLUDE)/machtype.cdk 
-timavg.f  : timavg.ptn \
-	 $(INCLUDE)/diagmacros.cdk $(INCLUDE)/machtype.cdk 
-timcov.f  : timcov.ptn \
-	 $(INCLUDE)/diagmacros.cdk $(INCLUDE)/machtype.cdk 
-timdev.f  : timdev.ptn \
-	 $(INCLUDE)/diagmacros.cdk $(INCLUDE)/machtype.cdk 
-timegen.f : timegen.ptn \
-	 $(INCLUDE)/diagmacros.cdk
-tsafc.f   : tsafc.ptn \
-	 $(INCLUDE)/machtype.cdk
-tscheck.f : tscheck.ptn \
-	 $(INCLUDE)/machtype.cdk
-tstep.f   : tstep.ptn \
-	 $(INCLUDE)/diagmacros.cdk $(INCLUDE)/machtype.cdk 
-ttesta.f  : ttesta.ptn \
-	 $(INCLUDE)/zlabel.cdk
-tteste.f  : tteste.ptn \
-	 $(INCLUDE)/zlabel.cdk
-txtplot.f : txtplot.ptn \
-	 $(INCLUDE)/char2int.cdk
-xappend.f : xappend.ptn \
-	 $(INCLUDE)/machtype.cdk
-xfind.f   : xfind.ptn \
-	 $(INCLUDE)/machtype.cdk $(INCLUDE)/zlabel.cdk
-xsave.f   : xsave.ptn \
-	 $(INCLUDE)/machtype.cdk $(INCLUDE)/zlabel.cdk
-zoncov.f  : zoncov.ptn \
-	 $(INCLUDE)/diagmacros.cdk
-zxplot.f : zxplot.ptn \
-	 $(INCLUDE)/char2int.cdk
+$(LIBP)(addf.o)    : addf.ptn \
+	$(INCLUDE)/diagmacros.cdk
+$(LIBP)(adjust.o)  : adjust.ptn \
+	$(INCLUDE)/machtype.cdk
+$(LIBP)(binach.o)  : binach.ptn \
+	$(INCLUDE)/machtype.cdk
+$(LIBP)(chabin.o)  : chabin.ptn \
+	$(INCLUDE)/machtype.cdk
+$(LIBP)(convert.o) : convert.ptn \
+	$(INCLUDE)/machtype.cdk
+$(LIBP)(cosf.o)    : cosf.ptn \
+	$(INCLUDE)/diagmacros.cdk
+$(LIBP)(crvplot.o) : crvplot.ptn \
+	$(INCLUDE)/char2int.cdk
+$(LIBP)(dertim.o)  : dertim.ptn \
+	$(INCLUDE)/diagmacros.cdk  $(INCLUDE)/machtype.cdk 
+$(LIBP)(diftim.o)  : diftim.ptn \
+	$(INCLUDE)/zlabel.cdk
+$(LIBP)(dxdp.o)    : dxdp.ptn \
+	$(INCLUDE)/toc_gest_1.cdk	$(INCLUDE)/toc_gest_2.cdk \
+	$(INCLUDE)/toc_gest_formats.cdk	$(INCLUDE)/set_a_b_from_AABB.cdk \
+	$(INCLUDE)/set_a_b_formats.cdk	$(MODDIR)/diag_toc.mod
+$(LIBP)(expone.o)  : expone.ptn \
+	$(INCLUDE)/diagmacros.cdk
+$(LIBP)(fcats.o)   : fcats.ptn \
+	$(INCLUDE)/machtype.cdk
+$(LIBP)(fstmdiag.o) : fstmdiag.ptn90 \
+	$(MODDIR)/diag_convert_ip123.mod \
+	$(MODDIR)/stats_signatures.mod
+$(LIBP)(fsttri.o) : fsttri.ptn \
+	$(MODDIR)/diag_convert_ip123.mod
+$(LIBP)(gadd.o)    : gadd.ptn \
+	$(INCLUDE)/diagmacros.cdk
+$(LIBP)(ggatim.o)  : ggatim.ptn \
+	$(INCLUDE)/diagmacros.cdk
+$(LIBP)(ggplot.o)  : ggplot.ptn \
+	$(INCLUDE)/char2int.cdk
+$(LIBP)(gpasg.o) : gpasg.ptn \
+	$(INCLUDE)/toc_gest_1.cdk	$(INCLUDE)/toc_gest_formats.cdk \
+	$(INCLUDE)/set_a_b_from_AABB.cdk	$(INCLUDE)/set_a_b_formats.cdk \
+	$(MODDIR)/diag_toc.mod
+$(LIBP)(gpdpd.o)   : gpdpd.ptn \
+	$(INCLUDE)/consdia.cdk	$(INCLUDE)/dintern.cdk \
+	$(INCLUDE)/fintern.cdk	$(INCLUDE)/set_a_b_from_AABB.cdk \
+	$(INCLUDE)/set_a_b_formats.cdk	$(INCLUDE)/toc_gest_1.cdk \
+	$(INCLUDE)/toc_gest_2.cdk	$(INCLUDE)/toc_gest_formats.cdk \
+	$(MODDIR)/diag_toc.mod
+$(LIBP)(gphum.o)   : gphum.ptn \
+	$(INCLUDE)/consdia.cdk $(INCLUDE)/dintern.cdk \
+	$(INCLUDE)/fintern.cdk	$(INCLUDE)/toc_gest_1.cdk \
+	$(INCLUDE)/toc_gest_2.cdk	$(INCLUDE)/set_a_b_from_AABB.cdk \
+	$(INCLUDE)/set_a_b_formats.cdk	$(MODDIR)/diag_toc.mod
+$(LIBP)(gpvtat.o)  : gpvtat.ptn \
+	$(INCLUDE)/consdia.cdk $(INCLUDE)/dintern.cdk \
+	$(INCLUDE)/fintern.cdk
+$(LIBP)(gsapl.o) : gsapl.ptn \
+	$(INCLUDE)/toc_gest_1.cdk	$(INCLUDE)/toc_gest_2.cdk \
+	$(INCLUDE)/toc_gest_formats.cdk	$(INCLUDE)/set_a_b_from_AABB.cdk \
+	$(INCLUDE)/set_a_b_formats.cdk	$(MODDIR)/diag_toc.mod
+$(LIBP)(gsapzl.o) : gsapzl.ptn \
+	$(INCLUDE)/toc_gest_1.cdk	$(INCLUDE)/toc_gest_2.cdk \
+	$(INCLUDE)/toc_gest_formats.cdk	$(INCLUDE)/set_a_b_from_AABB.cdk \
+	$(INCLUDE)/set_a_b_formats.cdk	$(MODDIR)/diag_toc.mod
+$(LIBP)(gsathl.o) : gsathl.ptn \
+	$(INCLUDE)/toc_gest_1.cdk	$(INCLUDE)/toc_gest_2.cdk \
+	$(INCLUDE)/toc_gest_formats.cdk	$(INCLUDE)/set_a_b_from_AABB.cdk \
+	$(INCLUDE)/set_a_b_formats.cdk	$(MODDIR)/diag_toc.mod
+$(LIBP)(gshumh.o) : gshumh.ptn \
+	$(INCLUDE)/consdia.cdk $(INCLUDE)/dintern.cdk \
+	$(INCLUDE)/fintern.cdk	$(INCLUDE)/toc_gest_1.cdk \
+	$(INCLUDE)/toc_gest_formats.cdk	$(MODDIR)/diag_toc.mod
+$(LIBP)(gsmslph.o) : gsmslph.ptn \
+	$(INCLUDE)/toc_gest_1.cdk	$(INCLUDE)/toc_gest_2.cdk \
+	$(INCLUDE)/toc_gest_formats.cdk	$(INCLUDE)/set_a_b_from_AABB.cdk \
+	$(INCLUDE)/set_a_b_formats.cdk	$(MODDIR)/diag_toc.mod
+$(LIBP)(hovplot.o) : hovplot.ptn \
+	$(INCLUDE)/char2int.cdk
+$(LIBP)(inttim.o)  : inttim.ptn \
+	$(INCLUDE)/diagmacros.cdk $(INCLUDE)/machtype.cdk 
+$(LIBP)(invntry.o) : invntry.ptn \
+	$(INCLUDE)/machtype.cdk
+$(LIBP)(joiner.o)  : joiner.ptn \
+	$(INCLUDE)/machtype.cdk
+$(LIBP)(meofvec.o) : meofvec.ptn \
+	$(INCLUDE)/diagmacros.cdk $(INCLUDE)/machtype.cdk 
+$(LIBP)(minvers.o) : minvers.ptn \
+	$(INCLUDE)/diagmacros.cdk $(INCLUDE)/machtype.cdk 
+$(LIBP)(mmult.o)   : mmult.ptn \
+	$(INCLUDE)/diagmacros.cdk
+$(LIBP)(mtrace.o)  : mtrace.ptn \
+	$(INCLUDE)/diagmacros.cdk
+$(LIBP)(pgen.o) : pgen.ptn \
+	$(INCLUDE)/toc_gest_1.cdk	$(INCLUDE)/toc_gest_2.cdk \
+	$(INCLUDE)/toc_gest_formats.cdk	$(INCLUDE)/set_a_b_from_AABB.cdk \
+	$(INCLUDE)/set_a_b_formats.cdk	$(MODDIR)/diag_toc.mod
+$(LIBP)(psdiv.o)   : psdiv.ptn \
+	$(INCLUDE)/diagmacros.cdk
+$(LIBP)(psmlt.o)   : psmlt.ptn \
+	$(INCLUDE)/diagmacros.cdk
+$(LIBP)(select.o)  : select.ptn \
+	$(INCLUDE)/zlabel.cdk \
+	$(MODDIR)/diag_toc.mod
+$(LIBP)(select2.o) : select2.ptn \
+	$(INCLUDE)/zlabel.cdk \
+	$(MODDIR)/diag_toc.mod
+$(LIBP)(shiftf.o)  : shiftf.ptn \
+	$(INCLUDE)/diagmacros.cdk $(INCLUDE)/machtype.cdk 
+$(LIBP)(sinf.o)    : sinf.ptn \
+	$(INCLUDE)/diagmacros.cdk
+$(LIBP)(sortf.o)   : sortf.ptn \
+	$(INCLUDE)/diagmacros.cdk $(INCLUDE)/machtype.cdk 
+$(LIBP)(spplot.o) : spplot.ptn \
+	$(INCLUDE)/char2int.cdk
+$(LIBP)(spvdgx.o)  : spvdgx.ptn \
+	$(INCLUDE)/machtype.cdk 
+$(LIBP)(tfilter.o) : tfilter.ptn \
+	$(INCLUDE)/diagmacros.cdk $(INCLUDE)/machtype.cdk 
+$(LIBP)(timavg.o)  : timavg.ptn \
+	$(INCLUDE)/diagmacros.cdk \
+	$(INCLUDE)/machtype.cdk \
+	$(INCLUDE)/zlabel.cdk \
+	$(MODDIR)/diag_convert_ip123.mod \
+	$(MODDIR)/stats_signatures.mod
+$(LIBP)(timcov.o)  : timcov.ptn \
+	$(INCLUDE)/diagmacros.cdk $(INCLUDE)/machtype.cdk \
+	$(MODDIR)/stats_signatures.mod
+$(LIBP)(timdev.o)  : timdev.ptn \
+	$(INCLUDE)/diagmacros.cdk $(INCLUDE)/machtype.cdk 
+$(LIBP)(timegen.o) : timegen.ptn \
+	$(INCLUDE)/diagmacros.cdk
+$(LIBP)(tsafc.o)   : tsafc.ptn \
+	$(INCLUDE)/machtype.cdk
+$(LIBP)(tscheck.o) : tscheck.ptn \
+	$(INCLUDE)/machtype.cdk
+$(LIBP)(tstep.o)   : tstep.ptn \
+	$(INCLUDE)/diagmacros.cdk $(INCLUDE)/machtype.cdk 
+$(LIBP)(ttesta.o)  : ttesta.ptn \
+	$(INCLUDE)/zlabel.cdk
+$(LIBP)(tteste.o)  : tteste.ptn \
+	$(INCLUDE)/zlabel.cdk
+$(LIBP)(txtplot.o) : txtplot.ptn \
+	$(INCLUDE)/char2int.cdk
+$(LIBP)(vsinth.o) : vsinth.ptn \
+	$(INCLUDE)/toc_gest_1.cdk	$(INCLUDE)/toc_gest_2.cdk \
+	$(INCLUDE)/toc_gest_formats.cdk	$(INCLUDE)/set_a_b_from_AABB.cdk \
+	$(INCLUDE)/set_a_b_formats.cdk	$(MODDIR)/diag_toc.mod
+$(LIBP)(windowf.o) : windowf.ptn	$(MODDIR)/diag_toc.mod
+$(LIBP)(xappend.o) : xappend.ptn \
+	$(INCLUDE)/machtype.cdk
+$(LIBP)(xfind.o)   : xfind.ptn \
+	$(INCLUDE)/machtype.cdk $(INCLUDE)/zlabel.cdk
+$(LIBP)(xsave.o)   : xsave.ptn \
+	$(INCLUDE)/machtype.cdk $(INCLUDE)/zlabel.cdk
+$(LIBP)(zoncov.o)  : zoncov.ptn \
+	$(INCLUDE)/diagmacros.cdk
+$(LIBP)(zxplot.o) : zxplot.ptn \
+	$(INCLUDE)/char2int.cdk
 
 #LISTE DES CIBLES DU FICHIER recettes
 
 initial:
 # Setup des repertoires dependants de $(EC_ARCH) et de $(VGDLIB)
 	/bin/mkdir -p $(LIBDIR) $(MANDIR) $(MODDIR) $(BINDIR)
-	s.locate --lib $(VGDLIB) 1> /dev/null || { echo -e \n PLS execute \". s.ssmuse.dot vgriddesc\" \n ; false ; }
+	s.locate --lib $(VGDLIB) 1> /dev/null || { echo -e \n PLS execute \". s.ssmuse.dot vgrid\" \n ; false ; }
 
 # Voir "Managing project with make" de O'Reilly & Associates, 1989,
 # pages 51-53, pour les details de ce qui se passe dans ce qui suit
@@ -417,14 +507,16 @@ document: driver.ptn info.lspgm $(TXTDECKS)
 driver: driver.ptn $(LIBP) $(LIBS)
 #Section de creation du binaire proprement dit
 	$(CPPT) $(DEFINE) $@.ptn > $@.f
+	$(DIAGNOSTIQUE)/bin/command-change-date.sh $@.f ; \
 	$(FC) $@.f  -o $@ -libpath $(DIAGS)/lib/$(EC_ARCH) \
 	-libappl "$(PROGLIB) $(DIAGLIB) $(VGDLIB) $(GRAFLIB)" \
 	-librmn $(RMNLIB) $(CODEBETA) -obj "$(OBJ)" \
 	-libsys "$(DDFUN90) $(LAPACK) $(BLAS)"
 	if [ -x $@ ] ; then \
-		/bin/mv driver $(BINDIR)/r.diag_$(DIAG_VERSION) ; \
+		/bin/mv driver $(BINDIR)/r.diag_$(DIAG_VERSION)_$(COMP_ARCH) ; \
+		ssh localhost ldd $(BINDIR)/r.diag_$(DIAG_VERSION)_$(COMP_ARCH) | \
+		grep -i "not found" && exit 1 ; /bin/rm $@.f $@.o ; \
 		touch -t 199001010000 driver && chmod 755 driver ; \
-		/bin/rm $@.f $@.o ; \
 	fi
 
 info.lspgm: driver.ptn
@@ -456,6 +548,8 @@ Linux_x86-64:
 #Section appropriee pour les fichiers STD saveur 1998 sur Linux INTEL 64 bits
 	$(MAKE) driver OBJ="$(OBJ)" RMNLIB=$(RMNLIB) MANDIR=$(MANDIR) \
 	NOPLOT=$(NOPLOT) VGDLIB=$(VGDLIB) GRAFLIB=$(GRAFLIB)
+
+ubuntu-18.04-skylake-64: Linux_x86-64
 
 NoPlot:
 #Section appropriee pour les fichiers STD saveur 1998 sur Linux 64 bits

@@ -18,10 +18,12 @@
  
   http://web-mrb.cmc.ec.gc.ca/mrb/si/eng/si/howto-si/doku.php?id=netcdf
  
-  In Dorval, the different AIX and Linux binaries can be
-  obtained with the command
+  In Dorval, the Linux binary can be obtained with these commands:
+    - On the Science network:
+         . r.load.dot /fs/ssm/eccc/mrd/rpn/diag/<rev>
 
-  . s.ssmuse.dot /ssm/net/rpn/utils/<rev> 
+    - On the EC network:
+         . r.load.dot /ssm/net/rpn/diag/<rev>
  
   You will need to define a UDUNITS environment variable.
  

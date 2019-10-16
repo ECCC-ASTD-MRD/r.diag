@@ -3,15 +3,23 @@ Exemples de commandes pour generer les binaires r.diag, cdf2ccc et cdf2rpn
 
 UQAM sans libgraph.a
 
-. s.ssmuse.dot pgi13         ; . s.ssmuse.dot vgriddesc ; make allbin RMNLIB=rmnbeta_015 FIXES=${PWD}/lib/Linux_x86-64/pgi13xx/msg.o 
-. s.ssmuse.dot gfortran-4.9  ; . s.ssmuse.dot vgriddesc ; make allbin FIXES=${PWD}/lib/Linux_x86-64/gfortran-4.9/stubs.o
+. s.ssmuse.dot dev/pgi-16
+    ou bien
+. s.ssmuse.dot dev/gfortran
+    ou bien
+. s.ssmuse.dot dev/intel-16
 
-CMC sans libgraph.a
+    et ensuite
 
-. ssmuse-sh -d hpcs/201402/02/base -d hpcs/201402/02/intel13sp1u2 -d rpn/libs/15.2 ; \
-eval ". s.ssmuse.dot /ssm/net/cmdn/vgrid/${VGRID_REVISION}/\${COMP_ARCH}" ; make allbin RMNLIB=rmn_015.2 FIXES=${PWD}/lib/${EC_ARCH}/stubs.o
+. s.ssmuse.dot dev/rmn_016 netcdff-4.4 vgriddesc-5.6
+# FIXES="$PWD/lib/$EC_ARCH/stubs.o $PWD/lib/$EC_ARCH/moduledate.o $PWD/lib/$EC_ARCH/crc32.o"
+FIXES=""
 
-s.use gmake as make ; s.use gnu_find as find ; . ssmuse-sh -d hpcs/201402/02/base -d hpcs/ext/xlf_13.1.0.10 -d rpn/libs/15.2 ; \
-eval ". s.ssmuse.dot /ssm/net/cmdn/vgrid/${VGRID_REVISION}/\${COMP_ARCH}" ; make allbin RMNLIB=rmn_015.2 FIXES=${PWD}/lib/${EC_ARCH}/stubs.o
+make allbin FIXES="${FIXES}"
 
-Pour generer avec libgraph.a ==> Ajouter "NOPLOT='' GRAFLIB=graph" a une des commandes precedentes.
+CMC sans libgraph.a et sans la derniere correction a moduledate
+ou on suppose qu'il existe un package SSM appelle netcdff
+
+. s.ssmuse.dot SI/ifortdev16 netcdff ; . s.ssmuse.dot GEM/x/4.8.3 ; make allbin
+
+Pour generer avec libgraph.a ==> Ajouter "NOPLOT='' GRAFLIB=graph" a une des commandes "make" precedentes.

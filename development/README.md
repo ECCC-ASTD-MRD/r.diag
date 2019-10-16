@@ -1,16 +1,17 @@
 
+
  R.DIAG - A GEM model and analysis Diagnostics Toolkit
  ======
 
  An extensive toolkit available to users wanting to manipulate 2D
  and 3D meteorological data, as produced either by the Environment
- Canada (EC) GEM forecast model or the EC CCCma General Circulation
- Model (GCM). The CMC/RPN GEM file formats and two flavors of the
- GCM's binary sequential format are supported. This toolkit was
- originally derived from an early 1990's unix port of the then
- CRAY version of the CCCma diagnostic toolkit. Additional code
- produced at UQAM for diagnostics of regional climate data in
- the late 1990's is also included in the toolbox.
+ and Climate Change Canada (ECCC) GEM forecast model or the ECCC
+ CCCma General Circulation Model (GCM). The CMC/RPN GEM file formats
+ and two flavors of the GCM's binary sequential format are supported.
+ This toolkit was originally derived from an early 1990's unix port
+ of the then CRAY version of the CCCma diagnostic toolkit. Additional
+ code produced at UQAM for diagnostics of regional climate data in
+ the late 1990's is also included in the toolkit.
 
  The GEM toolkit is built in the R.DIAG executable binary. The
  toolkit commands can be grouped under several themes or section.
@@ -39,7 +40,7 @@
  Input NetCDF files should closely conform to the CF v1.4 Metadata
  convention. The converter will otherwise (at best) choke on them.
  Depending on this executable's name, which should be either cdf2ccc
- or cdf2rpn, the default EC file format read/written by the executable
+ or cdf2rpn, the default ECCC file format read/written by the executable
  will be either the CCCma or CMC/RPN formats. These two executable
  are in general automatically generated as hard-links. The first
  version of the converter was created by the Ouranos Consortium
@@ -49,17 +50,30 @@
  The default Makefile target ("allbin") attempts to generate the
  libraries and executables, after checking that the initial setup
  has been done. The "all" target includes the "allbin" and "document"
- targets. The "export" target copies the final products to the parent
- directory. The working directory that holds the package is assumed
- to be just that, somewhere users may not be too confortable.
- The package implicitely assumes that make=gmake.
+ targets. The "document" target extracts the documentation headers
+ from the different sources files to the man/pdoc sub-directory.
+ The "export" target copies the final products to the parent directory.
+ The "web-document" target pushes the documentation to $HOSTWEB:$DIAGWEB.
+ The git working directory that holds the package is assumed to be just
+ that, somewhere users may not be too comfortable. The package
+ implicitely assumes that make=gmake.
 
  To generate the toolkit executable, the RPN/CMC development environment
  has to be installed and active (see mfvalin/rmnlib on github.com). As
- well, the Vgrid Descriptors package used in the GEM v4+ model also has
- to be available. Furthermore, to generate the two cdf2xxx executables,
- the old NetCDF v3.6 and UdUnits v1.2 library packages also have to
- available. Most of the code available here is written in FORTRAN.
+ well, a VgridDescriptors package compatible with the current GEM v4+
+ model version has to be available. Furthermore, to generate the two
+ cdf2xxx executables, the NetCDF (v3 or v4) and UdUnits v2 library
+ packages also have to be available. These in turn require the hdf5, dl,
+ and z libraries (if NetCDF v4 is used) and the expat library (for
+ UdUnits v2). The current configuration assumes that the the NetCDF
+ v4 package is used and that the FORTRAN interface netcdff library
+ is provided via a SSM bundle that also points to the UdUnits2
+ necessary components.
+
+ Most of the code available here is written in FORTRAN (and a lot
+ of it is still in F77). As a consequnce of this, the conversion tool
+ requires a FORTRAN to C wrapper for the UdUnits v2 C routines. This
+ is again available on github.com (see mfvalin/wrapper-code/udunits).
 
  Some versions of the toolkit may also use the DDFUN90 package as
  produced by  David H. Bailey of the NERSC, Lawrence Berkeley Lab.
@@ -73,11 +87,11 @@
  according to your environment's specifications.
  
  R.DIAG is copyrighted (C) 1990-2010 by the "Division de Recherche
- en Prevision Numerique" of Environment Canada. This code is free
- software; you can redistribute it and/or modify it under the terms
- of the GNU Lesser General Public License as published by the Free
- Software Foundation, version 2.1 of the License.
+ en Prevision Numerique" of ECCC. This code is free software; you can
+ redistribute it and/or modify it under the terms of the GNU Lesser
+ General Public License as published by the Free Software
+ Foundation, version 2.1 of the License.
 
  Contact : Dugas.Bernard@uqam.ca
- Last revision : April 2015
+ Last revision : July 2018
 
