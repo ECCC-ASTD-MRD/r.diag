@@ -52,7 +52,7 @@ FIXES   =
 # RMN and Vgrid_Descriptor library names
 
 RMNLIB  = rmn_015.2
-VGDLIB  = descrip
+VGDLIB  = vgrid
 
 # DDFUN90, NetCDF3 and UdUnits1 library names
 
