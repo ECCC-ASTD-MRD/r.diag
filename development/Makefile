@@ -69,7 +69,7 @@ STD     = 98
 default: allbin
 
 
-allbin: initial rdiag cdf2conv 
+allbin: initial rdiag
 
 all: allbin document
 
@@ -82,14 +82,14 @@ export:
 	rsync -av $(DIAGNOSTIQUE)/share $(DESTINATION)/ ;\
 	rsync -av $(DIAGNOSTIQUE)/src/lspgm/*.html $(DESTINATION)/share/pdoc/ ;\
 	rsync -av $(DIAGNOSTIQUE)/src/lssub/*.html $(DESTINATION)/share/pdoc/ ;\
-	rsync -av $(EXTRAS)/src/udunits-1.12.11/src/lib/udunits.dat $(DESTINATION)/include
+	#rsync -av $(EXTRAS)/src/udunits-1.12.11/src/lib/udunits.dat $(DESTINATION)/include
 
 # Ensure initial setup is done
 
 initial:
 	/bin/mkdir -p $(BINDIR) $(LIBDIR) $(MANDIR) $(MODDIR) $(SUBDIR)
 	##s.locate --lib $(VGDLIB) 1> /dev/null || { echo -e PLS execute \". s.ssmuse.dot vgriddesc\" \n ; false ; }
-	if [[ ! -f $(EXTLIB)/libudunits.a ]]; then cd $(EXTRAS) ; $(MAKE) all ; fi
+	#if [[ ! -f $(EXTLIB)/libudunits.a ]]; then cd $(EXTRAS) ; $(MAKE) all ; fi
 	if [[ ! -f $(LIBDIR)/libddfun90.a || -z "$(DDFUN90)" ]]; then \
 	cd $(DIAGNOSTIQUE)/src/extras/ddfun90 ; $(MAKE) RMNLIB=$(RMNLIB) ; fi
 	if [[ ! -x $(BINDIR)/r.echo ]]; then cd $(DIAGNOSTIQUE)/src/extras/tools ; $(MAKE) ; fi
@@ -97,6 +97,7 @@ initial:
 	s.f77 -g -c ../../program_version.f ; fi
 	if [[ ! -f $(LIBDIR)/stubs.o ]]; then cd $(LIBDIR) ;\
 	s.f90 -g -c ../../stubs.f90 ; fi
+
 
 # RDIAG Diagnostic toolkit recipe
 
