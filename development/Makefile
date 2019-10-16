@@ -94,10 +94,10 @@ initial:
 	#if [[ ! -f $(LIBDIR)/libddfun90.a || -z "$(DDFUN90)" ]]; then \
 	#cd $(DIAGNOSTIQUE)/src/extras/ddfun90 ; $(MAKE) RMNLIB=$(RMNLIB) ; fi
 	#if [[ ! -x $(BINDIR)/r.echo ]]; then cd $(DIAGNOSTIQUE)/src/extras/tools ; $(MAKE) ; fi
-	if [[ ! -f $(LIBDIR)/program_version.o ]]; then cd $(LIBDIR) ;\
-	s.f77 ../../program_version.f ; fi
-	if [[ ! -f $(LIBDIR)/stubs.o ]]; then cd $(LIBDIR) ;\
-	s.f90 ../../stubs.f90 ; fi
+	#if [[ ! -f $(LIBDIR)/program_version.o ]]; then cd $(LIBDIR) ;\
+	#s.f77 -g -c ../../program_version.f ; fi
+	#if [[ ! -f $(LIBDIR)/stubs.o ]]; then cd $(LIBDIR) ;\
+	#s.f90 -g -c ../../stubs.f90 ; fi
 
 
 # RDIAG Diagnostic toolkit recipe
