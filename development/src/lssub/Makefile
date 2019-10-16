@@ -235,6 +235,7 @@ convsub.o  : convsub.ftn diag_toc.mod \
 	$(INCLUDE)/machtype.cdk	$(INCLUDE)/zlabel.cdk
 coord.o : coord.ftn	diag_convert_ip123.mod
 diag_convert_ip123.o : diag_convert_ip123.cdk90
+
 diag_toc.o : diag_toc.cdk90	vgrid_descriptors.mod
 get.o      : get.ftn diag_toc.mod \
 	$(INCLUDE)/machtype.cdk $(INCLUDE)/zlabel.cdk
@@ -247,7 +248,7 @@ util.o     : util.ftn  diag_toc.mod \
 initial:
 # Setup des repertoires et liens dependants de $(EC_ARCH)
 	/bin/mkdir -p $(SOURCES) $(LIBDIR) $(MANDIR) $(MODDIR)
-	s.locate --lib $(VGDLIB) 1> /dev/null || { echo -e \n PLS execute \". s.ssmuse.dot vgriddesc\" \n ; false ; }
+	#s.locate --lib $(VGDLIB) 1> /dev/null || { echo -e \n PLS execute \". s.ssmuse.dot vgriddesc\" \n ; false ; }
 	if [[ `/bin/ls -L $(SOURCES)/Makefile ; echo $?` != 0 ]]; then \
 	/bin/ln -sf $(DIAGS)/src/lssub/Makefile_sources$(STD) $(SOURCES)/Makefile ; fi
 
