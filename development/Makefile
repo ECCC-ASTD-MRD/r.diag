@@ -60,6 +60,7 @@ DDFUN90  = ddfun90
 lNetCDF  = netcdff netcdf
 UDUNITS  = udunits
 
+
 DIAG_VERSION = 6.3.1
 CONV_VERSION = 2.2.1
 
@@ -67,9 +68,11 @@ STD     = 98
 
 default: allbin
 
+
 allbin: initial rdiag cdf2conv 
 
 all: allbin document
+
 
 export:
 	/bin/mkdir -p $(DESTINATION)/lib/$(EC_ARCH) ;\
@@ -85,7 +88,7 @@ export:
 
 initial:
 	/bin/mkdir -p $(BINDIR) $(LIBDIR) $(MANDIR) $(MODDIR) $(SUBDIR)
-	s.locate --lib $(VGDLIB) 1> /dev/null || { echo -e PLS execute \". s.ssmuse.dot vgriddesc\" \n ; false ; }
+	##s.locate --lib $(VGDLIB) 1> /dev/null || { echo -e PLS execute \". s.ssmuse.dot vgriddesc\" \n ; false ; }
 	if [[ ! -f $(EXTLIB)/libudunits.a ]]; then cd $(EXTRAS) ; $(MAKE) all ; fi
 	if [[ ! -f $(LIBDIR)/libddfun90.a || -z "$(DDFUN90)" ]]; then \
 	cd $(DIAGNOSTIQUE)/src/extras/ddfun90 ; $(MAKE) RMNLIB=$(RMNLIB) ; fi
