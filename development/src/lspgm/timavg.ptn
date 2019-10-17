@@ -1127,7 +1127,7 @@ C         END IF
 
           IF (ACCUM)                                           THEN
               IF (PKTYP.NE.'SQ') NSAMPB(1:NSET)  = IBUF(2)
-          ELSE IF (.NOT.(SAMPLES .OR. PKTYP.EQ.'SQ') )         THEN
+          ELSE IF (.NOT.(SAMPLES .AND. PKTYP.EQ.'SQ') )         THEN
               NSAMPB(1:NSET) = 1
           END IF
 
