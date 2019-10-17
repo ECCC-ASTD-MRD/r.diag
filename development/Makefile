@@ -87,7 +87,7 @@ default: allbin
 
 allbin: initial_base initial_cdf rdiag
 
-all: allbin document
+all: allbin
 
 documentation:
 	cd $(EXTRAS) ; $(MAKE) documentation
