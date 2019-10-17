@@ -298,8 +298,7 @@ $(LIBP)(expone.o)  : expone.ptn \
 $(LIBP)(fcats.o)   : fcats.ptn \
 	$(INCLUDE)/machtype.cdk
 $(LIBP)(fstmdiag.o) : fstmdiag.ptn90 \
-	$(MODDIR)/diag_convert_ip123.mod \
-	$(MODDIR)/stats_signatures.mod
+	$(MODDIR)/diag_convert_ip123.mod
 $(LIBP)(fsttri.o) : fsttri.ptn \
 	$(MODDIR)/diag_convert_ip123.mod
 $(LIBP)(gadd.o)    : gadd.ptn \
@@ -392,11 +391,9 @@ $(LIBP)(timavg.o)  : timavg.ptn \
 	$(INCLUDE)/diagmacros.cdk \
 	$(INCLUDE)/machtype.cdk \
 	$(INCLUDE)/zlabel.cdk \
-	$(MODDIR)/diag_convert_ip123.mod \
-	$(MODDIR)/stats_signatures.mod
+	$(MODDIR)/diag_convert_ip123.mod
 $(LIBP)(timcov.o)  : timcov.ptn \
-	$(INCLUDE)/diagmacros.cdk $(INCLUDE)/machtype.cdk \
-	$(MODDIR)/stats_signatures.mod
+	$(INCLUDE)/diagmacros.cdk $(INCLUDE)/machtype.cdk
 $(LIBP)(timdev.o)  : timdev.ptn \
 	$(INCLUDE)/diagmacros.cdk $(INCLUDE)/machtype.cdk 
 $(LIBP)(timegen.o) : timegen.ptn \

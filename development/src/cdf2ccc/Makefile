@@ -247,7 +247,7 @@ $(LIBP)(init_dim.o):			init_dim.f			$(INCLUDES)/cdf2ccc.h	$(INCLUDES)/dimmem.h \
 	$(INCLUDES)/infomem.h 
 $(LIBP)(initialise.o):		initialise.f		$(INCLUDES)/cdf2ccc.h 	$(INCLUDES)/infomem.h
 $(LIBP)(inq_file.o):			inq_file.F90		$(INCLUDES)/cdf2ccc.h \
-	$(INCLUDES)/ztypmem.h	$(MODDIR)/stats_signatures.mod
+	$(INCLUDES)/ztypmem.h
 $(LIBP)(lire_arg.o):			lire_arg.f			$(INCLUDES)/cdf2ccc.h	$(INCLUDES)/ztypmem.h
 $(LIBP)(lire_cccvar.o):		lire_cccvar.f		$(INCLUDES)/cdf2ccc.h	$(INCLUDES)/dimmem.h \
 	$(INCLUDES)/infomem.h	$(INCLUDES)/varmem.h	$(INCLUDES)/workmem.h 
@@ -256,7 +256,7 @@ $(LIBP)(put_attribut.o):	put_attribut.f		$(INCLUDES)/cdf2ccc.h	$(INCLUDES)/workm
 $(LIBP)(put_var.o):			put_var.f			$(INCLUDES)/cdf2ccc.h	$(INCLUDES)/workmem.h 
 $(LIBP)(rdlatlon2.o):		rdlatlon2.F90		$(INCLUDES)/cdf2ccc.h	$(INCLUDES)/dimmem.h \
 	$(INCLUDES)/ibufmem.h	$(INCLUDES)/infomem.h	$(INCLUDES)/varmem.h \
-	$(INCLUDES)/workmem.h	$(INCLUDES)/ztypmem.h	$(MODDIR)/stats_signatures.mod
+	$(INCLUDES)/workmem.h	$(INCLUDES)/ztypmem.h
 $(LIBP)(rdspec2.o):			rdspec2.f			$(INCLUDES)/cdf2ccc.h	$(INCLUDES)/dimmem.h \
 	$(INCLUDES)/ibufmem.h	$(INCLUDES)/infomem.h 	$(INCLUDES)/infomem.h \
 	$(INCLUDES)/specmem.h	$(INCLUDES)/varmem.h		$(INCLUDES)/workmem.h 

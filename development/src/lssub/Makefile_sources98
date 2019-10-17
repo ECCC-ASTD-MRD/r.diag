@@ -123,18 +123,17 @@ F90DECKS= \
 
 f90DECKS= \
 	diag_convert_ip123.f90	diag_convip_plus.f90 	diag_toc.f90 \
-	filter.f90	stats_signatures.f90
+	filter.f90
 
 MODDECKS= \
-	$(MODDIR)/diag_convert_ip123.mod 	$(MODDIR)/diag_toc.mod \
-	$(MODDIR)/stats_signatures.mod
+	$(MODDIR)/diag_convert_ip123.mod 	$(MODDIR)/diag_toc.mod
 
 convsub.o: convsub.f $(MODDIR)/diag_toc.mod $(MODDIR)/diag_convert_ip123.mod
 diag_convip_plus.o: diag_convip_plus.f90 $(MODDIR)/diag_convert_ip123.mod
 diag_toc.o: diag_toc.f90 vgrid_descriptors.mod
-get.o: get.f $(MODDIR)/diag_convert_ip123.mod $(MODDIR)/stats_signatures.mod
-label.o: lanel.f $(MODDIR)/diag_convert_ip123.mod $(MODDIR)/stats_signatures.mod
-put.o: put.f $(MODDIR)/diag_convert_ip123.mod $(MODDIR)/stats_signatures.mod
+get.o: get.f $(MODDIR)/diag_convert_ip123.mod
+label.o: lanel.f $(MODDIR)/diag_convert_ip123.mod
+put.o: put.f $(MODDIR)/diag_convert_ip123.mod
 util.o: util.f  $(MODDIR)/diag_toc.mod
 #coord.o: coord.f	diag_convert_ip123.mod
 
@@ -201,7 +200,6 @@ $(LIBS): $(FDECKS) $(CDECKS) $(f90DECKS) $(F90DECKS) $(MODDECKS) \
 	$(LIBS)(rec.o)	 	\
 	$(LIBS)(sfft.o)	 	\
 	$(LIBS)(spectra.o)	\
-	$(LIBS)(stats_signatures.o)	\
 	$(LIBS)(temperton.o) 	\
 	$(LIBS)(trans1d.o)	 	\
 	$(LIBS)(util.o)	 	\

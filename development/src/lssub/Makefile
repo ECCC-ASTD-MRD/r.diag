@@ -234,12 +234,10 @@ FTN90DECKS = \
 	filter.ftn90	diag_convip_plus.ftn90
 
 CDK90DECKS = \
-	diag_convert_ip123.cdk90	diag_toc.cdk90 \
-	stats_signatures.cdk90
+	diag_convert_ip123.cdk90	diag_toc.cdk90
 
 MODDECKS= \
-	$(MODDIR)/diag_convert_ip123.mod 	$(MODDIR)/diag_toc.mod \
-	$(MODDIR)/stats_signatures.mod
+	$(MODDIR)/diag_convert_ip123.mod 	$(MODDIR)/diag_toc.mod
 
 # Dependances
 
@@ -255,14 +253,12 @@ coord.f   : coord.ftn \
 fastaf2.f : fastaf2.ftn \
 	$(INCLUDE)/diagmacros.cdk
 get.f     : get.ftn \
-	$(INCLUDE)/machtype.cdk $(INCLUDE)/zlabel.cdk \
-	$(MODDIR)/stats_signatures.mod
+	$(INCLUDE)/machtype.cdk $(INCLUDE)/zlabel.cdk
 inctdia.f : inctdia.ftn \
 	$(INCLUDE)/consdia.cdk
 label.f   : label.ftn \
 	$(INCLUDE)/machtype.cdk \
-	$(MODDIR)/diag_convert_ip123.mod \
-	$(MODDIR)/stats_signatures.mod
+	$(MODDIR)/diag_convert_ip123.mod
 lgtst.f	: lgtxt.ftn \
 	$(INCLUDE)/calpi.cdk
 lowio92.f : lowio92.ftn \
@@ -273,8 +269,7 @@ paccrn.f  : paccrn.ftn \
 	$(INCLUDE)/machtype.cdk
 put.f     : put.ftn \
 	$(INCLUDE)/machtype.cdk $(INCLUDE)/highbuf.cdk \
-	$(MODDIR)/diag_convert_ip123.mod \
-	$(MODDIR)/stats_signatures.mod
+	$(MODDIR)/diag_convert_ip123.mod
 rec.f     : rec.ftn \
 	$(INCLUDE)/machtype.cdk $(INCLUDE)/zlabel.cdk
 util.f    : util.ftn \
@@ -292,15 +287,12 @@ $(LIBS)(diag_convip_plus.o) : diag_convip_plus.ftn90 \
 	$(MODDIR)/diag_convert_ip123.mod
 $(LIBS)(get.o)      : get.ftn \
 	$(INCLUDE)/machtype.cdk $(INCLUDE)/zlabel.cdk \
-	$(MODDIR)/diag_convert_ip123.mod \
-	$(MODDIR)/stats_signatures.mod
+	$(MODDIR)/diag_convert_ip123.mod
 $(LIBS)(label.o)    : label.ftn \
-	$(MODDIR)/diag_convert_ip123.mod \
-	$(MODDIR)/stats_signatures.mod
+	$(MODDIR)/diag_convert_ip123.mod
 $(LIBS)(put.o)      : put.ftn \
 	$(INCLUDE)/machtype.cdk $(INCLUDE)/zlabel.cdk \
-	$(MODDIR)/diag_convert_ip123.mod \
-	$(MODDIR)/stats_signatures.mod
+	$(MODDIR)/diag_convert_ip123.mod
 $(LIBS)(util.o)     : util.ftn \
 	$(INCLUDE)/machtype.cdk $(INCLUDE)/zlabel.cdk
 
@@ -370,7 +362,6 @@ $(LIBS):	initial	$(FTNDECKS)	$(FTN90DECKS) \
 	$(LIBS)(rec.o) 		\
 	$(LIBS)(sfft.o)		\
 	$(LIBS)(spectra.o)	\
-	$(LIBS)(stats_signatures.o)	\
 	$(LIBS)(temperton.o) 	\
 	$(LIBS)(trans1d.o) 	\
 	$(LIBS)(util.o)		\
