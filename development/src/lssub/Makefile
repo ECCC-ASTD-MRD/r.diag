@@ -180,8 +180,7 @@ endif
 
 OBJECTS= \
 	alp.o		cofg.o		convsub.o 	coord.o		ddl.o \
-	diag_convert_ip123.o	diag_convip_plus.o	diag_toc.o \
-	dimgt.o	divers.o 	eapl.o		eof.o		fastaf.o \
+	dimgt.o	diag_toc.o	 	divers.o 	eapl.o		eof.o		fastaf.o \
 	fastaf2.o 	ffgfw2.o 	fftcray.o 	fftini.o		ffwfg2.o \
 	filev.o	 	filter.o 	four2.o		gaussg.o		gcof.o \
 	gemdiag.o 	get.o		ggd.o		gobits.o 	inctdia.o \
@@ -214,8 +213,7 @@ F90DECKS= \
 	gaussg.F90	util2.F90
 
 f90DECKS= \
-	diag_convert_ip123.f90	diag_convip_plus.f90 	diag_toc.f90 \
-	filter.f90
+	diag_convert_ip123.f90 	diag_toc.f90	filter.f90
 
 FTNDECKS= \
 	alp.ftn		cofg.ftn		convsub.ftn 	coord.ftn 	ddl.ftn \
@@ -231,7 +229,7 @@ FTNDECKS= \
 	vfft.ftn
 
 FTN90DECKS = \
-	filter.ftn90	diag_convip_plus.ftn90
+	filter.ftn90
 
 CDK90DECKS = \
 	diag_convert_ip123.cdk90	diag_toc.cdk90
@@ -275,16 +273,11 @@ rec.f     : rec.ftn \
 util.f    : util.ftn \
 	$(INCLUDE)/machtype.cdk $(INCLUDE)/zlabel.cdk
 
-diag_convip_plus.f90 : diag_convip_plus.ftn90 \
-	$(MODDIR)/diag_convert_ip123.mod
-
 $(LIBS)(convsub.o)  : convsub.ftn \
 	$(INCLUDE)/fstparm.cdk	$(INCLUDE)/highbuf.cdk \
 	$(INCLUDE)/machtype.cdk	$(INCLUDE)/zlabel.cdk \
 	$(MODDIR)/diag_convert_ip123.mod \
 	$(MODDIR)/diag_toc.mod
-$(LIBS)(diag_convip_plus.o) : diag_convip_plus.ftn90 \
-	$(MODDIR)/diag_convert_ip123.mod
 $(LIBS)(get.o)      : get.ftn \
 	$(INCLUDE)/machtype.cdk $(INCLUDE)/zlabel.cdk \
 	$(MODDIR)/diag_convert_ip123.mod
@@ -318,7 +311,6 @@ $(LIBS):	initial	$(FTNDECKS)	$(FTN90DECKS) \
 	$(LIBS)(coord.o)		\
 	$(LIBS)(ddl.o)		\
 	$(LIBS)(diag_convert_ip123.o)		\
-	$(LIBS)(diag_convip_plus.o)		\
 	$(LIBS)(diag_toc.o)		\
 	$(LIBS)(dimgt.o)		\
 	$(LIBS)(divers.o)		\

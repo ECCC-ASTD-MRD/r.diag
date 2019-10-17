@@ -271,160 +271,106 @@ TXTDECKS = \
 
 #LISTE DES MODULES AYANT DES DEPENDANCES
 
-$(LIBP)(addf.o)    : addf.ptn \
-	$(INCLUDE)/diagmacros.cdk
-$(LIBP)(adjust.o)  : adjust.ptn \
-	$(INCLUDE)/machtype.cdk
-$(LIBP)(binach.o)  : binach.ptn \
-	$(INCLUDE)/machtype.cdk
-$(LIBP)(chabin.o)  : chabin.ptn \
-	$(INCLUDE)/machtype.cdk
-$(LIBP)(convert.o) : convert.ptn \
-	$(INCLUDE)/machtype.cdk
-$(LIBP)(cosf.o)    : cosf.ptn \
-	$(INCLUDE)/diagmacros.cdk
-$(LIBP)(crvplot.o) : crvplot.ptn \
-	$(INCLUDE)/char2int.cdk
-$(LIBP)(dertim.o)  : dertim.ptn \
-	$(INCLUDE)/diagmacros.cdk  $(INCLUDE)/machtype.cdk 
-$(LIBP)(diftim.o)  : diftim.ptn \
-	$(INCLUDE)/zlabel.cdk
-$(LIBP)(dxdp.o)    : dxdp.ptn \
-	$(INCLUDE)/toc_gest_1.cdk	$(INCLUDE)/toc_gest_2.cdk \
-	$(INCLUDE)/toc_gest_formats.cdk	$(INCLUDE)/set_a_b_from_AABB.cdk \
-	$(INCLUDE)/set_a_b_formats.cdk	$(MODDIR)/diag_toc.mod
-$(LIBP)(expone.o)  : expone.ptn \
-	$(INCLUDE)/diagmacros.cdk
-$(LIBP)(fcats.o)   : fcats.ptn \
-	$(INCLUDE)/machtype.cdk
-$(LIBP)(fstmdiag.o) : fstmdiag.ptn90 \
-	$(MODDIR)/diag_convert_ip123.mod
-$(LIBP)(fsttri.o) : fsttri.ptn \
-	$(MODDIR)/diag_convert_ip123.mod
-$(LIBP)(gadd.o)    : gadd.ptn \
-	$(INCLUDE)/diagmacros.cdk
-$(LIBP)(ggatim.o)  : ggatim.ptn \
-	$(INCLUDE)/diagmacros.cdk
-$(LIBP)(ggplot.o)  : ggplot.ptn \
-	$(INCLUDE)/char2int.cdk
-$(LIBP)(gpasg.o) : gpasg.ptn \
-	$(INCLUDE)/toc_gest_1.cdk	$(INCLUDE)/toc_gest_formats.cdk \
-	$(INCLUDE)/set_a_b_from_AABB.cdk	$(INCLUDE)/set_a_b_formats.cdk \
-	$(MODDIR)/diag_toc.mod
-$(LIBP)(gpdpd.o)   : gpdpd.ptn \
-	$(INCLUDE)/consdia.cdk	$(INCLUDE)/dintern.cdk \
-	$(INCLUDE)/fintern.cdk	$(INCLUDE)/set_a_b_from_AABB.cdk \
-	$(INCLUDE)/set_a_b_formats.cdk	$(INCLUDE)/toc_gest_1.cdk \
-	$(INCLUDE)/toc_gest_2.cdk	$(INCLUDE)/toc_gest_formats.cdk \
-	$(MODDIR)/diag_toc.mod
-$(LIBP)(gphum.o)   : gphum.ptn \
-	$(INCLUDE)/consdia.cdk $(INCLUDE)/dintern.cdk \
-	$(INCLUDE)/fintern.cdk	$(INCLUDE)/toc_gest_1.cdk \
-	$(INCLUDE)/toc_gest_2.cdk	$(INCLUDE)/set_a_b_from_AABB.cdk \
-	$(INCLUDE)/set_a_b_formats.cdk	$(MODDIR)/diag_toc.mod
-$(LIBP)(gpvtat.o)  : gpvtat.ptn \
-	$(INCLUDE)/consdia.cdk $(INCLUDE)/dintern.cdk \
-	$(INCLUDE)/fintern.cdk
-$(LIBP)(gsapl.o) : gsapl.ptn \
-	$(INCLUDE)/toc_gest_1.cdk	$(INCLUDE)/toc_gest_2.cdk \
-	$(INCLUDE)/toc_gest_formats.cdk	$(INCLUDE)/set_a_b_from_AABB.cdk \
-	$(INCLUDE)/set_a_b_formats.cdk	$(MODDIR)/diag_toc.mod
-$(LIBP)(gsapzl.o) : gsapzl.ptn \
-	$(INCLUDE)/toc_gest_1.cdk	$(INCLUDE)/toc_gest_2.cdk \
-	$(INCLUDE)/toc_gest_formats.cdk	$(INCLUDE)/set_a_b_from_AABB.cdk \
-	$(INCLUDE)/set_a_b_formats.cdk	$(MODDIR)/diag_toc.mod
-$(LIBP)(gsathl.o) : gsathl.ptn \
-	$(INCLUDE)/toc_gest_1.cdk	$(INCLUDE)/toc_gest_2.cdk \
-	$(INCLUDE)/toc_gest_formats.cdk	$(INCLUDE)/set_a_b_from_AABB.cdk \
-	$(INCLUDE)/set_a_b_formats.cdk	$(MODDIR)/diag_toc.mod
-$(LIBP)(gshumh.o) : gshumh.ptn \
-	$(INCLUDE)/consdia.cdk $(INCLUDE)/dintern.cdk \
-	$(INCLUDE)/fintern.cdk	$(INCLUDE)/toc_gest_1.cdk \
-	$(INCLUDE)/toc_gest_formats.cdk	$(MODDIR)/diag_toc.mod
-$(LIBP)(gsmslph.o) : gsmslph.ptn \
-	$(INCLUDE)/toc_gest_1.cdk	$(INCLUDE)/toc_gest_2.cdk \
-	$(INCLUDE)/toc_gest_formats.cdk	$(INCLUDE)/set_a_b_from_AABB.cdk \
-	$(INCLUDE)/set_a_b_formats.cdk	$(MODDIR)/diag_toc.mod
-$(LIBP)(hovplot.o) : hovplot.ptn \
-	$(INCLUDE)/char2int.cdk
-$(LIBP)(inttim.o)  : inttim.ptn \
-	$(INCLUDE)/diagmacros.cdk $(INCLUDE)/machtype.cdk 
-$(LIBP)(invntry.o) : invntry.ptn \
-	$(INCLUDE)/machtype.cdk
-$(LIBP)(joiner.o)  : joiner.ptn \
-	$(INCLUDE)/machtype.cdk
-$(LIBP)(meofvec.o) : meofvec.ptn \
-	$(INCLUDE)/diagmacros.cdk $(INCLUDE)/machtype.cdk 
-$(LIBP)(minvers.o) : minvers.ptn \
-	$(INCLUDE)/diagmacros.cdk $(INCLUDE)/machtype.cdk 
-$(LIBP)(mmult.o)   : mmult.ptn \
-	$(INCLUDE)/diagmacros.cdk
-$(LIBP)(mtrace.o)  : mtrace.ptn \
-	$(INCLUDE)/diagmacros.cdk
-$(LIBP)(pgen.o) : pgen.ptn \
-	$(INCLUDE)/toc_gest_1.cdk	$(INCLUDE)/toc_gest_2.cdk \
-	$(INCLUDE)/toc_gest_formats.cdk	$(INCLUDE)/set_a_b_from_AABB.cdk \
-	$(INCLUDE)/set_a_b_formats.cdk	$(MODDIR)/diag_toc.mod
-$(LIBP)(psdiv.o)   : psdiv.ptn \
-	$(INCLUDE)/diagmacros.cdk
-$(LIBP)(psmlt.o)   : psmlt.ptn \
-	$(INCLUDE)/diagmacros.cdk
-$(LIBP)(select.o)  : select.ptn \
-	$(INCLUDE)/zlabel.cdk \
-	$(MODDIR)/diag_toc.mod
-$(LIBP)(select2.o) : select2.ptn \
-	$(INCLUDE)/zlabel.cdk \
-	$(MODDIR)/diag_toc.mod
-$(LIBP)(shiftf.o)  : shiftf.ptn \
-	$(INCLUDE)/diagmacros.cdk $(INCLUDE)/machtype.cdk 
-$(LIBP)(sinf.o)    : sinf.ptn \
-	$(INCLUDE)/diagmacros.cdk
-$(LIBP)(sortf.o)   : sortf.ptn \
-	$(INCLUDE)/diagmacros.cdk $(INCLUDE)/machtype.cdk 
-$(LIBP)(spplot.o) : spplot.ptn \
-	$(INCLUDE)/char2int.cdk
-$(LIBP)(spvdgx.o)  : spvdgx.ptn \
-	$(INCLUDE)/machtype.cdk 
-$(LIBP)(tfilter.o) : tfilter.ptn \
-	$(INCLUDE)/diagmacros.cdk $(INCLUDE)/machtype.cdk 
-$(LIBP)(timavg.o)  : timavg.ptn \
-	$(INCLUDE)/diagmacros.cdk \
-	$(INCLUDE)/machtype.cdk \
-	$(INCLUDE)/zlabel.cdk \
-	$(MODDIR)/diag_convert_ip123.mod
-$(LIBP)(timcov.o)  : timcov.ptn \
-	$(INCLUDE)/diagmacros.cdk $(INCLUDE)/machtype.cdk
-$(LIBP)(timdev.o)  : timdev.ptn \
-	$(INCLUDE)/diagmacros.cdk $(INCLUDE)/machtype.cdk 
-$(LIBP)(timegen.o) : timegen.ptn \
-	$(INCLUDE)/diagmacros.cdk
-$(LIBP)(tsafc.o)   : tsafc.ptn \
-	$(INCLUDE)/machtype.cdk
-$(LIBP)(tscheck.o) : tscheck.ptn \
-	$(INCLUDE)/machtype.cdk
-$(LIBP)(tstep.o)   : tstep.ptn \
-	$(INCLUDE)/diagmacros.cdk $(INCLUDE)/machtype.cdk 
-$(LIBP)(ttesta.o)  : ttesta.ptn \
-	$(INCLUDE)/zlabel.cdk
-$(LIBP)(tteste.o)  : tteste.ptn \
-	$(INCLUDE)/zlabel.cdk
-$(LIBP)(txtplot.o) : txtplot.ptn \
-	$(INCLUDE)/char2int.cdk
-$(LIBP)(vsinth.o) : vsinth.ptn \
-	$(INCLUDE)/toc_gest_1.cdk	$(INCLUDE)/toc_gest_2.cdk \
-	$(INCLUDE)/toc_gest_formats.cdk	$(INCLUDE)/set_a_b_from_AABB.cdk \
-	$(INCLUDE)/set_a_b_formats.cdk	$(MODDIR)/diag_toc.mod
-$(LIBP)(windowf.o) : windowf.ptn	$(MODDIR)/diag_toc.mod
-$(LIBP)(xappend.o) : xappend.ptn \
-	$(INCLUDE)/machtype.cdk
-$(LIBP)(xfind.o)   : xfind.ptn \
-	$(INCLUDE)/machtype.cdk $(INCLUDE)/zlabel.cdk
-$(LIBP)(xsave.o)   : xsave.ptn \
-	$(INCLUDE)/machtype.cdk $(INCLUDE)/zlabel.cdk
-$(LIBP)(zoncov.o)  : zoncov.ptn \
-	$(INCLUDE)/diagmacros.cdk
-$(LIBP)(zxplot.o) : zxplot.ptn \
-	$(INCLUDE)/char2int.cdk
+addf.f    : addf.ptn \
+	 $(INCLUDE)/diagmacros.cdk
+adjust.f  : adjust.ptn \
+	 $(INCLUDE)/machtype.cdk
+binach.f  : binach.ptn \
+	 $(INCLUDE)/machtype.cdk
+chabin.f  : chabin.ptn \
+	 $(INCLUDE)/machtype.cdk
+convert.f : convert.ptn \
+	 $(INCLUDE)/machtype.cdk
+cosf.f    : cosf.ptn \
+	 $(INCLUDE)/diagmacros.cdk
+crvplot.f : crvplot.ptn \
+	 $(INCLUDE)/char2int.cdk
+dertim.f  : dertim.ptn \
+	 $(INCLUDE)/diagmacros.cdk  $(INCLUDE)/machtype.cdk 
+diftim.f  : diftim.ptn \
+	 $(INCLUDE)/zlabel.cdk
+expone.f  : expone.ptn \
+	 $(INCLUDE)/diagmacros.cdk
+fcats.f   : fcats.ptn \
+	 $(INCLUDE)/machtype.cdk
+gadd.f    : gadd.ptn \
+	 $(INCLUDE)/diagmacros.cdk
+ggatim.f  : ggatim.ptn \
+	 $(INCLUDE)/diagmacros.cdk
+ggplot.f  : ggplot.ptn \
+	 $(INCLUDE)/char2int.cdk
+gpdpd.f   : gpdpd.ptn \
+	 $(INCLUDE)/consdia.cdk $(INCLUDE)/dintern.cdk $(INCLUDE)/fintern.cdk
+gphum.f   : gphum.ptn \
+	 $(INCLUDE)/consdia.cdk $(INCLUDE)/dintern.cdk $(INCLUDE)/fintern.cdk
+gpvtat.f  : gpvtat.ptn \
+	 $(INCLUDE)/consdia.cdk $(INCLUDE)/dintern.cdk $(INCLUDE)/fintern.cdk
+hovplot.f : hovplot.ptn \
+	 $(INCLUDE)/char2int.cdk
+inttim.f  : inttim.ptn \
+	 $(INCLUDE)/diagmacros.cdk $(INCLUDE)/machtype.cdk 
+invntry.f : invntry.ptn \
+	 $(INCLUDE)/machtype.cdk
+joiner.f  : joiner.ptn \
+	 $(INCLUDE)/machtype.cdk
+meofvec.f : meofvec.ptn \
+	 $(INCLUDE)/diagmacros.cdk $(INCLUDE)/machtype.cdk 
+minvers.f : minvers.ptn \
+	 $(INCLUDE)/diagmacros.cdk $(INCLUDE)/machtype.cdk 
+mmult.f   : mmult.ptn \
+	 $(INCLUDE)/diagmacros.cdk
+mtrace.f  : mtrace.ptn \
+	 $(INCLUDE)/diagmacros.cdk
+psdiv.f   : psdiv.ptn \
+	 $(INCLUDE)/diagmacros.cdk
+psmlt.f   : psmlt.ptn \
+	 $(INCLUDE)/diagmacros.cdk
+select.f  : select.ptn \
+	 $(INCLUDE)/zlabel.cdk
+select2.f : select2.ptn \
+	 $(INCLUDE)/zlabel.cdk
+shiftf.f  : shiftf.ptn \
+	 $(INCLUDE)/diagmacros.cdk $(INCLUDE)/machtype.cdk 
+sinf.f    : sinf.ptn \
+	 $(INCLUDE)/diagmacros.cdk
+sortf.f   : sortf.ptn \
+	 $(INCLUDE)/diagmacros.cdk $(INCLUDE)/machtype.cdk 
+spplot.f : spplot.ptn \
+	 $(INCLUDE)/char2int.cdk
+spvdgx.f  : spvdgx.ptn \
+	 $(INCLUDE)/machtype.cdk 
+tfilter.f : tfilter.ptn \
+	 $(INCLUDE)/diagmacros.cdk $(INCLUDE)/machtype.cdk 
+timavg.f  : timavg.ptn \
+	 $(INCLUDE)/diagmacros.cdk $(INCLUDE)/machtype.cdk 
+timcov.f  : timcov.ptn \
+	 $(INCLUDE)/diagmacros.cdk $(INCLUDE)/machtype.cdk 
+timdev.f  : timdev.ptn \
+	 $(INCLUDE)/diagmacros.cdk $(INCLUDE)/machtype.cdk 
+timegen.f : timegen.ptn \
+	 $(INCLUDE)/diagmacros.cdk
+tsafc.f   : tsafc.ptn \
+	 $(INCLUDE)/machtype.cdk
+tscheck.f : tscheck.ptn \
+	 $(INCLUDE)/machtype.cdk
+tstep.f   : tstep.ptn \
+	 $(INCLUDE)/diagmacros.cdk $(INCLUDE)/machtype.cdk 
+ttesta.f  : ttesta.ptn \
+	 $(INCLUDE)/zlabel.cdk
+tteste.f  : tteste.ptn \
+	 $(INCLUDE)/zlabel.cdk
+txtplot.f : txtplot.ptn \
+	 $(INCLUDE)/char2int.cdk
+xappend.f : xappend.ptn \
+	 $(INCLUDE)/machtype.cdk
+xfind.f   : xfind.ptn \
+	 $(INCLUDE)/machtype.cdk $(INCLUDE)/zlabel.cdk
+xsave.f   : xsave.ptn \
+	 $(INCLUDE)/machtype.cdk $(INCLUDE)/zlabel.cdk
+zoncov.f  : zoncov.ptn \
+	 $(INCLUDE)/diagmacros.cdk
+zxplot.f : zxplot.ptn \
+	 $(INCLUDE)/char2int.cdk
 
 #LISTE DES CIBLES DU FICHIER recettes
 
