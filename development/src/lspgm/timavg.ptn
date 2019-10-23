@@ -461,7 +461,7 @@
 
               OK = RPBLOC('DEFAUT',VALEUR )
               CALL LOW2UP(  VALEUR,VALEUR )
-              IF (OK) MODTIM = (VALEUR.NE.'KEEPTIME')
+              IF (OK) MODTIM = (VALEUR.EQ.'KEEPTIME')
 
               IF (.NOT.MODTIM) WRITE(6,6000) trim( VERBE )
 
