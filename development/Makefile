@@ -45,7 +45,7 @@ EXTLIB  = $(EXTRAS)/NetcdfUdunits/$(EC_ARCH)/lib
 BINDIR  = $(DIAGNOSTIQUE)/bin/$(BASE_ARCH)
 INCLUDE = $(DIAGNOSTIQUE)/include
 LIBDIR  = $(DIAGNOSTIQUE)/lib/$(EC_ARCH)
-MANDIR  = $(DIAGNOSTIQUE)/share/pdoc
+MANDIR  = $(DIAGNOSTIQUE)/man/pdoc
 MODDIR  = $(INCLUDE)/$(EC_ARCH)
 SUBDIR  = $(DIAGNOSTIQUE)/src/lssub/sources$(STD)/$(EC_ARCH)
 
