@@ -55,7 +55,7 @@ STD     = 98
 
 DIAGS   = $(DIAGNOSTIQUE)
 LIBDIR  = $(DIAGS)/lib/$(EC_ARCH)
-MANDIR  = $(DIAGS)/share/pdoc
+MANDIR  = $(DIAGS)/man/pdoc
 INCLUDE = $(DIAGS)/include
 MODDIR  = $(INCLUDE)/$(EC_ARCH)
 SOURCES = $(DIAGS)/src/lssub/sources$(STD)/$(EC_ARCH)

@@ -65,7 +65,7 @@ ARCH    = $(EC_ARCH)
 DIAGS   = $(DIAGNOSTIQUE)
 BINDIR  = $(DIAGS)/bin
 LIBDIR  = $(DIAGS)/lib/$(EC_ARCH)
-MANDIR  = $(DIAGS)/share/pdoc
+MANDIR  = $(DIAGS)/man/pdoc
 INCLUDE = $(DIAGS)/include
 MODDIR  = $(INCLUDE)/$(EC_ARCH)
 
