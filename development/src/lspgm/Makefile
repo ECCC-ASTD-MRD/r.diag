@@ -461,7 +461,7 @@ info.lspgm: driver.ptn
 	for i in a b c d e f g; do \
 	/bin/rm -f $(MANDIR)/lspgm_$$i.txt $(MANDIR)/lspgm_$$i.html; \
 	$(CPPT) -DNO_SOURCE -DMORE_INFO driver.ptn | grep "^[*]$$i" | sed "s/^[*]$$i/ /" > lspgm_$$i.txt; \
-	/bin/cat lspgm_$$i.txt | info2html > lspgm_$$i.html ; \
+	/bin/cat lspgm_$$i.txt | ${DIAGNOSTIQUE}/bin/info2html > lspgm_$$i.html ; \
 	rsync -av lspgm_$$i.txt lspgm_$$i.html $(MANDIR) ; \
 	if [[ "$(HOSTWEB):$(DIAGWEB)" != ":" ]] ; then \
 	rsync -av lspgm_$$i.txt lspgm_$$i.html $(HOSTWEB):$(DIAGWEB) ; fi \

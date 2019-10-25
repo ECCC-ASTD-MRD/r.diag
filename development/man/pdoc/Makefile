@@ -112,7 +112,7 @@ document:	info.lspgm	$(TXTDECKS)
 info.lspgm	:	$(LSPGM)/driver.ptn
 	for i in a b c d e f g; do \
 	$(CPPT) -DNO_SOURCE -DMORE_INFO $(LSPGM)/driver.ptn | grep "^[*]$$i" | sed "s/^[*]$$i/ /" > lspgm_$$i.txt; \
-	/bin/cat lspgm_$$i.txt | info2html > lspgm_$$i.html ; \
+	/bin/cat lspgm_$$i.txt | ${DIAGNOSTIQUE}/bin/info2html > lspgm_$$i.html ; \
 	if [[ "$(HOSTWEB):$(DIAGWEB)" != ":" ]] ; then \
 	rsync -av lspgm_$$i.txt lspgm_$$i.html $(HOSTWEB):$(DIAGWEB) ; fi \
 	done
