@@ -82,10 +82,12 @@ default: allbin
 
 allbin: initial_base initial_cdf rdiag 
 
-all: allbin document
+all: allbin documentation
 
 documentation:
 	cd $(EXTRAS) ; $(MAKE) documentation
+	cd $(DIAGNOSTIQUE)/man/pdoc ; $(MAKE) document
+	cd $(DIAGNOSTIQUE)/src/lspgm ; $(MAKE) document
 
 export:
 	/bin/mkdir -p $(DESTINATION)/lib/$(EC_ARCH) ;\
@@ -156,9 +158,6 @@ libs: initial_base initial_cdf
 	cd $(DIAGNOSTIQUE)/src/cdf2ccc ; $(MAKE)
 
 # Online documentation (which was originaly found in $ARMNLIB/man/pdoc) recipe
-
-document:
-	cd $(DIAGNOSTIQUE)/man/pdoc ; $(MAKE) $@
 
 web_document:
 	cd $(DIAGNOSTIQUE)/share/pdoc ; $(MAKE) $@ \
