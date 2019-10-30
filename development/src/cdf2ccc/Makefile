@@ -28,7 +28,7 @@ DIAGS    = $(DIAGNOSTIQUE)
 BINDIR   = $(DIAGS)/bin/$(BASE_ARCH)
 INCLUDES = $(DIAGS)/include
 LIBDIR   = $(DIAGS)/lib/$(EC_ARCH)
-MANDIR   = $(DIAGS)/man/pdoc
+MANDIR   = $(DIAGS)/share/pdoc
 MODDIR   = $(INCLUDES) $(INCLUDES)/$(EC_ARCH) $(EXTRAS)/include
 
 CONV_VERSION = 2.3.0

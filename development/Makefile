@@ -45,7 +45,7 @@ EXTLIB  = $(EXTRAS)/NetcdfUdunits/$(EC_ARCH)/lib
 BINDIR  = $(DIAGNOSTIQUE)/bin/$(BASE_ARCH)
 INCLUDE = $(DIAGNOSTIQUE)/include
 LIBDIR  = $(DIAGNOSTIQUE)/lib/$(EC_ARCH)
-MANDIR  = $(DIAGNOSTIQUE)/man/pdoc
+MANDIR  = $(DIAGNOSTIQUE)/share/pdoc
 MODDIR  = $(INCLUDE)/$(EC_ARCH)
 SUBDIR  = $(DIAGNOSTIQUE)/src/lssub/sources$(STD)/$(EC_ARCH)
 
@@ -84,20 +84,21 @@ allbin: initial_base initial_cdf rdiag
 
 all: allbin documentation
 
-documentation:
+documentation: initial_base
 	cd $(EXTRAS) ; $(MAKE) documentation
-	cd $(DIAGNOSTIQUE)/man/pdoc ; $(MAKE) document
+	cd $(MANDIR) ; $(MAKE) document
 	cd $(DIAGNOSTIQUE)/src/lspgm ; $(MAKE) document
 
 export:
 	/bin/mkdir -p $(DESTINATION)/lib/$(EC_ARCH) ;\
+	/bin/mkdir -p $(MANDIR) ;\
 	rsync -av $(DIAGNOSTIQUE)/lib/$(EC_ARCH) $(DESTINATION)/lib/$(EC_ARCH)/.. ;\
 	rsync -avH $(DIAGNOSTIQUE)/bin $(DESTINATION)/ ;\
 	rsync -lptgoDv $(DIAGNOSTIQUE)/bin/* $(DESTINATION)/bin ;\
 	rsync -av $(DIAGNOSTIQUE)/include $(DESTINATION)/ ;\
 	[ -d $(DIAGNOSTIQUE)/share ] && rsync -av $(DIAGNOSTIQUE)/share $(DESTINATION)/ ;\
-	rsync -av $(DIAGNOSTIQUE)/man/pdoc/*.html $(DESTINATION)/share/pdoc/ ;\
-	rsync -av $(DIAGNOSTIQUE)/man/pdoc/udunits $(DESTINATION)/share/pdoc || true ;\
+	rsync -av $(MANDIR)/*.html $(DESTINATION)/share/pdoc/ ;\
+	rsync -av $(MANDIR)/udunits $(DESTINATION)/share/pdoc || true ;\
 	/bin/mkdir -p $(DESTINATION)/share/udunits ;\
 	rsync -av $(DIAGNOSTIQUE)/../extras/src/udunits-2.1.24/lib/*.xml $(DESTINATION)/share/udunits
 
