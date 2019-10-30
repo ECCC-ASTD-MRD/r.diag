@@ -89,7 +89,8 @@ allbin: initial_base initial_cdf rdiag cdf2conv
 
 all: allbin documentation
 
-documentation: initial_base
+documentation:
+	/bin/mkdir -p $(BINDIR) $(LIBDIR) $(MANDIR) $(MODDIR) $(SUBDIR)
 	cd $(EXTRAS) ; $(MAKE) documentation
 	cd $(MANDIR) ; $(MAKE) document
 	cd $(DIAGNOSTIQUE)/src/lspgm ; $(MAKE) document
