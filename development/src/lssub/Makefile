@@ -55,7 +55,7 @@ STD     = 98
 
 DIAGS   = $(DIAGNOSTIQUE)
 LIBDIR  = $(DIAGS)/lib/$(EC_ARCH)
-MANDIR  = $(DIAGS)/man/pdoc
+MANDIR  = $(DIAGS)/share/pdoc
 INCLUDE = $(DIAGS)/include
 MODDIR  = $(INCLUDE)/$(EC_ARCH)
 SOURCES = $(DIAGS)/src/lssub/sources$(STD)/$(EC_ARCH)
@@ -81,7 +81,7 @@ default: $(ARCH)
 
 .cdk90.a:
 	/bin/rm -f $*.f90
-	$(FTNC) $<
+	$(FTNC) <$
 	/bin/mkdir -p $(SOURCES)
 	/bin/mv -f $*.f90 $(SOURCES)
 

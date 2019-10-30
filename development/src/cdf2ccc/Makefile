@@ -49,9 +49,9 @@ EXTRAS   = $(DIAGNOSTIQUE)/../extras/NetcdfUdunits/$(EC_ARCH)
 DIAGS    = $(DIAGNOSTIQUE)
 BINDIR   = $(DIAGS)/bin/$(BASE_ARCH)
 LIBDIR   = $(DIAGS)/lib/$(EC_ARCH)
-MANDIR   = $(DIAGS)/man/pdoc
+MANDIR   = $(DIAGS)/share/pdoc
 INCLUDES = $(DIAGS)/include
-MODDIR   = $(INCLUDES)/$(EC_ARCH)
+MODDIR   = $(INCLUDES) $(INCLUDES)/$(EC_ARCH)
 MODDIR_EXTRAS = $(EXTRAS)/include
 
 CONV_VERSION = 2.3.4

@@ -22,8 +22,8 @@ CXXCPP= icpc
 CPPFLAGS = -DpgiFortran
 
 documentation:
-	mkdir -p $(CURDIR)/../development/man/pdoc/udunits
-	cd src/udunits-2.1.24 && cp -drp udunits2.pdf prog/udunits2prog.pdf lib/udunits2lib.pdf $(CURDIR)/../development/man/pdoc/udunits
+	mkdir -p $(CURDIR)/../development/share/pdoc/udunits
+	cd src/udunits-2.1.24 && cp -drp udunits2.pdf prog/udunits2prog.pdf lib/udunits2lib.pdf $(CURDIR)/../development/share/pdoc/udunits
 
 all: clean
 	echo Fortran compiler used : $(FCOMP) 
