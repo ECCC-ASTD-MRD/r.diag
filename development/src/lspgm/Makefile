@@ -121,13 +121,13 @@ endif
 
 .ptn.txt:
 	$(FTNT) $< | sed s/'^[*]'/' '/ > $(MANDIR)/$@ ;\
-	command-origin-document.sh $< $(MANDIR)/$@ ;\
+	${DIAGNOSTIQUE}/bin/command-origin-document.sh $< $(MANDIR)/$@ ;\
 	if ( test "$(HOSTWEB):$(DIAGWEB)" != ":" ) then \
 	rsync -av $(MANDIR)/$@ $(HOSTWEB):$(DIAGWEB) ; fi
 
 .ptn90.txt:
 	$(FTNT) $< | sed s/'^[!]'/' '/ > $(MANDIR)/$@ ;\
-	command-origin-document.sh $< $(MANDIR)/$@ ;\
+	${DIAGNOSTIQUE}/bin/command-origin-document.sh $< $(MANDIR)/$@ ;\
 	if ( test "$(HOSTWEB):$(DIAGWEB)" != ":" ) then \
 	rsync -av $(MANDIR)/$@ $(HOSTWEB):$(DIAGWEB) ; fi
 
