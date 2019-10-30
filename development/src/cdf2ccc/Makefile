@@ -59,7 +59,7 @@ LIBP     = $(LIBDIR)/lib$(MALIB).a
 DDFUN90  = ddfun90
 DIAGLIB  = diag_sq$(STD)_g
 RMNLIB   = rmn_016.2
-VGDLIB   = descrip
+VGDLIB   = vgrid
 
 
 # UQUM:  Static (_s) load via symlinks in the netcdff-4.4 SSM package

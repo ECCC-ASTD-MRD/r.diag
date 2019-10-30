@@ -66,7 +66,7 @@ DIAGWEB = public_html
 # RMN and Vgrid_Descriptor library names
 
 RMNLIB  = rmn_016.2
-VGDLIB  = descrip
+VGDLIB  = vgrid
 
 # DDFUN90, NetCDF4 and UdUnits2 library names
 

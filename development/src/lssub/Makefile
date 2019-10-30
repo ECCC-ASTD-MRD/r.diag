@@ -43,7 +43,7 @@ SOURCES = $(DIAGS)/src/lssub/sources$(STD)/$(EC_ARCH)
 
 DIAGLIB = diag_sq$(STD)
 LIBS    = $(LIBDIR)/lib$(DIAGLIB).a
-VGDLIB  = descrip
+VGDLIB  = vgrid
 
 TXT     = -DNO_SOURCE -DAUTO_DOC
 DEFINE  = -Dtaille_entete=$(ENTETE) -Dnombre_de_taches=$(NP)

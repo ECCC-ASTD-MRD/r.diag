@@ -54,7 +54,7 @@ GRAFLIB =
 LAPACK  = lapack
 PROGLIB = prog_sq$(STD)
 RMNLIB  = rmn_016.2
-VGDLIB  = descrip
+VGDLIB  = vgrid
 
 LIBP    = $(LIBDIR)/lib$(PROGLIB).a
 LIBS    = $(LIBDIR)/lib$(DIAGLIB).a
