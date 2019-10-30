@@ -85,7 +85,7 @@ allbin: initial_base initial_cdf rdiag
 all: allbin documentation
 
 documentation:
-	/bin/mkdir -p $(BINDIR) $(LIBDIR) $(MANDIR) $(MODDIR) $(SUBDIR)
+	/bin/mkdir -p $(MANDIR)
 	cd $(EXTRAS) ; $(MAKE) documentation
 	cd $(MANDIR) ; $(MAKE) document
 	cd $(DIAGNOSTIQUE)/src/lspgm ; $(MAKE) document
@@ -158,8 +158,6 @@ libs: initial_base initial_cdf
 	cd $(DIAGNOSTIQUE)/src/lspgm ; $(MAKE) ;\
 	echo "*** Making libcdf2ccc.a ***" ;\
 	cd $(DIAGNOSTIQUE)/src/cdf2ccc ; $(MAKE)
-
-# Online documentation (which was originaly found in $ARMNLIB/man/pdoc) recipe
 
 web_document:
 	cd $(DIAGNOSTIQUE)/share/pdoc ; $(MAKE) $@ \
