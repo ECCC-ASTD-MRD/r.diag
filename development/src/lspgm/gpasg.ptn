@@ -940,6 +940,7 @@
           END IF
       END IF
 
+      WRITE(6,*) '1st sanity check' !(RM)
       CALL GEM23_SANITY_CHECK( COORD, ETA(TOPE),PREF,PTOIT )
 
       CALL WRITLEV( ETA,NSL,'Output ' // COORD )
@@ -1004,6 +1005,7 @@
 
       END IF
 
+      WRITE(6,*) '2nd sanity check' !(RM)
       CALL GEM23_SANITY_CHECK( COORDI, PR(TOP),PREFI,PTOITI )
 
       IF (VERBE.EQ.'GPASG')                                    THEN
