@@ -67,7 +67,7 @@ VGDLIB   = vgrid
 #UDUNITS  = udunits2f_s udunits2_s
 #
 # CMC:   compile udunits with r.diag
-lNetCDF  = netcdff netcdf curl hdf5 hdf5_hl
+lNetCDF  = netcdff netcdf curl hdf5_hl z hdf5
 UDUNITS  = udunits2 expat
 
 LIBPATH  = $(LIBDIR) $(EXTRAS)/lib
