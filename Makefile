@@ -62,7 +62,8 @@ DIAGWEB = public_html
 
 # RMN and Vgrid_Descriptor library names
 
-RMNLIB  = rmn_016.3.1
+#RMNLIB  = rmn_016.3.1
+RMNLIB  = rmn
 VGDLIB  = descrip
 
 # LAPCK and BLAS libraries
@@ -77,7 +78,7 @@ DDFUN90  = ddfun90
 ifeq ($(SHARED_NETCDF),)
 # Static (_s) load via symlinks in the netcdff-4.4 SSM package
 NLocate  = s.locate
-lNetCDF  = netcdff_s netcdf_s hdf5_hl_s hdf5_s dl sz_s z
+lNetCDF  = netcdff netcdf hdf5_hl hdf5 dl sz z
 UDUNITS  = udunits2f_s udunits2_s expat
 else
 # Dynamic (shared-object) load via the system's netcdff package
@@ -123,7 +124,7 @@ initial_base:
 		rsync -a $(DIAGNOSTIQUE)/bin/r.diag_commands $(BINDIR) ; fi
 
 initial_cdf:
-	$(NLocate) --lib netcdff_s 1> /dev/null || { echo -e "\nPLS execute \". s.ssmuse.dot netcdff-4.4\"\n" ; false ; }
+	$(NLocate) --lib netcdff 1> /dev/null || { echo -e "\nPLS execute \". s.ssmuse.dot netcdff-4.4\"\n" ; false ; }
 	if [[ ! -f $(LIBDIR)/libudunits2f_s.a ]]; then cd $(DIAGNOSTIQUE)/src/extras/udunits-f-2.0 ; $(MAKE) ; fi
 
 # RDIAG Diagnostic toolkit recipe
