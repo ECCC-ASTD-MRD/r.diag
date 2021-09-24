@@ -572,6 +572,12 @@ Linux_x86-64:
 	$(MAKE) driver OBJ="$(OBJ)" RMNLIB=$(RMNLIB) MANDIR=$(MANDIR) \
 	NOPLOT=$(NOPLOT) VGDLIB=$(VGDLIB) GRAFLIB=$(GRAFLIB)
 
+
+ubuntu-18.04-skylake-64:
+#Section appropriee pour les fichiers STD saveur 1998 sur BASE_ARCH=ubuntu-18.04-skylake-64 INTEL 64 bits
+	$(MAKE) driver OBJ="$(OBJ)" RMNLIB=$(RMNLIB) MANDIR=$(MANDIR) \
+	NOPLOT=$(NOPLOT) VGDLIB=$(VGDLIB) GRAFLIB=$(GRAFLIB)
+
 NoPlot:
 #Section appropriee pour les fichiers STD saveur 1998 sur Linux 64 bits
 # mais sans les modules graphiques
