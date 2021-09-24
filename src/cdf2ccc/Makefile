@@ -116,7 +116,7 @@ RMNLIB   = rmn_016.3
 VGDLIB   = descrip
 
 # Static (_s) load via symlinks in the netcdff-4.4 SSM package
-lNetCDF  = netcdff_s netcdf_s hdf5_hl_s hdf5_s dl sz_s z
+lNetCDF  = netcdff netcdf hdf5_hl hdf5 dl sz z
 UDUNITS  = udunits2f_s udunits2_s expat
 
 LIBPATH  = $(LIBDIR)
@@ -328,7 +328,8 @@ initial:
 #	s.locate --lib $(VGDLIB) 1> /dev/null || { echo -e \n PLS execute \". s.ssmuse.dot vgriddesc\" \n ; false ; }
 	if [[ ! -f $(LIBDIR)/libdescrip.a || -z "$(VGDLIB)" ]]; then \
 		cd $(DIAGNOSTIQUE)/src/extras/descrip ; $(MAKE) ARUFLAG=$(ARUFLAG) ; fi
-	$(NLocate) --lib netcdff_s 1> /dev/null || { echo -e \n PLS execute \". s.ssmuse.dot netcdff-4.4\" \n ; false ; }
+	#$(NLocate) --lib netcdff_s 1> /dev/null || { echo -e \n PLS execute \". s.ssmuse.dot netcdff-4.4\" \n ; false ; }
+	$(NLocate) --lib netcdff 1> /dev/null || { echo -e \n PLS execute \". s.ssmuse.dot netcdff-4.4\" \n ; false ; }
 
 # Voir "Managing project with make" de O'Reilly & Associates, 1989,
 # pages 51-53, pour les details de ce qui se passe dans ce qui suit
