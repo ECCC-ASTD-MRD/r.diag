@@ -78,7 +78,7 @@ DDFUN90  = ddfun90
 ifeq ($(SHARED_NETCDF),)
 # Static (_s) load via symlinks in the netcdff-4.4 SSM package
 NLocate  = s.locate
-lNetCDF  = netcdff netcdf hdf5_hl hdf5 dl sz z
+lNetCDF  = netcdff netcdf hdf5_hl hdf5 dl sz z curl
 UDUNITS  = udunits2f_s udunits2_s expat
 else
 # Dynamic (shared-object) load via the system's netcdff package
