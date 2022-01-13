@@ -1,0 +1,18 @@
+stages:
+  - build
+
+variables:
+  GIT_SUBMODULE_STRATEGY: "recursive"
+  CLICOLOR_FORCE: "Yes please"
+  ORD_SOUMET_W: "30"
+
+before_script:
+  - source environment_setup.dot
+
+build:
+  stage: build
+  script:
+    - mkdir build
+    - cd build
+    - cmake .. -DCMAKE_INSTALL_PREFIX=$PWD/install-site
+    - make install

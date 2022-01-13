@@ -1,0 +1,13 @@
+NAME       : r.diag
+VERSION    :
+BUILD      : Release
+DESCRIPTION: r.diag
+SUMMARY    : r.diag
+MAINTAINER : RPN-SI
+URL        : https://gitlab.science.gc.ca/RPN-SI/fst-tools
+
+# Dependencies
+#    =,<,<=,>,>= : Version rules
+#    ~           : Optional
+
+RMN  ~>= 19.7.0

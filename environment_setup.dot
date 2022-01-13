@@ -1,0 +1,20 @@
+#!/bin/bash
+
+# Taken from 
+
+if ! (return 0 2>/dev/null) ; then
+    echo "This file must be sourced"
+    exit 1
+fi
+
+export ORDENV_SITE_PROFILE=20210129
+export ORDENV_COMM_PROFILE=eccc/20210604
+export ORDENV_GROUP_PROFILE=eccc/cmc/1.9.6
+. /fs/ssm/main/env/ordenv-boot-20201118.sh
+
+export EC_ATOMIC_PROFILE_VERSION=1.14.0
+
+. ssmuse-sh -d main/opt/cmake/cmake-3.16.4
+. r.env.dot --arch amd64
+. r.load.dot rpn/code-tools/ENV/cdt-1.5.2-intel-19.0.3.199
+. r.load.dot rpn/libs/19.7.0 rpn/utils/19.7.0
