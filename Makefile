@@ -68,7 +68,7 @@ VGDLIB  = descrip
 
 # LAPCK and BLAS libraries
 
-BLAS    = blas
+BLAS    = "blas gfortran"
 LAPACK  = lapack
 
 # DDFUN90 (Substitute Quad-Precision) library name
@@ -79,7 +79,8 @@ ifeq ($(SHARED_NETCDF),)
 # Static (_s) load via symlinks in the netcdff-4.4 SSM package
 NLocate  = s.locate
 lNetCDF  = netcdff netcdf hdf5_hl hdf5 dl sz z curl
-UDUNITS  = udunits2f_s udunits2_s expat
+#UDUNITS  = udunits2f_s udunits2_s expat
+UDUNITS  = udunits2f_s udunits2 expat
 else
 # Dynamic (shared-object) load via the system's netcdff package
 NLocate  = true
