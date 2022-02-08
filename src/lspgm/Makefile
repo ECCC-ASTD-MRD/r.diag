@@ -94,13 +94,13 @@ MODDIR  = $(INCLUDE)/$(EC_ARCH)
 CODEBETA=
 OBJ     =
 
-BLAS    = blas
+BLAS    = blas 
 DDFUN90 = ddfun90
 DIAGLIB = diag_sq$(STD)
-GRAFLIB =
+GRAFLIB = 
 LAPACK  = lapack
 PROGLIB = prog_sq$(STD)
-RMNLIB  = rmn_016.3
+RMNLIB  = rmn_19.7.0
 VGDLIB  = descrip
 
 LIBP    = $(LIBDIR)/lib$(PROGLIB).a
@@ -575,6 +575,16 @@ Linux_x86-64:
 
 ubuntu-18.04-skylake-64:
 #Section appropriee pour les fichiers STD saveur 1998 sur BASE_ARCH=ubuntu-18.04-skylake-64 INTEL 64 bits
+	$(MAKE) driver OBJ="$(OBJ)" RMNLIB=$(RMNLIB) MANDIR=$(MANDIR) \
+	NOPLOT=$(NOPLOT) VGDLIB=$(VGDLIB) GRAFLIB=$(GRAFLIB)
+
+rhel-8-icelake-64:
+#Section appropriee pour les fichiers STD saveur 1998 sur BASE_ARCH=rhel-8-icelake-64 INTEL 64 bits
+	$(MAKE) driver OBJ="$(OBJ)" RMNLIB=$(RMNLIB) MANDIR=$(MANDIR) \
+	NOPLOT=$(NOPLOT) VGDLIB=$(VGDLIB) GRAFLIB=$(GRAFLIB)
+
+rhel-8-amd64-64:
+#Section appropriee pour les fichiers STD saveur 1998 sur BASE_ARCH=rhel-8-icelake-64 INTEL 64 bits
 	$(MAKE) driver OBJ="$(OBJ)" RMNLIB=$(RMNLIB) MANDIR=$(MANDIR) \
 	NOPLOT=$(NOPLOT) VGDLIB=$(VGDLIB) GRAFLIB=$(GRAFLIB)
 
