@@ -62,7 +62,6 @@ DIAGWEB = public_html
 
 # RMN and Vgrid_Descriptor library names
 
-#RMNLIB  = rmn_016.3.1
 RMNLIB  = rmn
 VGDLIB  = descrip
 
@@ -79,7 +78,6 @@ ifeq ($(SHARED_NETCDF),)
 # Static (_s) load via symlinks in the netcdff-4.4 SSM package
 NLocate  = s.locate
 lNetCDF  = netcdff netcdf hdf5_hl hdf5 dl sz z curl
-#UDUNITS  = udunits2f_s udunits2_s expat
 UDUNITS  = udunits2f_s udunits2 expat
 else
 # Dynamic (shared-object) load via the system's netcdff package
@@ -88,7 +86,7 @@ lNetCDF  =
 UDUNITS  = udunits2f_s udunits2 expat
 endif
 
-DIAG_VERSION = 6.4.5
+DIAG_VERSION = 6.4.6
 CONV_VERSION = 2.3.5
 
 ENTETE  = 32
