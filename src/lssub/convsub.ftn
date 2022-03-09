@@ -702,7 +702,7 @@
           char = .true.
       else if (iand( datyp,8 ) == 8)                           then
           cmpl = .true.
-      else if (grtyp.eq.'X')                                   then
+      else if (grtyp.eq.'X' .or. grtyp.eq.'O')                 then
           data = .true.
       end if
 
