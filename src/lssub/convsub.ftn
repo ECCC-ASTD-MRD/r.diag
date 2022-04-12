@@ -1242,9 +1242,7 @@
 
                       if (.not. keepip2 
      +                    .and. (highip2 
-     +                    .or.  range_kind >= 0
-                                )
-                         )              then
+     +                    .or.  range_kind >= 0))              then
                           hold = npas * pphinv
                           call convhour( ip2, hold, +2 )
                       end if
@@ -1265,9 +1263,7 @@
                   npas  = time
                   if (.not. keepip2 
      +                .and. (highip2 
-     +                .or.  range_kind >= 0
-                            )
-                     )                  then
+     +                .or.  range_kind >= 0))                 then
                       hold = npas * pphinv
                       call convhour( ip2, hold, +2 )
                   end if
