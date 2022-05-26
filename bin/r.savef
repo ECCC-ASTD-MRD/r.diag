@@ -1,4 +1,4 @@
-#! /bin/ksh
+#! /usr/bin/env bash
 #
 zxzxzx=${DIAGNOSTIC_EXIT:=DIAGNOSTIC_EXIT}
 if [ -s "${zxzxzx}" ]; then exit 0 ; fi
