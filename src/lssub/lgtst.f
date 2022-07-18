@@ -173,7 +173,7 @@ C ***         ACCOUNT FOR POSSIBLE UNDERFLOWS.
                   DO  M=1,LM
                       KR = LSR(2,M+1)-LSR(2,M)
                       DO  N=1,KR
-                          IF (ABS(  DALP(N,M) ).LT.UNDERFL) DALP(N,M) = 0.0
+                          IF (ABS(DALP(N,M)).LT.UNDERFL) DALP(N,M)=0.0
                       END DO
                   END DO
               END IF

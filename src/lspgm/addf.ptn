@@ -491,9 +491,9 @@
 
       CALL MISPAR( CURRENT_MVALUE,MISFLAG,MISEPS )
 
-      IF (CURRENT_MVALUE)                                              THEN
+      IF (CURRENT_MVALUE)                                      THEN
           EPSILON = ABS( MISFLAG )*MISEPS
-          IF (.NOT.ALLOCATED( MA )) ALLOCATE( MA(MEM),MB(MEM), STAT=IER )
+          IF (.NOT.ALLOCATED( MA )) ALLOCATE(MA(MEM),MB(MEM),STAT=IER)
       ELSE IF (ALLOCATED( MA ))                                THEN
           DEALLOCATE( MA,MB, STAT=IER )
       END IF

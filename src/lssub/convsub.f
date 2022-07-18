@@ -3266,9 +3266,9 @@
 
                       if (debug)
      +                    write(6,6110) entnam,(nrc+ii),timx,timy,
-     +                                  rip1,rip2,rip3,rtypv,retik,rtypg,
-     +                                  rig1,rig2,rig3,rig4,rdate,rdelt,
-     +                                  rpas,tgril
+     +                             rip1,rip2,rip3,rtypv,retik,rtypg,
+     +                             rig1,rig2,rig3,rig4,rdate,rdelt,
+     +                             rpas,tgril
 
 ***                    Verifier la concordance des deux.
 
@@ -4481,7 +4481,7 @@
               If (.not.allocated( descu(lastdesc)%data ))
      +             allocate( descu(lastdesc)%data(U_NI*U_NJ) )
 
-              U_ERR = FSTLUK( descu(lastdesc)%data, U_CLE, U_NI, U_NJ, U_NK )
+              U_ERR = FSTLUK( descu(lastdesc)%data,U_CLE,U_NI,U_NJ,U_NK)
 
               If (U_ERR < 0)                                   THEN
                   If (DEBUG) write(6,6103) U_ERR

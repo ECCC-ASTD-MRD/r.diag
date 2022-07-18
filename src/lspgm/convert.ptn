@@ -949,7 +949,8 @@
      +          iopdatm,fixninj,convpr, difdatr
 
       real(8)   :: MisFlag, Epsilon = 0.01
-      logical   :: MValue=.false.,MValue_READ=.false.,MValue_IS_OFF=.false.
+      logical   :: MValue=.false.,MValue_READ=.false.,
+     +             MValue_IS_OFF=.false.
 
       real,           save :: misf=9.96921e+36                ! a very large float
       real    *8,     save :: misd=9.96921e+36                ! very large double
@@ -1970,7 +1971,7 @@
                   if (time8 == 1_8 * hold)                     then
                       ! Ceci n'est pas un date-time-stamp valide
                       write(6,6124) siecle,time,datadd
-                      if (box) nil = exfin( 'Convert','Erreur 24','NON' )
+                      if (box) nil = exfin('Convert','Erreur 24','NON')
                       call quit( 'Convert',24 )
                   else
                       time = hold
@@ -2904,7 +2905,8 @@
                   minu =      (dates(6)/100)/60
                   seco = mod( (dates(6)/100),60 )
 
-                  date8(infon) = ((((anne*cent+mois)*cent+jour)*cent+heur)*cent+minu)*cent+seco
+                  date8(infon) = ((((anne*cent+mois)*cent+jour)
+     +                *cent+heur)*cent+minu)*cent+seco
 
 ***                Si la ligne de code qui suit est activee,
 ***                le programme lira tous les enregistrements.
@@ -2943,8 +2945,10 @@
 
 ***                        Explicitely turn off the missing value decoder.
 
-                          call set_missing_value_mapping( 11, 1, dummy, 0,0,0 )
-                          call set_missing_value_mapping( 11, 1, dummy, 0,0,1 )
+                          call set_missing_value_mapping(
+     +                          11, 1, dummy, 0,0,0 )
+                          call set_missing_value_mapping(
+     +                          11, 1, dummy, 0,0,1 )
 
                       end if
 
@@ -3087,7 +3091,8 @@
                   minu =      (dates(6)/100)/60
                   seco = mod( (dates(6)/100),60 )
 
-                  date8(i) = ((((anne*cent+mois)*cent+jour)*cent+heur)*cent+minu)*cent+seco
+                  date8(i) = ((((anne*cent+mois)*cent+jour)
+     +                *cent+heur)*cent+minu)*cent+seco
 
                   dimr(1,i) = ni
                   dimr(2,i) = nj
@@ -3971,8 +3976,9 @@
 ***                toujours les memes ?
 
                   if ((dateo  >= 0           .and.
-     +                 dateo0 <  123 200 000 .and. dateo0 /= (dateo-mod( dateo,10 )))
-     +           .or. (dateo  <  0           .and. dateo0 /=  dateo )
+     +                 dateo0 <  123 200 000 .and. 
+     +                 dateo0 /= (dateo-mod( dateo,10 )))
+     +           .or. (dateo  <  0  .and. dateo0 /=  dateo )
      +           .or.  deet0 .ne. deet
      +           .or.  etikt0.ne. etiket
      +           .or.  grtyp0.ne. grtyp

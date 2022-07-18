@@ -433,17 +433,17 @@ C$    EXTERNAL      mpserv
 *---------------------------------------------------------------------
 ***        ALLOCATE MEMORY.
 
-          allocate( AP  (  ILH *2 * ILAT      ), \
-                    ALP (( LA2    + LM   ) *NP), \
-                    CA  (  LA2                ), \
-                    CT  (  LA2 *2          *NP), \
-                    EPSI(( LA2    + LM   )    ), \
-                    P   (  LA     * ILATH     ), \
-                    TRIG(  ILG    * 6         ), \
-                    WG  (  LGG             *NP), \
-                    WRK (  ILG *2          *NP), \
-                    WS  (( LA  *2 )        *NP), \
-                    IBUF(  MAXW   + HEAD      ), STAT=IER )
+          allocate( AP  (  ILH *2 * ILAT      ), 
+     +               ALP (( LA2    + LM   ) *NP), 
+     +               CA  (  LA2                ), 
+     +               CT  (  LA2 *2          *NP), 
+     +               EPSI(( LA2    + LM   )    ), 
+     +               P   (  LA     * ILATH     ), 
+     +               TRIG(  ILG    * 6         ), 
+     +               WG  (  LGG             *NP), 
+     +               WRK (  ILG *2          *NP), 
+     +               WS  (( LA  *2 )        *NP), 
+     +               IBUF(  MAXW   + HEAD      ), STAT=IER )
           
           IF (IER /= 0) CALL                      XIT(' Ggacof ',-8 )
 
@@ -568,17 +568,17 @@ C$    EXTERNAL      mpserv
 *------------------------------------------------------------------
 ***        ALLOCATE MEMORY.
 
-          allocate( AP  (  HEAD                   ), \
-                    CT  (  HEAD                   ), \
-                    TRIG(  HEAD                   ), \
-                    WRK (  HEAD                   ), \
-                    ALP (( LAZ    + LMZ  ) * NP*2 ), \
-                    CA  (  LAZ    + LMZ           ), \
-                    EPSI(( LAZ    + LMZ  )     *2 ), \
-                    P   (  LAZ    * ILATH         ), \
-                    WZ  (  ZLEV   * ILAT   *(NP+1)), \
-                    WS  (  ZLEV   * LAZ *2 *(NP+1)), \
-                    IBUF(  MAXW   + HEAD          ), STAT=IER )
+          allocate( AP  (  HEAD                   ), 
+     +               CT  (  HEAD                   ), 
+     +               TRIG(  HEAD                   ), 
+     +               WRK (  HEAD                   ), 
+     +               ALP (( LAZ    + LMZ  ) * NP*2 ), 
+     +               CA  (  LAZ    + LMZ           ), 
+     +               EPSI(( LAZ    + LMZ  )     *2 ), 
+     +               P   (  LAZ    * ILATH         ), 
+     +               WZ  (  ZLEV   * ILAT   *(NP+1)), 
+     +               WS  (  ZLEV   * LAZ *2 *(NP+1)), 
+     +               IBUF(  MAXW   + HEAD          ), STAT=IER )
           
           IF (IER /= 0) CALL                      XIT(' Ggacof ',-8 )
 

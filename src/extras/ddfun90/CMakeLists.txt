@@ -21,7 +21,7 @@ add_library(ddfun90 STATIC
 )
 
 add_executable(testquad tquadtsdd.f90)
-target_link_libraries(testquad PRIVATE ddfun90 RMN::RMN)
+target_link_libraries(testquad PRIVATE ddfun90 rmn)
 
 install(TARGETS ddfun90 DESTINATION lib)
 

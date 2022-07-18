@@ -167,10 +167,10 @@
       REAL         D60,DGRW
       CHARACTER(4) PKTYP,TYPE
       CHARACTER    LIGNE*8,GRTYP*1,AHEM*5
-      INTEGER      JPAK,JBUF(HEAD),IER,NFF,            \
-                   NR, LX,LY, IP,JP, NHEM,LSR(2,MAXM), \
-                   LA,LR,LM,KTR,LRLMT,I,IO,LEN,        \
-                   MAXW,NWDSP,NWDPS
+      INTEGER      JPAK,JBUF(HEAD),IER,NFF,            
+     +              NR, LX,LY, IP,JP, NHEM,LSR(2,MAXM), 
+     +              LA,LR,LM,KTR,LRLMT,I,IO,LEN,        
+     +              MAXW,NWDSP,NWDPS
 
       integer,     allocatable, dimension(:) :: IBUF
       real(8),     allocatable, dimension(:) :: PS,WRKL
@@ -182,9 +182,9 @@
       CHARACTER(4),EXTERNAL :: GETYP
       INTEGER,     EXTERNAL :: CLRLMT,GETSIZ
       LOGICAL,     EXTERNAL :: RPBLOC,SETIO64
-      EXTERNAL     MACSPE,JCLPNT,GETLIGN,BURNF,XIT,        \
-                   HPALLOC,HPDEALLC,EPSCAL,GETFLD2,STAPS2, \
-                   SETLAB,PUTFLD2,DIMGT2
+      EXTERNAL     MACSPE,JCLPNT,GETLIGN,BURNF,XIT,        
+     +              HPALLOC,HPDEALLC,EPSCAL,GETFLD2,STAPS2, 
+     +              SETLAB,PUTFLD2,DIMGT2
 !===================================================================
 
       NOMPRG =
@@ -317,16 +317,16 @@
               CALL                                 XIT(' Cofaps ', 0 )
           END IF
 
-          IF (IBUF(7).NE.CLRLMT(LR,LM,KTR,.TRUE.).AND. \
-              IBUF(7).NE.CLRLMT(LR,LM,KTR,.FALSE.))    \
-              CALL                                 XIT(' Cofaps ',-3 )
+          IF (IBUF(7).NE.CLRLMT(LR,LM,KTR,.TRUE.).AND. 
+     +        IBUF(7).NE.CLRLMT(LR,LM,KTR,.FALSE.))    
+     +        CALL                                 XIT(' Cofaps ',-3 )
 
           IF (NR.EQ.0) CALL PRTLAB( IBUF )
 
 !**        CONVERT SPECTRAL COEFF TO P.S. GRID FIELD.
 
-          CALL STAPS3( PS, LX,LY,IP,JP,D60,DGRW,NHEM, \
-                       SP, LSR,LM, WRKL )
+          CALL STAPS3( PS, LX,LY,IP,JP,D60,DGRW,NHEM, 
+     +                  SP, LSR,LM, WRKL )
 
 !**        SAVE THE GRIDS. PACKING IS 16 BITS/WORD.
 
@@ -393,8 +393,8 @@
       RETURN
       END
 
-      SUBROUTINE STAPS3( G, NI,NJ,IP,JP,D60,DGRW,NHEM, \
-                         P, LSR,LM, WRKL )
+      SUBROUTINE STAPS3( G, NI,NJ,IP,JP,D60,DGRW,NHEM, 
+     +                    P, LSR,LM, WRKL )
 
 !**    DEC  8/80 - J.D.HENDERSON
 
@@ -493,9 +493,9 @@
 !**                NOT ALREADY DONE. GET LONGITUDE AND EVALUATE
 !**                FOURIER SERIES AT THAT POINT.
 
-   19             IF (II >= 1 .AND. II <= NI .AND. \
-                      JJ >= 1 .AND. JJ <= NJ .AND. \
-                      G(II,JJ).EQ.GFILL)                       THEN
+   19             IF (II >= 1 .AND. II <= NI .AND. 
+     +                 JJ >= 1 .AND. JJ <= NJ .AND. 
+     +                 G(II,JJ).EQ.GFILL)                       THEN
                       CALL LLFXY( DLAT,DLON,X,Y,D60,DGRW,NHEM )
                       RLON = DLON*DRCON
                       CALL CFVAL2( G(II,JJ), WRKL, MAXF,RLON )

@@ -8,16 +8,6 @@ macro(setup_ptn_to_ftn INPUT_FILE OUTPUT_FILE)
     )
 endmacro()
 
-macro(setup_gppf_file INPUT_FILE OUTPUT_FILE EXTRA)
-    add_custom_command(
-        OUTPUT ${OUTPUT_FILE}
-        # Note : Backslashes before '#' are for CMake.
-        COMMAND r.gppf ${EXTRA} -chop_bang -gpp -F -D__FILE__="\#file" -D__LINE__="\#line" -I/fs/ssm/eccc/mrd/rpn/utils/19.7.0/ubuntu-18.04-amd64-64/include -I/fs/ssm/eccc/mrd/rpn/utils/19.7.0/ubuntu-18.04-skylake-64/include -I/fs/ssm/eccc/mrd/rpn/libs/19.7.0/ubuntu-18.04-amd64-64/include/Linux_x86-64/intel-19.0.3.199 -I/fs/ssm/eccc/mrd/rpn/libs/19.7.0/ubuntu-18.04-amd64-64/include -I/fs/ssm/eccc/mrd/rpn/libs/19.7.0/ubuntu-18.04-amd64-64/include/Linux_x86-64/intel-19.0.3.199 -I/fs/ssm/eccc/mrd/rpn/libs/19.7.0/ubuntu-18.04-skylake-64/include -I/fs/ssm/eccc/mrd/rpn/libs/19.7.0/all/include/Linux_x86-64/intel-19.0.3.199 -I/fs/ssm/eccc/mrd/rpn/libs/19.7.0/all/include -I/fs/ssm/eccc/mrd/rpn/libs/19.7.0/all/include/Linux_x86-64/intel-19.0.3.199 -I/fs/ssm/main/opt/openmpi/openmpi-3.1.2--hpcx-2.4.0-mofed-4.6--intel-19.0.3.199/ubuntu-18.04-amd64-64/include -I/fs/ssm/eccc/mrd/rpn/code-tools/1.5.2/all/include/Linux_x86-64/intel-19.0.3.199 -I/fs/ssm/eccc/mrd/rpn/code-tools/1.5.2/all/include -I/fs/ssm/eccc/mrd/rpn/code-tools/1.5.2/all/include/Linux_x86-64/intel-19.0.3.199 -I/fs/ssm/comm/eccc/all/opt/intelcomp/intelpsxe-cluster-19.0.3.199/multi/include -I/fs/ssm/eccc/mrd/rpn/utils/19.7.0/all/share/include -I/fs/homeu1/eccc/cmd/cmds/phc001/Repositories/gitlab.science.gc.ca/RPN-SI/r.diag/src/lssub/../../include -I./Sources. -I/fs/ssm/eccc/mrd/rpn/utils/19.7.0/ubuntu-18.04-amd64-64/include -I/fs/ssm/eccc/mrd/rpn/utils/19.7.0/ubuntu-18.04-skylake-64/include -I/fs/ssm/eccc/mrd/rpn/libs/19.7.0/ubuntu-18.04-amd64-64/include/Linux_x86-64/intel-19.0.3.199 -I/fs/ssm/eccc/mrd/rpn/libs/19.7.0/ubuntu-18.04-amd64-64/include -I/fs/ssm/eccc/mrd/rpn/libs/19.7.0/ubuntu-18.04-amd64-64/include/Linux_x86-64/intel-19.0.3.199 -I/fs/ssm/eccc/mrd/rpn/libs/19.7.0/ubuntu-18.04-skylake-64/include -I/fs/ssm/eccc/mrd/rpn/libs/19.7.0/all/include/Linux_x86-64/intel-19.0.3.199 -I/fs/ssm/eccc/mrd/rpn/libs/19.7.0/all/include -I/fs/ssm/eccc/mrd/rpn/libs/19.7.0/all/include/Linux_x86-64/intel-19.0.3.199 -I/fs/ssm/main/opt/openmpi/openmpi-3.1.2--hpcx-2.4.0-mofed-4.6--intel-19.0.3.199/ubuntu-18.04-amd64-64/include -I/fs/ssm/eccc/mrd/rpn/code-tools/1.5.2/all/include/Linux_x86-64/intel-19.0.3.199 -I/fs/ssm/eccc/mrd/rpn/code-tools/1.5.2/all/include -I/fs/ssm/eccc/mrd/rpn/code-tools/1.5.2/all/include/Linux_x86-64/intel-19.0.3.199 -I/fs/ssm/comm/eccc/all/opt/intelcomp/intelpsxe-cluster-19.0.3.199/multi/include -I/usr/include -Dtaille_entete=32 -Dnombre_de_taches=1 -DLittle_Endian -DWITH_intel -D__INTEL_COMPILER=1900 -DAMD64 -DLINUX_X86_64 -DWITHOUT_OpenMP ${INPUT_FILE} > ${OUTPUT_FILE}
-        DEPENDS ${INPUT_FILE}
-        COMMENT "Generating ${OUTPUT_FILE} from ${INPUT_FILE} with r.gppf"
-    )
-endmacro()
-
 file(GLOB PTN_FILES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} *.ptn)
 foreach(PTN_FILE ${PTN_FILES})
     string(REGEX REPLACE "\\.ptn" ".ftn" FTN_FILE ${PTN_FILE})
@@ -25,8 +15,7 @@ foreach(PTN_FILE ${PTN_FILES})
     set(input_file ${CMAKE_CURRENT_SOURCE_DIR}/${PTN_FILE})
     set(intermediate_file ${CMAKE_CURRENT_BINARY_DIR}/${FTN_FILE})
     set(output_file ${CMAKE_CURRENT_BINARY_DIR}/${F_FILE})
-    setup_ptn_to_ftn(${input_file} ${intermediate_file})
-    setup_gppf_file(${intermediate_file} ${output_file} "")
+    setup_ptn_to_ftn(${input_file} ${output_file})
 endforeach()
 
 file(GLOB PTN90_FILES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} *.ptn90)
@@ -36,11 +25,11 @@ foreach(PTN_FILE ${PTN90_FILES})
     set(input_file ${CMAKE_CURRENT_SOURCE_DIR}/${PTN_FILE})
     set(intermediate_file ${CMAKE_CURRENT_BINARY_DIR}/${FTN90_FILE})
     set(output_file ${CMAKE_CURRENT_BINARY_DIR}/${F90_FILE})
-    setup_ptn_to_ftn(${input_file} ${intermediate_file})
-    setup_gppf_file(${intermediate_file} ${output_file} "-lang-f90+")
+    setup_ptn_to_ftn(${input_file} ${output_file})
+#    setup_gppf_file(${intermediate_file} ${output_file} "-lang-f90+")
 endforeach()
 
-add_library(lspgm STATIC
+add_library(prog_sq98 STATIC
 
     # Missing from this list zlnplot.ptn (not in the makefile list and has weird compilation errors)
     # and maybe otheres
@@ -290,9 +279,11 @@ add_library(lspgm STATIC
     ${CMAKE_CURRENT_BINARY_DIR}/zxtrig.f # zxtrig.ptn
     ${CMAKE_CURRENT_BINARY_DIR}/zxwave.f # zxwave.ptn
     ${CMAKE_CURRENT_BINARY_DIR}/zxmav.f # zxmav.ptn
+
+    grid_to_grid.f # from librm 19.7.0
 )
 
-target_compile_definitions( lspgm
+target_compile_definitions(prog_sq98
     PRIVATE 
         -DNOPLOT
         -Dnombre_de_taches=1
@@ -307,4 +298,22 @@ target_compile_definitions( lspgm
         -DWITHOUT_OpenMP
 )
 
-add_dependencies(lspgm lssub) 
+add_dependencies(prog_sq98 diag_sq98) 
+
+add_executable(r.diag ${CMAKE_CURRENT_BINARY_DIR}/driver.f)
+add_dependencies(r.diag prog_sq98 diag_sq98) 
+target_link_libraries(r.diag PRIVATE prog_sq98 diag_sq98 descrip rmn BLAS::BLAS LAPACK::LAPACK)
+target_compile_definitions(r.diag
+    PRIVATE 
+        -DNOPLOT
+        -Dnombre_de_taches=1
+        -DVERY_NICE=oui
+        -Dtaille_entete=32
+        -DNEW_INTERP
+        -DLittle_Endian
+        -DWITH_intel
+        -D__INTEL_COMPILER=1900
+        -DAMD64
+        -DLINUX_X86_64
+        -DWITHOUT_OpenMP
+)

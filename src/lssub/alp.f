@@ -609,8 +609,8 @@ C--------------------------------------------------------------------
 
       LASTLA = LSR(1,LM+1) ! Sauver pour prochain appel
 
-      allocate( AC(NALP0,LM),AD(NALP0,LM),AE(NALP0,LM), \
-                ALP(NALP0,LM),EPSI(NALP0,LM) )
+      allocate( AC(NALP0,LM),AD(NALP0,LM),AE(NALP0,LM),
+     +           ALP(NALP0,LM),EPSI(NALP0,LM) )
 
       DO  M=1,LM
           MS = M-1
@@ -662,8 +662,8 @@ C--------------------------------------------------------------------
 #     include  "calpi.cdk"
 
 !---------------------------------------------------------------
-      if (.not.associated( AC ) .or. LSR(1,LM+1) /= LASTLA) \
-          call ALPINI2( LSR,LM )
+      if (.not.associated( AC ) .or. LSR(1,LM+1) /= LASTLA) 
+     +     call ALPINI2( LSR,LM )
 
       ! DETERMINE THE TYPE OT TRUNCATION.
 
@@ -707,9 +707,8 @@ C--------------------------------------------------------------------
               ! ALP(LR,M) = AC(LR,M)*ALP(LR,M-2)+AE(LR,M)*ALP(LR-1,M)
               
               ! CALCULATE THE LAST ROW USING THE OLD RECURSIVE FORMULA
-                ALP(LR,M) = \
-                ( SINLAT*ALP(LR-1,M) - EPSI(LR-1,M)*ALP(LR-2,M) ) \
-                /                 EPSI(LR,M)
+                ALP(LR,M) = ( SINLAT*ALP(LR-1,M) - EPSI(LR-1,M)*
+     +              ALP(LR-2,M) ) / EPSI(LR,M)
                  
 
           END IF

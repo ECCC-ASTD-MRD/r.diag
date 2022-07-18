@@ -63,7 +63,7 @@
  * Permettre a GETENVC d'enlever les blancs en bout de parametres.
  * 
  * Revision 1.6  92/10/13  15:37:37  armnrbd
- * Enlever la definition du macro wordfloat.
+ * Enlever la definition du macro float.
  * 
  * Revision 1.5  92/06/19  13:43:33  armnrbd
  * Modifier la documentation a CSORT.
@@ -114,15 +114,15 @@
 
 */
 
-wordfloat
+float
 f77name(second) ( )
 
 {
 
    struct tms buffer;
    clock_t elapsed;
-   wordint ticks;
-   wordfloat hold;
+   int32_t ticks;
+   float hold;
 
    ticks = sysconf(_SC_CLK_TCK) ;
    elapsed = times(&buffer) ;
@@ -143,7 +143,7 @@ f77name(second) ( )
 
 */
 
-wordint
+int32_t
 f77name(nice19) ( )
 
 {
@@ -161,10 +161,10 @@ f77name(nice19) ( )
 
 */
 
-wordfloat 
+float 
 f77name(cvmgt) ( arg1, arg2, logic )
-wordfloat *arg1, *arg2 ;
-wordint   *logic ;
+float *arg1, *arg2 ;
+int32_t   *logic ;
 
 {
    return *logic ? *arg1 : *arg2 ;
@@ -180,13 +180,13 @@ wordint   *logic ;
 */
 
 void f77name(leadblk)( name,len )
-wordint len;
+int32_t len;
 char name[1];
 
 {
 
-   wordint i,j;
-   unsigned wordint size;
+   int32_t i,j;
+   uint32_t size;
    char *temp;
 
    size = len+1 ;
@@ -218,13 +218,13 @@ char name[1];
 
 void
 f77name(getenvc) ( name, value, len1, len2 )
-wordint  len1, len2;
+int32_t  len1, len2;
 char name[1], value[1];
 
 {
 
-   wordint i;
-   unsigned wordint size;
+   int32_t i;
+   uint32_t size;
    char *temp, *hold;
 
 /* Transfert de name dans une chaine C */
@@ -269,7 +269,7 @@ char name[1], value[1];
 
 void 
 f77name(qqexit) (val)
-wordint *val ;
+int32_t *val ;
 
 {
      exit(*val);
@@ -294,14 +294,14 @@ wordint *val ;
 
 */
 
-wordint
+int32_t
 f77name(isrchflt) ( n, sx, inc, sy )
-wordint    *n, *inc ;
-wordfloat  *sx, *sy ;
+int32_t    *n, *inc ;
+float  *sx, *sy ;
 
 {
 
-   wordint count ;
+   int32_t count ;
 
    if ( *n <= 0 || *inc <= 0 ) return 0 ;
 
@@ -311,14 +311,14 @@ wordfloat  *sx, *sy ;
 
 }
 
-wordint
+int32_t
 f77name(isrchfle) ( n, sx, inc, sy )
-wordint    *n, *inc ;
-wordfloat  *sx, *sy ;
+int32_t    *n, *inc ;
+float  *sx, *sy ;
 
 {
 
-   wordint count ;
+   int32_t count ;
 
    if ( *n <= 0 || *inc <= 0 ) return 0 ;
 
@@ -328,14 +328,14 @@ wordfloat  *sx, *sy ;
 
 }
 
-wordint
+int32_t
 f77name(isrchfgt) ( n, sx, inc, sy )
-wordint    *n, *inc ;
-wordfloat  *sx, *sy ;
+int32_t    *n, *inc ;
+float  *sx, *sy ;
 
 {
 
-   wordint count ;
+   int32_t count ;
 
    if ( *n <= 0 || *inc <= 0 ) return 0 ;
 
@@ -345,14 +345,14 @@ wordfloat  *sx, *sy ;
 
 }
 
-wordint
+int32_t
 f77name(isrchfge) ( n, sx, inc, sy )
-wordint    *n, *inc ;
-wordfloat  *sx, *sy ;
+int32_t    *n, *inc ;
+float  *sx, *sy ;
 
 {
 
-   wordint count ;
+   int32_t count ;
 
    if ( *n <= 0 || *inc <= 0 ) return 0 ;
 
@@ -382,11 +382,11 @@ wordfloat  *sx, *sy ;
 
 void 
 f77name(dscopy) ( n, sx, incx, sy, incy  )
-wordint   *n,  *incx, *incy ;
-wordfloat      *sx,   *sy ;
+int32_t   *n,  *incx, *incy ;
+float      *sx,   *sy ;
 
 {
-   wordint count ;
+   int32_t count ;
 
    if ( *n > 0 ) 
    {
@@ -438,20 +438,20 @@ wordfloat      *sx,   *sy ;
 
 void 
 f77name(csortr) ( list, index, size )
-wordfloat *list ;
-wordint *index, *size ;
+float *list ;
+int32_t *index, *size ;
 
 {
 
    int switches = 0 ;
-   wordint gap = *size, i = 0, j = 0, top = 0 ;
+   int32_t gap = *size, i = 0, j = 0, top = 0 ;
 
 /* Faire le tri en comparant les elements de "list" */
 
    do
       {
 
-      gap = (wordint)((wordfloat)gap/SHRINKFACTOR);
+      gap = (int32_t)((float)gap/SHRINKFACTOR);
       switch (gap)
 	 {
 	 case 0:  /* The smallest gap is 1 - bubble sort */
@@ -492,19 +492,19 @@ wordint *index, *size ;
 void 
 f77name(csortd) ( list, index, size )
 double *list ;
-wordint *index, *size ;
+int32_t *index, *size ;
 
 {
 
    int switches = 0 ;
-   wordint gap = *size, i = 0, j = 0, top = 0 ;
+   int32_t gap = *size, i = 0, j = 0, top = 0 ;
 
 /* Faire le tri en comparant les elements de "list" */
 
    do
       {
 
-      gap = (wordint)((wordfloat)gap/SHRINKFACTOR);
+      gap = (int32_t)((float)gap/SHRINKFACTOR);
       switch (gap)
 	 {
 	 case 0:  /* The smallest gap is 1 - bubble sort */
@@ -544,19 +544,19 @@ wordint *index, *size ;
 
 void 
 f77name(csorte) ( list, index, size )
-wordint *list, *index, *size ;
+int32_t *list, *index, *size ;
 
 {
 
    int switches = 0 ;
-   wordint gap = *size, i = 0, j = 0, top = 0 ;
+   int32_t gap = *size, i = 0, j = 0, top = 0 ;
 
 /* Faire le tri en comparant les elements de "list" */
 
    do
       {
 
-      gap = (wordint)((wordfloat)gap/SHRINKFACTOR);
+      gap = (int32_t)((float)gap/SHRINKFACTOR);
       switch (gap)
 	 {
 	 case 0:  /* The smallest gap is 1 - bubble sort */
@@ -597,19 +597,19 @@ wordint *list, *index, *size ;
 void 
 f77name(csortl) ( list, index, size )
 long long *list ;
-wordint *index, *size ;
+int32_t *index, *size ;
 
 {
 
    int switches = 0 ;
-   wordint gap = *size, i = 0, j = 0, top = 0 ;
+   int32_t gap = *size, i = 0, j = 0, top = 0 ;
 
 /* Faire le tri en comparant les elements de "list" */
 
    do
       {
 
-      gap = (wordint)((wordfloat)gap/SHRINKFACTOR);
+      gap = (int32_t)((float)gap/SHRINKFACTOR);
       switch (gap)
 	 {
 	 case 0:  /* The smallest gap is 1 - bubble sort */
@@ -649,19 +649,19 @@ wordint *index, *size ;
 void 
 f77name(csortc) ( list, index, size, len )
 char *list ;
-wordint *index, *size, len ;
+int32_t *index, *size, len ;
 
 {
 
    int switches = 0 ;
-   wordint gap = *size, i = 0, j = 0, top = 0 ;
+   int32_t gap = *size, i = 0, j = 0, top = 0 ;
 
 /* Faire le tri en comparant les elements de "list" */
 
    do
       {
 
-      gap = (wordint)((wordfloat)gap/SHRINKFACTOR);
+      gap = (int32_t)((float)gap/SHRINKFACTOR);
       switch (gap)
 	 {
 	 case 0:  /* The smallest gap is 1 - bubble sort */
@@ -704,7 +704,7 @@ wordint *index, *size, len ;
 
 void 
 f77name(swap_endianness) ( buffer,size )
-wordint *buffer, *size ;
+int32_t *buffer, *size ;
 
 {
 

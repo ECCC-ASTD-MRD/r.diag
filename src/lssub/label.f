@@ -1108,7 +1108,7 @@ CCC           call swapa4( ibuf(1) )
               status = diag_decode_ip( RP1,RP2,RP3,ip1,ip2,ip3 )
               if (status == CONVERT_ERROR)                     THEN
                   if (info) write(6,6001) status,ip1,ip2,ip3
-                  call                                xit(' Prtlab3',-1 )
+                  call xit(' Prtlab3',-1 )
               end if
               if (RP3%kind == KIND_SAMPLES)                    THEN
                   CALL GET_IP1_STRING( IP2,SLEV2 )
@@ -1203,7 +1203,8 @@ CCC           call swapa4( ibuf(1) )
 
 ***    PRINT TO ICHAINE WITH APPROPRIATE FORMAT.
 
-      WRITE(ICHAINE,6000) IBUF(1),TRIM(SDAT),IBUF(3),TRIM(SLEV),(IBUF(I),I=5,8)
+      WRITE(ICHAINE,6000) 
+     +    IBUF(1),TRIM(SDAT),IBUF(3),TRIM(SLEV),(IBUF(I),I=5,8)
 
       CHAINE = ICHAINE
 

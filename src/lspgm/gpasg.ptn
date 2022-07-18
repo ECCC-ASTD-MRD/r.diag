@@ -438,7 +438,8 @@
       REAL,       DIMENSION(:), ALLOCATABLE,TARGET :: LNSP,TOPP,TOPPI
       REAL,       DIMENSION(:), ALLOCATABLE        :: F,ETA
       REAL,       DIMENSION(:,:), POINTER          :: PS2D
-      REAL(8),    DIMENSION(:), POINTER            :: A4,B4, AT,BT, AD,BD
+      REAL(8),    DIMENSION(:), POINTER            :: A4,B4, AT,BT,
+     +                                                AD,BD
       REAL,       DIMENSION(:), POINTER            :: PS
 
       DATA        DEF   / .FALSE. /,
@@ -911,7 +912,8 @@
 
               ! Size as returned from GetTOC (-1 to remove the last
               !  height [1.5m (T) or 10m (M)] levels for vcode=5005+)
-              NSL = size( LEVS ) ; IF (APPEND .and. VERSION >= 5) NSL = NSL-1
+              NSL = size( LEVS ) 
+              IF (APPEND .and. VERSION >= 5) NSL = NSL-1
 
               IF (NSL < 1 .OR. NSL > MAXLEV) CALL  XIT( VERBEX ,-23 )
               DEALLOCATE( ETA ) ; ALLOCATE( ETA(NSL) )

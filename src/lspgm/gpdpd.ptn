@@ -297,7 +297,8 @@
       REAL,       DIMENSION(:), ALLOCATABLE        :: F,G, PS
 
       ! nullify local_pressure which is used in LoPTOC and has to be initialized
-      real,       dimension(:,:,:), save, pointer  :: local_pressure=>null()
+      real,       dimension(:,:,:), save, pointer  :: 
+     +              local_pressure=>null()
       REAL,       DIMENSION(:,:), ALLOCATABLE      :: PS2D
 
       LOGICAL,      EXTERNAL :: RPBLOC

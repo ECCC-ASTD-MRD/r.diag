@@ -592,7 +592,8 @@ C
           END DO
 
           CALL GET_CENDIAN( CENDI )
-          IF (BIGENDI /= CENDI) CALL swap_endianness( IBUF(HEAD+1),NWDS )
+          IF (BIGENDI /= CENDI) 
+     +      CALL swap_endianness( IBUF(HEAD+1),NWDS )
 
           RETURN
 

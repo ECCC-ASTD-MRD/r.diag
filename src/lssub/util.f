@@ -968,7 +968,8 @@ C
       LOGICAL,        SAVE :: MSGLVL = .false., SETYP
 
       REAL(8)         RVALUE,REPSIL, init8
-      LOGICAL,SAVE :: MValue=.false.,MValue_READ=.false.,MValue_IS_OFF=.false.
+      LOGICAL,SAVE :: MValue=.false.,MValue_READ=.false.,
+     +    MValue_IS_OFF=.false.
       REAL(8),SAVE :: MisFlag,Epsilon=1D-3
 
       real,           save :: misf=9.96921e+36                ! a very large float
@@ -987,7 +988,8 @@ C
 #     include        "zlabel.cdk"
 
       CHARACTER   DIAGEXT*512
-      LOGICAL     DEXIT,SET_DEXIT  ; COMMON /DEXIT/   DEXIT,SET_DEXIT,DIAGEXT
+      LOGICAL     DEXIT,SET_DEXIT  ; COMMON /DEXIT/   
+     +            DEXIT,SET_DEXIT,DIAGEXT
       INTEGER     KEY(0:MAXUNIT)   ; COMMON /DIAGKEY/ KEY
       CHARACTER   UNIT5*512        ; COMMON /IODIRE/  UNIT5
       INTEGER     INFMOT(0:MAXUNIT); COMMON /LIRZXL/  INFMOT
@@ -1006,7 +1008,8 @@ C
       CHARACTER*4 PKTYP(0:MAXUNIT) ; COMMON /ZZPKTYP/ PKTYP
       LOGICAL     INFO             ; COMMON /ZZVERBO/ INFO
       INTEGER     DATVAL
-      LOGICAL     DATE,KEEPIP2     ; COMMON /ZZZDATE/ DATE,KEEPIP2,DATVAL
+      LOGICAL     DATE,KEEPIP2     ; COMMON /ZZZDATE/  
+     +            DATE,KEEPIP2,DATVAL
       LOGICAL     E64OUT           ; COMMON /ZZZE64O/ E64OUT
       LOGICAL     LOPEN(MAXUNIT)   ; COMMON /ZZZOPEN/ LOPEN
       LOGICAL     SEQ              ; COMMON /ZZZSEQF/ SEQ   

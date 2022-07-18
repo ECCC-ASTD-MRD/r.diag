@@ -518,7 +518,6 @@ SUBROUTINE DIAG_CCARD( INCLE,DEF,VAL,N,II )
       Integer  i, ic, indfin
       character c, quotechar
       character(LEN=8192) arg
-      integer, external :: longueur
 
       if (debut) then
          pos = 1
@@ -564,7 +563,7 @@ SUBROUTINE DIAG_CCARD( INCLE,DEF,VAL,N,II )
             endif
          END DO getarg
 
-         indfin = longueur(arg)
+         indfin = len_trim(arg)
 
          if ((arg(1:1) .eq. '-') .and. (.not. pudcle)) then
             qqqoenv = 1           ! nom de cle

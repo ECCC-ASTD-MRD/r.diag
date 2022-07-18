@@ -430,8 +430,10 @@ C
                   DATE64 = DATE64/DATE_CONVERSION_FACTOR
 
                   IF ((YDATE .AND. DATVAL >= 00 ) .OR.
-     +                (DATE64 >= (MinDat8*UnMillion)/DATE_CONVERSION_FACTOR+BASDAT8 
-     +           .AND. DATE64 <  (MaxDat8*UnMillion)/DATE_CONVERSION_FACTOR+BASDAT8) )
+     +                (DATE64 >= (MinDat8*UnMillion)/
+     +                  DATE_CONVERSION_FACTOR+BASDAT8 
+     +           .AND. DATE64 <  (MaxDat8*UnMillion)/
+     +                  DATE_CONVERSION_FACTOR+BASDAT8) )
      +            THEN
                       CDATE   =.TRUE.
                       DATE64  = DATE64 - BASDAT8
@@ -1949,8 +1951,8 @@ C
           RP2%hi = HIVAL ; RP2%lo = LOVAL ; RP2%kind = KIND_HOURS
           stat = diag_encode_ip( ip1,ip2,ip3, RP1,RP2,RP3 ) 
           IF (stat == CONVERT_ERROR)                           THEN
-              IF (INFO) \
-                  WRITE(6,6001) stat,RP2%hi,RP2%lo,RP2%kind
+              IF (INFO) 
+     +             WRITE(6,6001) stat,RP2%hi,RP2%lo,RP2%kind
               CALL                                 XIT('PutSamplZ',-1 )
           END IF
           CALL PUTHIGH( IP2       ,'IP2'  ,IBUF )

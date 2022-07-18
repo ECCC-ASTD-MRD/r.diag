@@ -1,13 +1,13 @@
 NAME       : r.diag
 VERSION    :
 BUILD      : Release
-DESCRIPTION: r.diag
-SUMMARY    : r.diag
-MAINTAINER : RPN-SI
-URL        : https://gitlab.science.gc.ca/RPN-SI/fst-tools
+DESCRIPTION: GEM model and analysis Diagnostics Toolkit
+SUMMARY    : An extensive toolkit available to users wanting to manipulate forecast data in CMC/RPN GEM file format
+MAINTAINER : Djamel Bouhemhem Djamel.Bouhemhem@ec.gc.ca
+URL        : https://gitlab.science.gc.ca/RPN-SI/r.diag
 
 # Dependencies
 #    =,<,<=,>,>= : Version rules
 #    ~           : Optional
 
-RMN  ~>= 19.7.0
+RMN  ~>= 20.0.0

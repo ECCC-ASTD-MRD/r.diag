@@ -67,10 +67,10 @@ C **********************************************************************
  
       INTEGER   NI,NJ,NC
       REAL      A(NI,NJ),FLO,HI,CINT,SCALE,AMX,AMN,RANGE
-      REAL      AMAX,AMIN,FSCAL,CONT
+      REAL      FSCAL,CONT
 C     ------------------------------------------------------------------
-      AMX   = AMAX( A,NI,NJ,0 )
-      AMN   = AMIN( A,NI,NJ,0 )
+      AMX   = MAXVAL(A)
+      AMN   = MINVAL(A)
 
       IF (ABS( AMN ).LT.2E-37) AMN = 0.0
       IF (ABS( AMX ).LT.2E-37) AMX = 0.0

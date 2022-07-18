@@ -281,9 +281,9 @@
       MEM1 = 2*LEN + 2*(2*LA) + 2*(2*LAW) + 2*(LM+1)
       MEM2 = 2*LAW
 
-      allocate( IBUF(LEN),JBUF(LEN), \
-                ALFA(LA*2),QR(LA*2),DD(LA*2), \
-                UU(LAW*2),VV(LAW*2),EPSI(LAW), STAT=IER )
+      allocate( IBUF(LEN),JBUF(LEN), 
+     +           ALFA(LA*2),QR(LA*2),DD(LA*2), 
+     +           UU(LAW*2),VV(LAW*2),EPSI(LAW), STAT=IER )
 
       IF (IER /= 0) CALL                           XIT(' Cwinds ',-8 )
 

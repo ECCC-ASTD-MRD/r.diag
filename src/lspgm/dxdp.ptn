@@ -307,7 +307,8 @@
       REAL(8),    DIMENSION(:,:,:),ALLOCATABLE :: LPC
 
       ! nullify local_pressure which is used in LoPTOC and has to be initialized
-      real,       dimension(:,:,:), save, pointer  :: local_pressure=>null()
+      real,       dimension(:,:,:), save, pointer  :: 
+     +              local_pressure=>null()
       real,       dimension(:,:),    allocatable   :: ps
 
       CHARACTER(16),EXTERNAL :: GETKINDC
@@ -758,7 +759,8 @@
                       ELSE
                           DO  L=1,LL
                               ! Calculate exp( A(L)+B(L)*LN(PS/PREF) )
-                              LPC(L+L1,I,J) = exp( A(L)+B(L)*(LP(I,J)-CORR2) )
+                              LPC(L+L1,I,J) = exp( A(L)+B(L)*(LP(I,J)
+     +                            -CORR2) )
                           END DO
                           IF (LL == NLEV-1) LPC(L2,I,J) = exp( LP(I,J) )
                       END IF
@@ -778,7 +780,8 @@
                   ! RE-ORDER local_pressure FOR NEXT OPERATIONS.
                   DO  J=1,NJ
                   DO  I=1,NI
-                      LPC(1:nlev,I,J) = local_pressure(I,J,1:nlev)
+                      LPC(1:nlev,I,J) = 
+     +                   local_pressure(I,J,1:nlev)
                   END DO
                   END DO
 
@@ -809,7 +812,8 @@
               ELSE IF (COORD.NE.'PRES')                        THEN
                   IF (COORD.EQ.'GEM' .OR.
      +                COORD.EQ.'SIG' )                         THEN
-                      PR8(1:NLEV) = PTOIT + PR0(1:NLEV) * ( LP(I0,J0) - PTOIT )
+                      PR8(1:NLEV) = PTOIT + PR0(1:NLEV) * 
+     +                   ( LP(I0,J0) - PTOIT )
                   ELSE
                       PR8(1:NLEV) = A(1:NLEV) + B(1:NLEV) * LP(I0,J0)
                   END IF
@@ -824,12 +828,12 @@
                   DO  L=TOP+INC,BOTM,INC
                       HAUT  = L-INC
                       BAS   = L+INC
-                      XMEM1 = (PR8(L   )-PR8(HAUT)) / (PR8(BAS )-PR8(L   ))
-     +                      /           (PR8(BAS ) -  PR8(HAUT))
-                      XMEM2 = (PR8(BAS )-PR8(L   )) / (PR8(L   )-PR8(HAUT))
-     +                      /           (PR8(BAS ) -  PR8(HAUT))
-                      DP(L) =  XMEM1  *( G(BAS )  -   G(L   ))
-     +                      +  XMEM2  *( G(L   )  -   G(HAUT))
+                      XMEM1 = (PR8(L  )-PR8(HAUT))/(PR8(BAS)-PR8(L   ))
+     +                      /          (PR8(BAS ) - PR8(HAUT))
+                      XMEM2 = (PR8(BAS)-PR8(L   ))/(PR8(L  )-PR8(HAUT))
+     +                      /          (PR8(BAS ) - PR8(HAUT))
+                      DP(L) =  XMEM1  *( G(BAS )  - G(L   ))
+     +                      +  XMEM2  *( G(L   )  - G(HAUT))
                   END DO
 
               ELSE IF (KIND.EQ.0)                              THEN

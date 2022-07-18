@@ -139,7 +139,8 @@
  
       INTEGER,    ALLOCATABLE, DIMENSION(:)   :: IBUF
       REAL,       ALLOCATABLE, DIMENSION(:)   :: F,G, VALX,VALY 
-      REAL,       ALLOCATABLE, DIMENSION(:,:) :: LATLON_WE,LATLON_SN,LONR,LATR
+      REAL,       ALLOCATABLE, DIMENSION(:,:) :: LATLON_WE,LATLON_SN,
+     +                                           LONR,LATR
 
       CHARACTER   NOMPRG*256
       COMMON     /PROGNAM/ NOMPRG
@@ -198,7 +199,7 @@
 ***            LECTURE DE DATAIN 
 
               IF (NFF == 3)                                    THEN
-                  CALL GETFLD2( 2, DATAIN, 'DATA',-1,' ',-1, JBUF,MAXD,OK )
+                  CALL GETFLD2(2,DATAIN,'DATA',-1,' ',-1,JBUF,MAXD,OK)
               ELSE
                   OK = .FALSE.
               END IF

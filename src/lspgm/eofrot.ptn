@@ -140,7 +140,8 @@
      +            IINK,IOUT,IIN1,IIN2,IJIN,IJOUT1,IJOUT2,
      +            IPAK,MEM,R8SIZE
  
-      REAL(8),    ALLOCATABLE,DIMENSION(:) :: MAT,WRK,VAL,VEC,FCOR,PRIM,TARG
+      REAL(8),    ALLOCATABLE,DIMENSION(:) :: MAT,WRK,VAL,VEC,
+     +                                        FCOR,PRIM,TARG
       INTEGER,    ALLOCATABLE,DIMENSION(:) :: NDEX,JBUF
 
       CHARACTER   NOMPRG*256

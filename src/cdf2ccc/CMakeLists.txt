@@ -63,7 +63,7 @@ add_library(cdf2ccc STATIC
 target_include_directories(cdf2ccc PUBLIC ${CMAKE_BINARY_DIR}/src/extras/udunits-f-2.0)
 target_include_directories(cdf2ccc PUBLIC ${NETCDF_Fortran_INCLUDE_DIR})
 target_link_libraries(cdf2ccc PUBLIC ${NETCDF_Fortran_LIBRARY})
-add_dependencies(cdf2ccc f_udunits_2 lssub)
+add_dependencies(cdf2ccc f_udunits_2 diag_sq98)
 
 set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,--warn-unresolved-symbols")
 add_executable(stable.cdf2ccc cdf2ccc.F90)

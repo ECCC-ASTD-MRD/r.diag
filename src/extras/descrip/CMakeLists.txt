@@ -1,6 +1,5 @@
 add_library(descrip vgrid.c vgrid_descriptors.F90 vgrid_utils.F90)
-target_compile_options(descrip PRIVATE -qopenmp)
-
+target_link_libraries(descrip PRIVATE ddfun90 rmn)
 install(TARGETS descrip DESTINATION lib)
 
 # TODO How to install the *.mod files?  I think they are supposed to go in lib.

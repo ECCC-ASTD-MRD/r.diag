@@ -462,7 +462,8 @@ CCC           DSUM = DBLE( LA )*PETIT
           CMEAN(1) = DSUM(1)/LA
           CMEAN(2) = DSUM(2)/LA
 
-          CVAR     = MAX( 0.0_8 , (CVAR/LA) - (CMEAN(1)*CMEAN(1) + CMEAN(2)*CMEAN(2)) )
+          CVAR     = MAX( 0.0_8 , (CVAR/LA) - 
+     +    (CMEAN(1)*CMEAN(1) + CMEAN(2)*CMEAN(2)) )
 
       ELSE
 
@@ -485,7 +486,8 @@ CCC           DSUM = DBLE( LA )*PETIT
           CMEAN(1) = DSUM(1)/LA
           CMEAN(2) = DSUM(2)/LA
 
-          CVAR     = MAX( 0.0_8 , (CVAR/LA) - (CMEAN(1)*CMEAN(1) + CMEAN(2)*CMEAN(2)) )
+          CVAR     = MAX( 0.0_8 , (CVAR/LA) - 
+     +     (CMEAN(1)*CMEAN(1) + CMEAN(2)*CMEAN(2)) )
 
       END IF
 

@@ -727,10 +727,11 @@ C
 ***               Date selon le format dicte par DATE_CONVERSION_FACTOR
                   date64  = Y2KDAT8( date64 )
 
-                  IF (date64 >= (MinDat8 * 1 00 00 00)/DATE_CONVERSION_FACTOR) THEN
+                  IF (date64 >= (MinDat8 * 1 00 00 00)
+     +                /DATE_CONVERSION_FACTOR) THEN
 
-                      YYYYMMDD8 =      (DATE_CONVERSION_FACTOR*date64)/D8  
-                      HHMMSShh8 = MOD( (DATE_CONVERSION_FACTOR*date64),D8 )
+                      YYYYMMDD8=   (DATE_CONVERSION_FACTOR*date64)/D8  
+                      HHMMSShh8=MOD((DATE_CONVERSION_FACTOR*date64),D8)
                       YYYYMMDD = YYYYMMDD8 ; HHMMSShh = HHMMSShh8
 
                   ELSE
@@ -809,10 +810,11 @@ C
 ***               Date selon le format dicte par DATE_CONVERSION_FACTOR
                   date64    = Y2KDAT8( ENTIER8 )
 
-                   IF (date64 >= (MinDat8 * 1 00 00 00)/DATE_CONVERSION_FACTOR) THEN
+                   IF (date64 >= (MinDat8 * 1 00 00 00)
+     +                 /DATE_CONVERSION_FACTOR) THEN
 
-                       YYYYMMDD =      (DATE_CONVERSION_FACTOR*date64)/D8  
-                       HHMMSShh = MOD( (DATE_CONVERSION_FACTOR*date64),D8 )
+                       YYYYMMDD=    (DATE_CONVERSION_FACTOR*date64)/D8  
+                       HHMMSShh=MOD((DATE_CONVERSION_FACTOR*date64),D8)
 
                    ELSE
 
@@ -2203,18 +2205,21 @@ C     END IF
                   HNEWL = GETHIC('NEWL',IBUF )
                   IF (NLEV /= INFMOT(NF) .OR. HNEWL == NEWL)   THEN
                       ! Sauver les niveaux TROUVES dans le dernier '++' (PP).
-                      SAV_LEV(SET(I-1)+1:SET(I)) = INT_LEV(SET(I-1)+1:SET(I))
+                      SAV_LEV(SET(I-1)+1:SET(I)) = 
+     +                    INT_LEV(SET(I-1)+1:SET(I))
                       NEW_LEV = .TRUE. ; PP_LEV = .TRUE.
                   ELSE IF (PP_LEV)                             THEN
                       IF (NEW_LEV)                             THEN
                           IF (I > 1 .AND.
      +                        NLEV == SET(I-1)-SET(I-2))       THEN
                               ! Definir SAV_LEV pour ce jeu de niveaux
-                              SAV_LEV(SET(I-1)+1:SET(I)) = SAV_LEV(SET(I-2)+1:SET(I-1))
+                              SAV_LEV(SET(I-1)+1:SET(I)) = 
+     +                            SAV_LEV(SET(I-2)+1:SET(I-1))
                           END IF
                       END IF
                       IF (NLEV == SET(I)-SET(I-1))
-     +                    INT_LEV(SET(I-1)+1:SET(I)) = SAV_LEV(SET(I-1)+1:SET(I))
+     +                    INT_LEV(SET(I-1)+1:SET(I)) = 
+     +                       SAV_LEV(SET(I-1)+1:SET(I))
                   END IF
               END IF
 
@@ -2574,18 +2579,21 @@ C     END IF
                   HNEWL = GETHIC('NEWL',IBUF )
                   IF (NLEV /= INFMOT(NF) .OR. HNEWL == NEWL)   THEN
                       ! Sauver les niveaux TROUVES dans le dernier '++' (PP).
-                      SAV_LEV(SET(I-1)+1:SET(I)) = INT_LEV(SET(I-1)+1:SET(I))
+                      SAV_LEV(SET(I-1)+1:SET(I)) = 
+     +                    INT_LEV(SET(I-1)+1:SET(I))
                       NEW_LEV = .TRUE. ; PP_LEV = .TRUE.
                   ELSE IF (PP_LEV)                             THEN
                       IF (NEW_LEV)                             THEN
                           IF (I > 1 .AND.
      +                        NLEV == SET(I-1)-SET(I-2))       THEN
                               ! Definir SAV_LEV pour ce jeu de niveaux
-                              SAV_LEV(SET(I-1)+1:SET(I)) = SAV_LEV(SET(I-2)+1:SET(I-1))
+                              SAV_LEV(SET(I-1)+1:SET(I)) = 
+     +                         SAV_LEV(SET(I-2)+1:SET(I-1))
                           END IF
                       END IF
                       IF (NLEV == SET(I)-SET(I-1))
-     +                    INT_LEV(SET(I-1)+1:SET(I)) = SAV_LEV(SET(I-1)+1:SET(I))
+     +                    INT_LEV(SET(I-1)+1:SET(I)) = 
+     +                       SAV_LEV(SET(I-1)+1:SET(I))
                   END IF
               END IF
 
@@ -2606,7 +2614,7 @@ C     END IF
               END IF
 
               ! Determiner le nombre d'echantillons NSAMP
-              NSAMP(I) = GETSAMPLZ( RKIND(I),HIVAL(I),LOVAL(I),IPM, IBUF )
+              NSAMP(I) = GETSAMPLZ(RKIND(I),HIVAL(I),LOVAL(I),IPM,IBUF)
 
 ***            COMPARER LES NIVEAUX LUS ET SPECIFIE EN ENTREE.
 
@@ -2728,7 +2736,8 @@ C     END IF
 
                   ! Determiner le nombre d'echantillons NSAMP
                   IF (J == SET(I-1)+1)
-     +            NSAMP(I) = GETSAMPLZ( RKIND(I),HIVAL(I),LOVAL(I),IPM,IBUF )
+     +               NSAMP(I) = 
+     +                  GETSAMPLZ(RKIND(I),HIVAL(I),LOVAL(I),IPM,IBUF)
 
                   ZLABEL = ZHOLD
 
@@ -4428,12 +4437,16 @@ CCC   MAXWRD0 = MAX( NWDS*NLEV , MAXWRD0 , MAXSWRD0 )
           NPASP1_DEET = NINT( (NPAS+1)*DBLE( DEET )/5., 8 )
           HEURES = NPAS*(DBLE( DEET )/60.)/60.
           IF (MOD( NPAS,60 ) == 0 .AND. NPAS/60 /= 0) THEN
-             NPASP1_DEET60 = NINT( ((NPAS/60)+1)*DBLE( DEET*60 ) / 5, 8 )
-             NPAS_DEET60   = NINT(  (NPAS/60)   *DBLE( DEET*60 ) / 5, 8 )
+             NPASP1_DEET60 = 
+     +           NINT( ((NPAS/60)+1)*DBLE( DEET*60 ) / 5, 8 )
+             NPAS_DEET60   = 
+     +           NINT(  (NPAS/60)   *DBLE( DEET*60 ) / 5, 8 )
           END IF
           IF (MOD( NPAS,3600 ) == 0 .AND. NPAS/3600 /= 0) THEN
-             NPASP1_DEET3600 = NINT( ((NPAS/3600)+1)*DBLE( DEET*3600 ) / 5, 8 )
-             NPAS_DEET3600   = NINT(  (NPAS/3600)   *DBLE( DEET*3600 ) / 5, 8 )
+             NPASP1_DEET3600 = 
+     +           NINT( ((NPAS/3600)+1)*DBLE( DEET*3600 ) / 5, 8 )
+             NPAS_DEET3600   = 
+     +           NINT(  (NPAS/3600)   *DBLE( DEET*3600 ) / 5, 8 )
           END IF
       END IF
           

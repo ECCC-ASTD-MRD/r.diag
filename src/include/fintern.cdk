@@ -27,18 +27,18 @@
 !
 # endif
 !     FONCTION DE TENSION DE VAPEUR SATURANTE (TETENS) - EW OU EI SELON TT
-      foewf(ttt) = dmin1(dsign(ttns3w,Dble(ttt)-Dble(trpl)),dsign \
-       (ttns3i,Dble(ttt)-Dble(trpl)))*dabs(Dble(ttt)-Dble(trpl))/ \
-       (Dble(ttt)-ttns4w+dmax1(0.d0,dsign(ttns4w-ttns4i,Dble(trpl)-Dble(ttt))))
+      foewf(ttt) = dmin1(dsign(ttns3w,Dble(ttt)-Dble(trpl)),dsign 
+     +  (ttns3i,Dble(ttt)-Dble(trpl)))*dabs(Dble(ttt)-Dble(trpl))/ 
+     +  (Dble(ttt)-ttns4w+dmax1(0.d0,dsign(ttns4w-ttns4i,Dble(trpl)-Dble(ttt))))
       fomult(ddd)=ttns1*ddd
       foew(ttt) = fomult(dexp(foewf(ttt)))
 !
 !     FONCTION CALCULANT LA DERIVEE SELON T DE  LN EW (OU LN EI)
-      fodle(ttt)=\
-      (4097.93d0+dmax1(0.d0,dsign(1709.88d0,Dble(trpl)-Dble(ttt))))\
-       /((Dble(ttt)-ttns4w+dmax1(0.d0,dsign(ttns4w-ttns4i,\
-       Dble(trpl)-Dble(ttt))))*(Dble(ttt)-ttns4w+dmax1(0.d0,\
-       dsign(ttns4w-ttns4i,Dble(trpl)-Dble(ttt)))))
+      fodle(ttt)=
+     + (4097.93d0+dmax1(0.d0,dsign(1709.88d0,Dble(trpl)-Dble(ttt))))
+     +  /((Dble(ttt)-ttns4w+dmax1(0.d0,dsign(ttns4w-ttns4i,
+     +  Dble(trpl)-Dble(ttt))))*(Dble(ttt)-ttns4w+dmax1(0.d0,
+     +  dsign(ttns4w-ttns4i,Dble(trpl)-Dble(ttt)))))
 !
 !     FONCTION CALCULANT L'HUMIDITE SPECIFIQUE SATURANTE (QSAT)
       FOQST(TTT,PRS) = DBLE(EPS1)/(DMAX1(1.D0,DBLE(PRS)/FOEW(TTT))-DBLE(EPS2))

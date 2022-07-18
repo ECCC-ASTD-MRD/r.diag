@@ -100,8 +100,8 @@
           CALL CHECKT( ITIME, YY,MM,DD,HH,MIN,OBS, OK )
 
           IF(OK)                                               THEN
-             NEWTIM = MIN + \
-                     (HH + (DD - 1 + JDAYS(MM) + YY*ANNE)*JOUR)*HEUR
+             NEWTIM = MIN + 
+     +             (HH + (DD - 1 + JDAYS(MM) + YY*ANNE)*JOUR)*HEUR
           END IF
 
       ELSE IF (DTM.EQ.3)                                       THEN
@@ -309,9 +309,9 @@
 
       IF (OBS)                                                 THEN
 
-          IF (MOD( YY,   4 ) .EQ. 0 .AND. \
-             (MOD( YY, 100 ) .NE. 0 .OR.  \
-              MOD( YY, 400 ) .EQ. 0 ) )                        THEN
+          IF (MOD( YY,   4 ) .EQ. 0 .AND. 
+     +        (MOD( YY, 100 ) .NE. 0 .OR.  
+     +         MOD( YY, 400 ) .EQ. 0 ) )                       THEN
               LMONTH(2) = 29
           ELSE
               LMONTH(2) = 28
@@ -326,11 +326,11 @@
       YLOW  = 1900
       YHIGH = 2146
 
-      IF ( (YY .LT.YLOW .OR. YY .GT.  YHIGH   ) .OR. \
-           (MM .LT. 1   .OR. MM .GT.   12     ) .OR. \
-           (DD .LT. 1   .OR. DD .GT.LMONTH(MM)) .OR. \
-           (HH .LT. 0   .OR. HH .GT.   23     ) .OR. \
-           (MIN.LT. 0   .OR. MIN.GT.   59     ) )              THEN
+      IF ( (YY .LT.YLOW .OR. YY .GT.  YHIGH   ) .OR. 
+     +      (MM .LT. 1   .OR. MM .GT.   12     ) .OR. 
+     +      (DD .LT. 1   .OR. DD .GT.LMONTH(MM)) .OR. 
+     +      (HH .LT. 0   .OR. HH .GT.   23     ) .OR. 
+     +      (MIN.LT. 0   .OR. MIN.GT.   59     ) )              THEN
 
           OK =.FALSE.
           WRITE(6,6010) TIME
