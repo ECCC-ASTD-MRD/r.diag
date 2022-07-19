@@ -107,6 +107,7 @@ An extensive toolkit available to users wanting to manipulate 2D
 
 - CMake 3.12+
 - librmn
+- NetCDF
 
 Note: =cmake_rpn= and =ci-env= are included as a submodule.  Please clone with the
 =--recursive= flag or run =git submodule update --init --recursive= in the
