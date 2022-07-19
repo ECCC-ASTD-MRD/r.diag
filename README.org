@@ -106,8 +106,8 @@ An extensive toolkit available to users wanting to manipulate 2D
 ** Build dependencies
 
 - CMake 3.12+
-- librmn
 - NetCDF
+- librmn
 
 Note: =cmake_rpn= and =ci-env= are included as a submodule.  Please clone with the
 =--recursive= flag or run =git submodule update --init --recursive= in the
@@ -141,7 +141,7 @@ This will load the specified compiler and define the ECCI_DATA_DIR variable for 
 #+begin_src
 mkdir build
 cd build
-cmake .. -DCMAKE_INSTALL_PREFIX=${your_choice}
+cmake .. -DCMAKE_INSTALL_PREFIX=${your_choice}  -DNetCDF_ROOT=${NetCDF_ROOT}
 make -j 4
 make install
 #+end_src
@@ -151,6 +151,7 @@ make install
 ** Build dependencies
 
 - CMake 3.12+
+- NetCDF
 - librmn with shared libraries (https://github.com/ECCC-ASTD-MRD/librmn/tree/dev)
 
 Note: =cmake_rpn= and =ci-env= are included as a submodule but =ci-env= is not available externally. 
