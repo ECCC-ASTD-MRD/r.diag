@@ -40,15 +40,16 @@ include_directories(${CMAKE_SOURCE_DIR}/src/include)
 #set(NETCDF_Fortran_LIBRARY ${NETCDF_Fortran_BASE}/lib/libnetcdff.a)
 #set(NETCDF_Fortran_INCLUDE_DIR ${NETCDF_Fortran_BASE}/include)
 
+add_subdirectory(src/man)
 add_subdirectory(src/extras)
 add_subdirectory(src/cdf2ccc)
 add_subdirectory(src/lssub)
 add_subdirectory(src/lspgm)
-#add_subdirectory(src/man)
 
 install(DIRECTORY src/bin     DESTINATION ${CMAKE_INSTALL_PREFIX} USE_SOURCE_PERMISSIONS)
 install(DIRECTORY src/include DESTINATION ${CMAKE_INSTALL_PREFIX} USE_SOURCE_PERMISSIONS)
 install(DIRECTORY src/lib     DESTINATION ${CMAKE_INSTALL_PREFIX} USE_SOURCE_PERMISSIONS)
+install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/src/man DESTINATION ${CMAKE_INSTALL_PREFIX} USE_SOURCE_PERMISSIONS)
 
 # Packaging
 ec_package_name()                 # Define package prefix  
