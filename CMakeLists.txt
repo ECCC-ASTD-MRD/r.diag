@@ -18,6 +18,8 @@ include(ec_compiler_presets)
 
 set(CMAKE_Fortran_PREPROCESS ON)
 set(CMAKE_Fortran_MODULE_DIRECTORY ${CMAKE_BINARY_DIR}/include)
+
+# Need to extend line length     gfortran            ifort
 set(CMAKE_Fortran_FLAGS "-ffixed-line-length-none -extend-source ${CMAKE_Fortran_FLAGS} ")
 
 include(CTest)
@@ -26,23 +28,23 @@ add_custom_target(check COMMAND CTEST_OUTPUT_ON_FAILURE=TRUE ${CMAKE_CTEST_COMMA
 find_package(rmn REQUIRED)
 find_package(LAPACK REQUIRED)
 find_package(BLAS REQUIRED)
-
-#find_package(NetCDF REQUIRED)
+find_package(NetCDF COMPONENTS Fortran REQUIRED)
 
 include_directories(${CMAKE_SOURCE_DIR}/src/include)
 
-set(NETCDF_C_BASE /fs/ssm/hpco/exp/netcdf-4.4.1.1/ubuntu-18.04-amd64-64)
-set(NETCDF_C_LIBRARY ${NETCDF_C_BASE}/lib/libnetcdf.a)
-set(NETCDF_C_INCLUDE_DIR ${NETCDF_C_BASE}/include)
+#set(NETCDF_C_BASE /fs/ssm/hpco/exp/netcdf-4.4.1.1/ubuntu-18.04-amd64-64)
+#set(NETCDF_C_LIBRARY ${NETCDF_C_BASE}/lib/libnetcdf.a)
+#set(NETCDF_C_INCLUDE_DIR ${NETCDF_C_BASE}/include)
 
-set(NETCDF_Fortran_BASE /fs/ssm/hpco/exp/hdf5-netcdf4/master/netcdf-fortran_4.4.5-intel-19.0.3.199-openmpi-3.1.2-static_ubuntu-18.04-amd64-64)
-set(NETCDF_Fortran_LIBRARY ${NETCDF_Fortran_BASE}/lib/libnetcdff.a)
-set(NETCDF_Fortran_INCLUDE_DIR ${NETCDF_Fortran_BASE}/include)
+#set(NETCDF_Fortran_BASE /fs/ssm/hpco/exp/hdf5-netcdf4/master/netcdf-fortran_4.4.5-intel-19.0.3.199-openmpi-3.1.2-static_ubuntu-18.04-amd64-64)
+#set(NETCDF_Fortran_LIBRARY ${NETCDF_Fortran_BASE}/lib/libnetcdff.a)
+#set(NETCDF_Fortran_INCLUDE_DIR ${NETCDF_Fortran_BASE}/include)
 
 add_subdirectory(src/extras)
 add_subdirectory(src/cdf2ccc)
 add_subdirectory(src/lssub)
 add_subdirectory(src/lspgm)
+#add_subdirectory(src/man)
 
 install(DIRECTORY src/bin     DESTINATION ${CMAKE_INSTALL_PREFIX} USE_SOURCE_PERMISSIONS)
 install(DIRECTORY src/include DESTINATION ${CMAKE_INSTALL_PREFIX} USE_SOURCE_PERMISSIONS)

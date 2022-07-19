@@ -27,17 +27,13 @@ case ${1:-*} in
   exit 0
   ;;
 --versions )
-  cd ${DIAGNOSTIQUE}/bin/${BASE_ARCH}/
+  cd ${DIAGNOSTIQUE}/bin
   ls ${0##*/}_*.*.*
   exit 0
   ;;
---src )
-  echo ${DIAGNOSTIQUE}/src
-  exit 0
-  ;;
 * )
-  CDF2RPN=${CDF2RPN:-${DIAGNOSTIQUE}/bin/${BASE_ARCH}/stable.cdf2rpn}
-  if [[ `echo ${CDF2RPN} | cut -c1` != "/" ]]; then CDF2RPN=${DIAGNOSTIQUE}/bin/${BASE_ARCH}/${CDF2RPN} ; fi
+  CDF2RPN=${CDF2RPN:-${DIAGNOSTIQUE}/bin/stable.cdf2ccc}
+  if [[ `echo ${CDF2RPN} | cut -c1` != "/" ]]; then CDF2RPN=${DIAGNOSTIQUE}/bin/${CDF2RPN} ; fi
   if [[ -x ${CDF2RPN} ]] ; then
     if [[ -z "${launched_by_cdf2rpn_script}" ]]; then
       export launched_by_cdf2rpn_script=YES
@@ -51,7 +47,7 @@ case ${1:-*} in
       exit 99
     fi
   else
-    ${DIAGNOSTIQUE}/bin/${BASE_ARCH}/stable.cdf2rpn "$@"
+    ${DIAGNOSTIQUE}/bin/stable.cdf2ccc "$@"
     exit $?
   fi
   ;;

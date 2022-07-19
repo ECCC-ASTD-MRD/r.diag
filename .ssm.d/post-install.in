@@ -15,10 +15,12 @@ rm -f ${profilePath} ${loginPath}
 mkdir -p ${profileDirPath}
 
 cat > ${profilePath} << EOF
+export DIAGNOSTIQUE='${packageHome}'
 source r.diag_autocomplete.dot
 EOF
 
 cat > ${loginPath} << EOF
+export DIAGNOSTIQUE='${packageHome}'
 source r.diag_autocomplete.dot
 EOF
 

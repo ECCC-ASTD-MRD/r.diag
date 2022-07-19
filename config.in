@@ -8,17 +8,16 @@
 #       configure_file(config.in ${CMAKE_BINARY_DIR}/${NAME}-config @ONLY)
 #       install(PROGRAMS ${CMAKE_BINARY_DIR}/${NAME}-config DESTINATION bin)
 
-cc="@CMAKE_C_COMPILER_ID@ @CMAKE_C_COMPILER_VERSION@"
 fc="@CMAKE_Fortran_COMPILER_ID@ @CMAKE_Fortran_COMPILER_VERSION@"
-cflags="@EC_C_FLAGS@"
 fflags="@EC_Fortran_FLAGS@"
 defs="@EC_CMAKE_DEFINITIONS@"
 libs=CMAKE_LIBS
 
-version=@PROJECT_VERSION@
-env=@EC_CI_ENV@
+version="@PROJECT_VERSION@"
+env="@EC_CI_ENV@"
 
-has_rmn=@RMN_VERSION@@RMN_STATE@
+has_rmn="@rmn_VERSION@@rmn_STATE@"
+has_cdf="@NetCDF_VERSION@"
 
 usage()
 {
@@ -28,14 +27,13 @@ Usage: @NAME@-config [OPTION]
 Available values for OPTION include:
 
   --help         display this help message and exit
-  --cc           C compiler [${cc}]
   --fc           FORTRAN compiler [${fc}]
-  --cflags       C compiler flags [${cflags}]
   --fflags       Fortran compiler flags [${fflags}]
   --defs         Preprocessor definitions [${defs}]
   --version      library version [${version}]
   --env          environment version used [${env}]
   --has-rmn      which version of librmn is it compiled with [${has_rmn}]
+  --has-cdf      which version of NetCDF is it compiled with [${has_cdf}]
 
 EOF
 }
@@ -59,18 +57,10 @@ while test $# -gt 0; do
 	usage 0
 	;;
 
-    --cc)
-       	echo ${cc:-no}
-       	;;
-
     --fc)
        	echo ${fc:-no}
        	;;
 
-    --cflags)
-       	echo ${cflags}
-       	;;
-           
     --fflags)
        	echo ${fflags}
        	;;
@@ -85,6 +75,10 @@ while test $# -gt 0; do
 
     --has-rmn)
        	echo ${has_rmn:-no}
+       	;;
+
+    --has-cdf)
+       	echo ${has_cdf:-no}
        	;;
 
     --version)

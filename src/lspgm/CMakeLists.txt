@@ -26,7 +26,6 @@ foreach(PTN_FILE ${PTN90_FILES})
     set(intermediate_file ${CMAKE_CURRENT_BINARY_DIR}/${FTN90_FILE})
     set(output_file ${CMAKE_CURRENT_BINARY_DIR}/${F90_FILE})
     setup_ptn_to_ftn(${input_file} ${output_file})
-#    setup_gppf_file(${intermediate_file} ${output_file} "-lang-f90+")
 endforeach()
 
 add_library(prog_sq98 STATIC
@@ -300,10 +299,10 @@ target_compile_definitions(prog_sq98
 
 add_dependencies(prog_sq98 diag_sq98) 
 
-add_executable(r.diag ${CMAKE_CURRENT_BINARY_DIR}/driver.f)
-add_dependencies(r.diag prog_sq98 diag_sq98) 
-target_link_libraries(r.diag PRIVATE prog_sq98 diag_sq98 descrip rmn BLAS::BLAS LAPACK::LAPACK)
-target_compile_definitions(r.diag
+add_executable(stable.r.diag driver.f)
+add_dependencies(stable.r.diag prog_sq98 diag_sq98 descrip) 
+target_link_libraries(stable.r.diag PRIVATE prog_sq98 diag_sq98 descrip rmn BLAS::BLAS LAPACK::LAPACK)
+target_compile_definitions(stable.r.diag
     PRIVATE 
         -DNOPLOT
         -Dnombre_de_taches=1
