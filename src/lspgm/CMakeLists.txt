@@ -8,7 +8,7 @@ macro(setup_ptn_to_ftn INPUT_FILE OUTPUT_FILE)
     )
 endmacro()
 
-file(GLOB PTN_FILES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} *)
+file(GLOB PTN_FILES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} *.ptn)
 foreach(PTN_FILE ${PTN_FILES})
     string(REGEX REPLACE "\\.ptn" ".f" F_FILE ${PTN_FILE})
     set(input_file ${CMAKE_CURRENT_SOURCE_DIR}/${PTN_FILE})
@@ -294,6 +294,7 @@ target_compile_definitions(prog_sq98
 )
 
 add_dependencies(prog_sq98 diag_sq98) 
+install(TARGETS prog_sq98 DESTINATION lib)
 
 add_executable(stable.r.diag driver.f)
 add_dependencies(stable.r.diag prog_sq98 diag_sq98 descrip) 
@@ -312,3 +313,4 @@ target_compile_definitions(stable.r.diag
         -DLINUX_X86_64
         -DWITHOUT_OpenMP
 )
+install(TARGETS stable.r.diag DESTINATION bin)

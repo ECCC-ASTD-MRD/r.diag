@@ -62,3 +62,4 @@ target_compile_definitions(diag_sq98 PRIVATE -Dtaille_entete=32 -Dnombre_de_tach
 target_link_libraries(diag_sq98 PRIVATE rmn)
 
 add_dependencies(diag_sq98 descrip)
+install(TARGETS diag_sq98 DESTINATION lib)

@@ -20,7 +20,7 @@ source r.diag_autocomplete.dot
 EOF
 
 cat > ${loginPath} << EOF
-export DIAGNOSTIQUE='${packageHome}'
+setenv DIAGNOSTIQUE='${packageHome}'
 source r.diag_autocomplete.dot
 EOF
 
