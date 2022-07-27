@@ -2,6 +2,7 @@ file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/pdoc DESTINATION ${CMAKE_CURRENT_BINARY_DI
 
 # Transform txt doc to html
 file(GLOB PTN_FILES ${CMAKE_SOURCE_DIR}/src/lspgm/*.ptn)
+list(APPEND PTN_FILES ${CMAKE_SOURCE_DIR}/src/cdf2ccc/cdf2ccc.F90)
 foreach(PTN_FILE ${PTN_FILES})
    get_filename_component(TXT_FILE ${PTN_FILE} NAME_WLE)
    execute_process (
