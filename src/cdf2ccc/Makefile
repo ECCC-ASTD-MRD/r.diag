@@ -397,16 +397,27 @@ $(LIBP):	initial	$(FDECKS)	$(HDECKS)	\
 
 cdf2ccc: initial cdf2ccc.F90
 #	Creation de l'executable cdf2ccc ailleurs que ailleurs que sous AIX
+#	# Create lib$(MALIB).a (libcdf2ccc.a)
 	$(ARX) $(LIBP) lire_arg.o
+	# add_custom_command + add_custom_target.(Produce a cdf2ccc2.F90 from cdf2ccc.F90)
+	# Command=cdf2ccc.F90 ($@.F90)
+	# Sortie_CDF cdf2ccc2 (The script outputs ${Sortie_CDF}.F90)
 	$(DIAGNOSTIQUE)/bin/command-change-date.sh $@.F90 cdf2ccc2 ; \
+	# Compile cdf2ccc2.F90 (produced by the previous step
+	# Also uses lire_arg.o $(OBJ) some libs (NetCDF, RMN, libcdf2ccc.a), targets (ddfun90, VGDLIB(descrip), udunits)
 	s.f90 -src cdf2ccc2.F90 \
 	-o $@ $$(s.prefix -L $(LIBPATH)) $$(s.prefix -I "$(INCLUDES) $(MODDIR)") \
 	$$(s.prefix -l $(MALIB) $(lNetCDF) $(UDUNITS) $(DIAGLIB) $(VGDLIB) $(RMNLIB) \
 	$(DDFUN90)) $(NINCLUDE) $(NFLOAD) $(DEFINE) lire_arg.o $(OBJ) $(CODEBETA)
 	if [ -x $@ ] ; then \
+		# Remove intermediate files
 		/bin/rm -f lire_arg.o cdf2ccc2.F90 cdf2ccc2.o ; \
+		# Move $@ -> $(BINDIR)/ whatever
 		/bin/mv $@ $(BINDIR)/$@_$(CONV_VERSION)_$(COMP_ARCH) ;cd $(BINDIR) ; \
+		# Some kind of ldd test
 		ssh localhost ldd $(BINDIR)/$@_$(CONV_VERSION)_$(COMP_ARCH) | grep -i "not found" && exit 1 ; \
+		# Some kind of link that would probably be replaced by
+		# installing to the right place.
 		/bin/ln -f $@_$(CONV_VERSION)_$(COMP_ARCH) cdf2rpn_$(CONV_VERSION)_$(COMP_ARCH) ; \
 	fi
 

@@ -1,0 +1,13 @@
+NAME       : r.diag
+VERSION    :
+BUILD      : Release
+DESCRIPTION: GEM model and analysis Diagnostics Toolkit
+SUMMARY    : An extensive toolkit available to users wanting to manipulate forecast data in CMC/RPN GEM file format
+MAINTAINER : Djamel Bouhemhem Djamel.Bouhemhem@ec.gc.ca
+URL        : https://gitlab.science.gc.ca/RPN-SI/r.diag
+
+# Dependencies
+#    =,<,<=,>,>= : Version rules
+#    ~           : Optional
+
+RMN  ~>= 20.0.0

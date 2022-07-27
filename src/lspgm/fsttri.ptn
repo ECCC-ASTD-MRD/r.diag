@@ -256,7 +256,7 @@
       character(4)  :: REV='4.47' ! FSTTRI internal revision level
   
       integer,      parameter :: NBRFICH = nombre_maximal_de_fichiers
-      integer,      parameter :: NBRARGS = 19, NBRCLE = NBRFICH+NBRARGS+1
+      integer,      parameter :: NBRARGS = 19, NBRCLE=NBRFICH+NBRARGS+1
 
       integer    :: NMAX = 20000
 
@@ -357,7 +357,7 @@ C    +              valnum,kind
 ***    Parametres d'appel:
 ***    ------------------
 
-     ! NBRARGS=(2:20), i.e. 19 Arguments generaux
+*      NBRARGS=(2:20), i.e. 19 Arguments generaux
       data cles(02)/ 'D.'     /,def1(02)/' '      /,def2(02)/'TAPE2'  /,
      +     cles(03)/ 'DATEO'  /,def1(03)/'DATEO'  /,def2(03)/'*'      /,
      +     cles(04)/ 'TYPVAR' /,def1(04)/'TYPVAR' /,def2(04)/'*'      /,
@@ -725,7 +725,8 @@ C    +              valnum,kind
 ***        Allouer l'espace de travail necessaire.
 
       if (Desc)
-     +    allocate( buff(nw),ibuf(nw),stat=ier ) ; if (ier /= 0) goto 999
+     +    allocate( buff(nw),ibuf(nw),stat=ier )
+      if (ier /= 0) goto 999
 
 ***    Lire l'information sur tous les champs. Initialiser sindex.
 
@@ -765,12 +766,12 @@ C    +              valnum,kind
                       inbr2 = fstouv( iu2,'RND' )
                   else
                       write(6,6002) trim( nomrenv )
-                      if (box) nil = exfin( 'FstTRI', 'Erreur 2', 'NON' )
+                      if (box) nil = exfin('FstTRI','Erreur 2','NON')
                       call quit( ' FstTri ',2 )
                   end if
                   if (inbr2 < 0)                               then
                       write(6,6222) inbr2,trim( nomrenv )
-                      if (box) nil = exfin( 'FstTRI', 'Erreur 2', 'NON' )
+                      if (box) nil = exfin('FstTRI','Erreur 2','NON')
                       call quit( ' FstTri ',2 )
                   end if
                   rewrit = Vrai
@@ -982,7 +983,7 @@ C    +              valnum,kind
 
                            if (i3-ind32 > 0)                   then
 
-                              call csorte( kind1,sindex(ind31),i3-ind31 )
+                              call csorte(kind1,sindex(ind31),i3-ind31)
 
 ***                            Passer au niveau vertical suivant ...
 
@@ -994,7 +995,7 @@ C    +              valnum,kind
                                  valnum = kind1(sindex(ind41))
 
                                  do  i4=ind42,i3-1
-                                    if (kind1(sindex(i4)) /= valnum) exit
+                                    if (kind1(sindex(i4))/=valnum) exit
                                  end do
 
 ***                               I4 contient le debut du prochain groupe
@@ -1002,7 +1003,8 @@ C    +              valnum,kind
 ***                               ... selon la pression/sigma.
 
                                  if (i4-ind42 > 0)
-     +                           call csortr( niveau1,sindex(ind41),i4-ind41 )
+     +                           call 
+     +                           csortr(niveau1,sindex(ind41),i4-ind41)
 
 ***                               Passer au prochain bloc de KIND.
 
@@ -1070,14 +1072,16 @@ C    +              valnum,kind
 
       if (.not.Desc .or. nwds.gt.nwds0)                        then
 
-          ier =0 ; if (Desc) deallocate( buff,ibuf, stat=ier ) ; if (ier /= 0) goto 999
+          ier =0 ; if (Desc) deallocate( buff,ibuf, stat=ier ) 
+          if (ier /= 0) goto 999
 
 ***        Allouer l'espace de travail necessaire.
 
           nwds0 = nwds
           nw    = max( 4096,2*nwds ) + taille_entete
 
-          allocate( buff(nw),ibuf(nw),stat=ier ) ; if (ier /= 0) goto 999
+          allocate( buff(nw),ibuf(nw),stat=ier )
+          if (ier /= 0) goto 999
        
       end if
 
@@ -1213,12 +1217,12 @@ C    +              valnum,kind
                       inbr2 = fstouv( iu2,'RND' )
                   else
                       write(6,6002) trim( nomfich(2:512) )
-                      if (box) nil = exfin( 'FstTRI', 'Erreur 2', 'NON' )
+                      if (box) nil = exfin('FstTRI','Erreur 2','NON')
                       call quit( ' FstTri ',2 )
                   end if
                   if (inbr2 < 0)                               then
                       write(6,6222) inbr2,trim( nomfich(2:512) )
-                      if (box) nil = exfin( 'FstTRI', 'Erreur 2', 'NON' )
+                      if (box) nil = exfin('FstTRI','Erreur 2','NON')
                       call quit( ' FstTri ',2 )
                   end if
 
@@ -1434,7 +1438,8 @@ CCC   if (ier.ne.0) print *,'erreur dans hpcheck=',ier
  6300 format(/"   L'argument -rewrit n'est plus supporte."/)
 
  6001 format(/'   Deux noms de fichiers sont requis a l''entree...'/)
- 6002 format(/"   Impossible d'associer un nom a une unite d'E/S"/:3x,A/)
+ 6002 format(/"   Impossible d'associer un nom a une unite d'E/S"
+     +        /:3x,A/)
  6222 format(/'   Erreur ',i5," durant l'ouverture (fstouv) "/:3x,A/)
  6003 format(/'   Un fichier source doit exister au depart...'/:3x,A)
  6004 format(/'   Le fichier destination existe deja...'/)

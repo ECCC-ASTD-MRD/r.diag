@@ -1,0 +1,21 @@
+#+TITLE: TODO
+
+* src/cdr2ccc
+
+From looking in =${CMAKE_SOURCE_DIR}/bin=, we see =cdf2ccc= and =cdf2rpn= which call executables compiled in the directory.
+
+Right now it's just the library that is compiled and the executables are not
+
+The makefile has
+
+#+BEGIN_SRC makefile
+cdf2ccc: initial cdf2ccc.F90
+    s.f90 -src cdf2ccc2.F90 -o $@ $$(s.prefix -L $(LIBPATH)) $$(s.prefix -I "$(INCLUDES) $(MODDIR)") $$(s.prefix -l $(MALIB) $(lNetCDF) $(UDUNITS) $(DIAGLIB) $(VGDLIB) $(RMNLIB) \
+	if [ -x $@ ] ; then \
+		/bin/ln -f $@_$(CONV_VERSION)_$(COMP_ARCH) cdf2rpn_$(CONV_VERSION)_$(COMP_ARCH) ; \
+	fi
+#+END_SRC
+
+so it's =ln -f cdf2ccc_${stuff} cdf2rpn_${stuff}=
+
+Ask someone if there is anything special (aside from the obvious possibility that the code looks at argv[0]) with this so that I reproduce the result well.

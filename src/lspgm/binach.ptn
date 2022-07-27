@@ -458,9 +458,11 @@
 ***            TRANSFER THE LABEL.
  
               IF (MACHINE.EQ.1)                                THEN
-                  WRITE (2,6021) BUF(1),SDATE,BUF(3:8),(BUF(I+HEAD),I=1,NWDS)
+                  WRITE (2,6021) BUF(1),SDATE,BUF(3:8),
+     +                (BUF(I+HEAD),I=1,NWDS)
               ELSE IF (MACHINE.EQ.2)                           THEN
-                  WRITE (2,6022) BUF(1),SDATE,BUF(3:8),(BUF(I+HEAD),I=1,NWDS*2)
+                  WRITE (2,6022) BUF(1),SDATE,BUF(3:8),
+     +                (BUF(I+HEAD),I=1,NWDS*2)
               END IF
  
           ELSE IF (TYPE.EQ.'CHAR')                             THEN
