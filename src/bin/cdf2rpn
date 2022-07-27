@@ -4,7 +4,7 @@ print_usage() {
     For a general description of the program
     ${0##*/}
                            ** OR **
-    ${0##*/} [-h|--help] [--doc] [--src] [--versions] [--man]
+    ${0##*/} [-h|--help] [--doc] [--versions] [--man]
                            ** OR **
     ${0##*/} -cdf fichier_netcdf -rpn fichier_rpn [-dir] -attr [fichier_attributs_netcdf] [-autres_arguments]
        "
