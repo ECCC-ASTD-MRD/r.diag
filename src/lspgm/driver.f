@@ -1,4 +1,3 @@
-#     define LIGNE( nom ) If ('nom'.EQ.nomprg) Call nom
 #     if defined (AUTO_DOC)
 *
 *     * LSPGM contient l'historique des revisions a la version UNIX/LINUX
@@ -973,291 +972,291 @@
   200 Call PUTVERB( nomprg ) ! Sauver le nom de la commande
 
       If ('accumul'.EQ.nomprg) Call timavg
-      LIGNE(addf   )
+      If ('addf' .EQ. nomprg) Call addf
       If ('add'.EQ.nomprg) Call addf
       If ('addlev'.EQ.nomprg) Call zadlev
-      LIGNE(adjust )
-      LIGNE(addtext)
-      LIGNE(averages)
-      LIGNE(beta   )
-      LIGNE(beta   )
-      LIGNE(betao  )
-      LIGNE(binach )
-      LIGNE(binning)
-      LIGNE(bins   )
+      If ('adjust' .EQ. nomprg) Call adjust
+      If ('addtext' .EQ. nomprg) Call addtext
+      If ('averages' .EQ. nomprg) Call averages
+      If ('beta' .EQ. nomprg) Call beta
+      If ('beta' .EQ. nomprg) Call beta
+      If ('betao' .EQ. nomprg) Call betao
+      If ('binach' .EQ. nomprg) Call binach
+      If ('binning' .EQ. nomprg) Call binning
+      If ('bins' .EQ. nomprg) Call bins
       If ('cdiv'.EQ.nomprg) Call addf
-      LIGNE(chabin )
+      If ('chabin' .EQ. nomprg) Call chabin
       If ('cmlt'.EQ.nomprg) Call addf
-      LIGNE(cofagg )
-      LIGNE(cofaps )
-      LIGNE(complex)
-      LIGNE(condef )
+      If ('cofagg' .EQ. nomprg) Call cofagg
+      If ('cofaps' .EQ. nomprg) Call cofaps
+      If ('complex' .EQ. nomprg) Call complex
+      If ('condef' .EQ. nomprg) Call condef
       If ('conjmlt'.EQ.nomprg) Call addf
-      LIGNE(convert)
-      LIGNE(corpar )
-      LIGNE(cosf   )
+      If ('convert' .EQ. nomprg) Call convert
+      If ('corpar' .EQ. nomprg) Call corpar
+      If ('cosf' .EQ. nomprg) Call cosf
       If ('cos'.EQ.nomprg) Call cosf
-      LIGNE(critt  )
-      LIGNE(ctemps )
-      LIGNE(cwinds )
-      LIGNE(delhat )
-      LIGNE(delhato)
-      LIGNE(dertim )
-      LIGNE(diftim )
+      If ('critt' .EQ. nomprg) Call critt
+      If ('ctemps' .EQ. nomprg) Call ctemps
+      If ('cwinds' .EQ. nomprg) Call cwinds
+      If ('delhat' .EQ. nomprg) Call delhat
+      If ('delhato' .EQ. nomprg) Call delhato
+      If ('dertim' .EQ. nomprg) Call dertim
+      If ('diftim' .EQ. nomprg) Call diftim
       If ('divf'.EQ.nomprg) Call addf
       If ('div'.EQ.nomprg) Call addf
-      LIGNE(dxdp   )
-      LIGNE(enleve )
-***   LIGNE(eof25  )
-      LIGNE(eofrot )
-      LIGNE(expone )
-      LIGNE(extrac )
-      LIGNE(fcats  )
-      LIGNE(fit    )
+      If ('dxdp' .EQ. nomprg) Call diftim
+      If ('enleve' .EQ. nomprg) Call enleve
+***   If ('eof25' .EQ. nomprg) Call eof25
+      If ('eofrot' .EQ. nomprg) Call eofrot
+      If ('expone' .EQ. nomprg) Call expone
+      If ('extrac' .EQ. nomprg) Call extrac
+      If ('fcats' .EQ. nomprg) Call fcats
+      If ('fit' .EQ. nomprg) Call fit
       If ('fit3d'.EQ.nomprg) Call fit
-      LIGNE(flat   )
-      LIGNE(fmask  )
-      LIGNE(fpow   )
-      LIGNE(fstmdiag)
-      LIGNE(fsttri )
-      LIGNE(ftest  )
-      LIGNE(fullcor)
-      LIGNE(fullmix)
-      LIGNE(gadd   )
+      If ('flat' .EQ. nomprg) Call flat
+      If ('fmask' .EQ. nomprg) Call fmask
+      If ('fpow' .EQ. nomprg) Call fpow
+      If ('fstmdiag' .EQ. nomprg) Call fstmdiag
+      If ('fsttri' .EQ. nomprg) Call fsttri
+      If ('ftest' .EQ. nomprg) Call ftest
+      If ('fullcor' .EQ. nomprg) Call fullcor
+      If ('fullmix' .EQ. nomprg) Call fullmix
+      If ('gadd' .EQ. nomprg) Call gadd
       If ('add2d'.EQ.nomprg) Call gadd
-      LIGNE(gaussw )
+      If ('gaussw' .EQ. nomprg) Call gaussw
       If ('gdiv'.EQ.nomprg) Call gadd
       If ('gmlt'.EQ.nomprg) Call gadd
       If ('mlt2d'.EQ.nomprg) Call gadd
-      LIGNE(ggacof )
-      LIGNE(ggall  )
-      LIGNE(ggaps  )
-      LIGNE(ggatim )
-      LIGNE(ggdlat )
-      LIGNE(ggdlon )
-      LIGNE(gghems )
-      LIGNE(gglob  )
-      LIGNE(ggsign )
-      LIGNE(ggstat )
-      LIGNE(ggtrig )
-      LIGNE(ggvecps)
+      If ('ggacof' .EQ. nomprg) Call ggacof
+      If ('ggall' .EQ. nomprg) Call ggall
+      If ('ggaps' .EQ. nomprg) Call ggaps
+      If ('ggatim' .EQ. nomprg) Call ggatim
+      If ('ggdlat' .EQ. nomprg) Call ggdlat
+      If ('ggdlon' .EQ. nomprg) Call ggdlon
+      If ('gghems' .EQ. nomprg) Call gghems
+      If ('gglob' .EQ. nomprg) Call gghems
+      If ('ggsign' .EQ. nomprg) Call ggsign
+      If ('ggstat' .EQ. nomprg) Call ggstat
+      If ('ggtrig' .EQ. nomprg) Call ggtrig
+      If ('ggvecps' .EQ. nomprg) Call ggvecps
       If ('ggvecz'.EQ.nomprg) Call ggvecps
-      LIGNE(globavg)
-      LIGNE(gpasg  )
-      LIGNE(gpdpd  )
-      LIGNE(gphum  )
+      If ('globavg' .EQ. nomprg) Call globavg
+      If ('gpasg' .EQ. nomprg) Call gpasg
+      If ('gpdpd' .EQ. nomprg) Call gpdpd
+      If ('gphum' .EQ. nomprg) Call gphum
       If ('gptavt'.EQ.nomprg) Call gpvtat
-      LIGNE(gpvtat )
-      LIGNE(grset  )
-      LIGNE(gsapl  )
-      LIGNE(gsaptp )
-      LIGNE(gsapzl )
+      If ('gpvtat' .EQ. nomprg) Call gpvtat
+      If ('grset' .EQ. nomprg) Call grset
+      If ('gsapl' .EQ. nomprg) Call gsapl
+      If ('gsaptp' .EQ. nomprg) Call gsaptp
+      If ('gsapzl' .EQ. nomprg) Call gsapzl
       If ('gsasg'.EQ.nomprg) Call gpasg
-      LIGNE(gsathl )
-      LIGNE(gsathlt)
-      LIGNE(gshumh )
-      LIGNE(gsmslp )
-      LIGNE(gsmslph)
-      LIGNE(gsomgah)
-      LIGNE(gsomega)
-      LIGNE(gwtqd  )
-      LIGNE(ijlook )
-      LIGNE(inttim )
+      If ('gsathl' .EQ. nomprg) Call gsathl
+      If ('gsathlt' .EQ. nomprg) Call gsathlt
+      If ('gshumh' .EQ. nomprg) Call gshumh
+      If ('gsmslp' .EQ. nomprg) Call gsmslp
+      If ('gsmslph' .EQ. nomprg) Call gsmslph
+      If ('gsomgah' .EQ. nomprg) Call gsomgah
+      If ('gsomega' .EQ. nomprg) Call gsomega
+      If ('gwtqd' .EQ. nomprg) Call gwtqd
+      If ('ijlook' .EQ. nomprg) Call ijlook
+      If ('inttim' .EQ. nomprg) Call inttim
       If ('timsum'.EQ.nomprg) Call inttim
-      LIGNE(invntry)
-      LIGNE(joiner )
-      LIGNE(joinup )
-      LIGNE(kef    )
+      If ('invntry' .EQ. nomprg) Call invntry
+      If ('joiner' .EQ. nomprg) Call joiner
+      If ('joinup' .EQ. nomprg) Call joinup
+      If ('kef' .EQ. nomprg) Call kef
       If ('ke'.EQ.nomprg) Call kef
-      LIGNE(lagcor )
-      LIGNE(laslon )
-      LIGNE(legendre)
-      LIGNE(levrev )
-      LIGNE(linepc )
-      LIGNE(linint )
-      LIGNE(llagg  )
+      If ('lagcor' .EQ. nomprg) Call lagcor
+      If ('laslon' .EQ. nomprg) Call laslon
+      If ('legendre' .EQ. nomprg) Call legendre
+      If ('levrev' .EQ. nomprg) Call levrev
+      If ('linepc' .EQ. nomprg) Call linepc
+      If ('linint' .EQ. nomprg) Call linint
+      If ('llagg' .EQ. nomprg) Call llagg
       If ('llvagg'.EQ.nomprg) Call llagg
-      LIGNE(loge   )
-      LIGNE(lpprint)
-      LIGNE(lspgm  )
-      LIGNE(lssub  )
-      LIGNE(makezg )
+      If ('loge' .EQ. nomprg) Call loge
+      If ('lpprint' .EQ. nomprg) Call  lpprint
+      If ('lspgm' .EQ. nomprg) Call lspgm
+      If ('lssub' .EQ. nomprg) Call lssub
+      If ('makezg' .EQ. nomprg) Call makezg
       If ('makeyy' .EQ.nomprg) call makezg
       If ('makezgv'.EQ.nomprg) call makezg
       If ('makeyyv'.EQ.nomprg) call makezg
-      LIGNE(memcoef)
-      LIGNE(mempred)
-      LIGNE(meofvec)
-      LIGNE(mergef )
+      If ('memcoef' .EQ. nomprg) Call memcoef
+      If ('mempred' .EQ. nomprg) Call mempred
+      If ('meofvec' .EQ. nomprg) Call meofvec
+      If ('mergef' .EQ. nomprg) Call mergef
       If ('merge'.EQ.nomprg) Call mergef
-      LIGNE(meriavg)
-      LIGNE(minvers)
-      LIGNE(miroir )
-      LIGNE(mkmask1)
-      LIGNE(mkmask2)
-      LIGNE(mkmask3)
-      LIGNE(mksymm )
-      LIGNE(mkunsy )
+      If ('meriavg' .EQ. nomprg) Call meriavg
+      If ('minvers' .EQ. nomprg) Call minvers
+      If ('miroir' .EQ. nomprg) Call miroir
+      If ('mkmask1' .EQ. nomprg) Call mkmask1
+      If ('mkmask2' .EQ. nomprg) Call mkmask2
+      If ('mkmask3' .EQ. nomprg) Call mkmask3
+      If ('mksymm' .EQ. nomprg) Call mksymm
+      If ('mkunsy' .EQ. nomprg) Call mkunsy
       If ('mltf'.EQ.nomprg) Call addf
       If ('mlt'.EQ.nomprg) Call addf
-      LIGNE(mmult  )
-      LIGNE(modulus)
-      LIGNE(tmmult )
+      If ('mmult  ' .EQ. nomprg) Call mmult
+      If ('modulus' .EQ. nomprg) Call modulus
+      If ('tmmult ' .EQ. nomprg) Call tmmult
       If ('msfact'.EQ.nomprg) Call globavg
-      LIGNE(mslpr  )
-      LIGNE(mtrace )
-      LIGNE(newnam )
-      LIGNE(oilfill)
+      If ('mslpr  ' .EQ. nomprg) Call mslpr
+      If ('mtrace ' .EQ. nomprg) Call mtrace
+      If ('newnam ' .EQ. nomprg) Call newnam
+      If ('oilfill' .EQ. nomprg) Call oilfill
       If ('nhall'.EQ.nomprg) Call ggall
-***   LIGNE(nspec  )
-      LIGNE(parmsub)
-      LIGNE(pcomp  )
-      LIGNE(pgen   )
+***   If ('nspec' .EQ. nomprg) Call nspec
+      If ('parmsub' .EQ. nomprg) Call parmsub
+      If ('pcomp' .EQ. nomprg) Call pcomp
+      If ('pgen' .EQ. nomprg) Call pgen
       If ('psagg'.EQ.nomprg) Call llagg
       If ('psvagg'.EQ.nomprg) Call llagg
-      LIGNE(psdiv  )
-      LIGNE(psmlt  )
-      LIGNE(randeof)
-      LIGNE(rangrd )
-      LIGNE(rcopy  )
-      LIGNE(relabl )
-      LIGNE(repack )
-      LIGNE(rgopr  )
-      LIGNE(rmax   )
+      If ('psdiv' .EQ. nomprg) Call psdiv
+      If ('psmlt' .EQ. nomprg) Call psmlt
+      If ('randeof' .EQ. nomprg) Call randeof
+      If ('rangrd' .EQ. nomprg) Call rangrd
+      If ('rcopy' .EQ. nomprg) Call rcopy
+      If ('relabl' .EQ. nomprg) Call relabl
+      If ('repack' .EQ. nomprg) Call repack
+      If ('rgopr' .EQ. nomprg) Call rgopr
+      If ('rmax' .EQ. nomprg) Call rmax
       If ('rmin'.EQ.nomprg) Call rmax
-      LIGNE(rmlabl )
+      If ('rmlabl' .EQ. nomprg) Call rmlabl
       If ('rzonavg'.EQ.nomprg) Call zonavg
       If ('rzonvavg'.EQ.nomprg) Call zonavg
-      LIGNE(select )
-      LIGNE(select2)
+      If ('select' .EQ. nomprg) Call select
+      If ('select2' .EQ. nomprg) Call select2
       If ('shall'.EQ.nomprg) Call ggall
-      LIGNE(shiftf )
+      If ('shiftf' .EQ. nomprg) Call shiftf
       If ('shift'.EQ.nomprg) Call shiftf
-      LIGNE(signag )
-      LIGNE(sinf   )
+      If ('signag' .EQ. nomprg) Call signag
+      If ('sinf' .EQ. nomprg) Call sinf
       If ('sin'.EQ.nomprg) Call sinf
-      LIGNE(slice  )
-      LIGNE(smooth )
-      LIGNE(smspec )
-      LIGNE(solflux)
-      LIGNE(sortf  )
+      If ('slice' .EQ. nomprg) Call slice
+      If ('smooth' .EQ. nomprg) Call smooth
+      If ('smspec' .EQ. nomprg) Call smspec
+      If ('solflux' .EQ. nomprg) Call solflux
+      If ('sortf' .EQ. nomprg) Call sortf
       If ('sort'.EQ.nomprg) Call sortf
-      LIGNE(spamp  )
-      LIGNE(spblow )
-      LIGNE(spcalpa)
-      LIGNE(spcdns )
-      LIGNE(spconj )
-      LIGNE(spcsum )
-      LIGNE(spdlat )
-      LIGNE(spdlon )
-      LIGNE(spdlsq )
-      LIGNE(spectr )
-      LIGNE(spflux )
-      LIGNE(spgdev )
-      LIGNE(splapl )
-      LIGNE(spldiss)
-      LIGNE(splinv )
-      LIGNE(splook )
-      LIGNE(spnegm )
-      LIGNE(spreim )
-      LIGNE(spresol)
-      LIGNE(spslope)
-      LIGNE(spsmoo )
-      LIGNE(spvdgx )
-      LIGNE(spzdev )
-      LIGNE(spzxmlt)
-      LIGNE(sqroot )
-      LIGNE(square )
-      LIGNE(stdev  )
-      LIGNE(subarea)
+      If ('spamp' .EQ. nomprg) Call spamp
+      If ('spblow' .EQ. nomprg) Call spblow
+      If ('spcalpa' .EQ. nomprg) Call spcalpa
+      If ('spcdns' .EQ. nomprg) Call spcdns
+      If ('spconj' .EQ. nomprg) Call spconj
+      If ('spcsum' .EQ. nomprg) Call spcsum
+      If ('spdlat' .EQ. nomprg) Call spdlat
+      If ('spdlon' .EQ. nomprg) Call spdlon
+      If ('spdlsq' .EQ. nomprg) Call spdlsq
+      If ('spectr' .EQ. nomprg) Call spectr
+      If ('spflux' .EQ. nomprg) Call spflux 
+      If ('spgdev' .EQ. nomprg) Call spgdev
+      If ('splapl' .EQ. nomprg) Call splapl
+      If ('spldiss' .EQ. nomprg) Call spldiss
+      If ('splinv' .EQ. nomprg) Call splinv
+      If ('splook' .EQ. nomprg) Call splook
+      If ('spnegm' .EQ. nomprg) Call spnegm
+      If ('spreim' .EQ. nomprg) Call spreim
+      If ('spresol' .EQ. nomprg) Call spresol
+      If ('spslope' .EQ. nomprg) Call spslope
+      If ('spsmoo' .EQ. nomprg) Call spsmoo
+      If ('spvdgx' .EQ. nomprg) Call spvdgx
+      If ('spzdev' .EQ. nomprg) Call spzdev
+      If ('spzxmlt' .EQ. nomprg) Call spzxmlt
+      If ('sqroot' .EQ. nomprg) Call sqroot
+      If ('square' .EQ. nomprg) Call square
+      If ('stdev' .EQ. nomprg) Call stdev
+      If ('subarea' .EQ. nomprg) Call subarea
       If ('subf'.EQ.nomprg) Call addf
       If ('sub'.EQ.nomprg) Call addf
-      LIGNE(t2test )
-      LIGNE(tfilter)
-      LIGNE(timagg )
-      LIGNE(timavg )
-      LIGNE(timcov )
-      LIGNE(timdev )
+      If ('t2test' .EQ. nomprg) Call t2test
+      If ('tfilter' .EQ. nomprg) Call tfilter
+      If ('timagg' .EQ. nomprg) Call timagg
+      If ('timavg' .EQ. nomprg) Call timavg
+      If ('timcov' .EQ. nomprg) Call timcov
+      If ('timdev' .EQ. nomprg) Call timdev
       If ('timmax'.EQ.nomprg) Call timavg
       If ('timmin'.EQ.nomprg) Call timavg
-      LIGNE(timegen)
-      LIGNE(transpos)
-      LIGNE(tsafc  )
-      LIGNE(tscheck)
-      LIGNE(tstep  )
-      LIGNE(ttesta )
-      LIGNE(tteste )
-      LIGNE(unbinn )
-      LIGNE(unmask )
-      LIGNE(unseas )
-      LIGNE(varspec)
-      LIGNE(vbasd  )
-      LIGNE(veint  )
-      LIGNE(vertinc)
-      LIGNE(vminmax)
-      LIGNE(vpint  )
-      LIGNE(vpintl )
-      LIGNE(vpintv )
-      LIGNE(vsint  )
-      LIGNE(vsinth )
+      If ('timegen' .EQ. nomprg) Call timegen
+      If ('transpos' .EQ. nomprg) Call transpos
+      If ('tsafc' .EQ. nomprg) Call tsafc
+      If ('tscheck' .EQ. nomprg) Call tscheck
+      If ('tstep' .EQ. nomprg) Call tstep
+      If ('ttesta' .EQ. nomprg) Call ttesta
+      If ('tteste' .EQ. nomprg) Call tteste
+      If ('unbinn' .EQ. nomprg) Call unbinn
+      If ('unmask' .EQ. nomprg) Call unmask
+      If ('unseas' .EQ. nomprg) Call unseas
+      If ('varspec' .EQ. nomprg) Call varspec
+      If ('vbasd' .EQ. nomprg) Call vbasd
+      If ('veint' .EQ. nomprg) Call veint
+      If ('vertinc' .EQ. nomprg) Call vertinc
+      If ('vminmax' .EQ. nomprg) Call vminmax
+      If ('vpint' .EQ. nomprg) Call vpint
+      If ('vpintl' .EQ. nomprg) Call vpintl
+      If ('vpintv' .EQ. nomprg) Call vpintv
+      If ('vsint' .EQ. nomprg) Call vsint
+      If ('vsinth' .EQ. nomprg) Call vsinth
       If ('vsinthl'.EQ.nomprg) Call vsinth
-      LIGNE(w2stat )
-      LIGNE(windowf)
+      If ('w2stat' .EQ. nomprg) Call w2stat
+      If ('windowf' .EQ. nomprg) Call windowf
       If ('window'.EQ.nomprg) Call windowf
-      LIGNE(xappend) 
-      LIGNE(xfind  )
-      LIGNE(xlin   )
-      LIGNE(xsave  ) 
-      LIGNE(xtrac  )
-      LIGNE(xtrac2 )
-      LIGNE(xtrac3 )
-      LIGNE(xtrac4 )
-      LIGNE(xylin  )
-      LIGNE(ytox   )
-      LIGNE(zadlev )
-      LIGNE(zdhdiv )
-      LIGNE(zonavg )
+      If ('xappend' .EQ. nomprg) Call xappend
+      If ('xfind' .EQ. nomprg) Call xfind
+      If ('xlin' .EQ. nomprg) Call xlin
+      If ('xsave' .EQ. nomprg) Call  xsave
+      If ('xtrac' .EQ. nomprg) Call xtrac
+      If ('xtrac2' .EQ. nomprg) Call xtrac2
+      If ('xtrac3' .EQ. nomprg) Call xtrac3
+      If ('xtrac4' .EQ. nomprg) Call xtrac4
+      If ('xylin' .EQ. nomprg) Call xylin
+      If ('ytox' .EQ. nomprg) Call ytox
+      If ('zadlev' .EQ. nomprg) Call zadlev
+      If ('zdhdiv' .EQ. nomprg) Call zdhdiv
+      If ('zonavg' .EQ. nomprg) Call zonavg
       If ('zonvavg'.EQ.nomprg) Call zonavg
-      LIGNE(zoncov )
+      If ('zoncov' .EQ. nomprg) Call zoncov
       If ('zonvar'.EQ.nomprg) Call zoncov
-      LIGNE(zondev )
+      If ('zondev' .EQ. nomprg) Call zondev
       If ('zonvdev'.EQ.nomprg) Call zondev
-      LIGNE(zonmod )
-      LIGNE(zxaglb )
-      LIGNE(zxdev  )
+      If ('zonmod' .EQ. nomprg) Call zonmod
+      If ('zxaglb' .EQ. nomprg) Call zxaglb
+      If ('zxdev' .EQ. nomprg) Call zxdev
       If ('ggdev'.EQ.nomprg) Call zxdev
-      LIGNE(zxdevp )
-      LIGNE(zxdlat )
-      LIGNE(zxdlatf)
-      LIGNE(zxgam  )
-      LIGNE(zxint  )
-      LIGNE(zxmav  )
-      LIGNE(zxprint)
-      LIGNE(zxpsi  )
+      If ('zxdevp' .EQ. nomprg) Call zxdevp
+      If ('zxdlat' .EQ. nomprg) Call zxdlat
+      If ('zxdlatf' .EQ. nomprg) Call zxdlatf
+      If ('zxgam' .EQ. nomprg) Call zxgam
+      If ('zxint' .EQ. nomprg) Call zxint
+      If ('zxmav' .EQ. nomprg) Call zxmav
+      If ('zxprint' .EQ. nomprg) Call zxprint
+      If ('zxpsi' .EQ. nomprg) Call zxpsi
       If ('zxrhum'.EQ.nomprg) Call gphum
-      LIGNE(zxtrig )
-      LIGNE(zxwave )
+      If ('zxtrig' .EQ. nomprg) Call zxtrig
+      If ('zxwave' .EQ. nomprg) Call zxwave
 #     if !defined (NOPLOT)
-      LIGNE(crvplot)
-      LIGNE(ggplot )
-      LIGNE(hdplot )
-      LIGNE(hovplot)
-      LIGNE(spplot )
-      LIGNE(txtplot)
-      LIGNE(xplot  ) 
-      LIGNE(xmplot ) 
-      LIGNE(zxplot )
+      If ('crvplot' .EQ. nomprg) Call crvplot
+      If ('ggplot' .EQ. nomprg) Call ggplot
+      If ('hdplot' .EQ. nomprg) Call hdplot
+      If ('hovplot' .EQ. nomprg) Call hovplot
+      If ('spplot' .EQ. nomprg) Call spplot
+      If ('txtplot' .EQ. nomprg) Call txtplot
+      If ('xplot' .EQ. nomprg) Call  xplot
+      If ('xmplot' .EQ. nomprg) Call  xmplot
+      If ('zxplot' .EQ. nomprg) Call zxplot
 #     endif
 #     if !defined (NOMCR)
-      LIGNE(barx   )
-      LIGNE(bary   )
-      LIGNE(calmap )
-      LIGNE(calpres)
-      LIGNE(delx   )
-      LIGNE(dely   )
-      LIGNE(plagalc)
-      LIGNE(psgrid )
-      LIGNE(xpand  )
+      If ('barx' .EQ. nomprg) Call barx
+      If ('bary' .EQ. nomprg) Call bary
+      If ('calmap' .EQ. nomprg) Call calmap
+      If ('calpres' .EQ. nomprg) Call calpres
+      If ('delx' .EQ. nomprg) Call delx
+      If ('dely' .EQ. nomprg) Call dely
+      If ('plagalc' .EQ. nomprg) Call plagalc
+      If ('psgrid' .EQ. nomprg) Call psgrid
+      If ('xpand' .EQ. nomprg) Call xpand
 #     endif
 
       Write(6,'(//" Programme ",A8," inconnu."//)') nomprg
