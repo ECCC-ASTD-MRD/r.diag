@@ -24,7 +24,7 @@ build:icelake-inteloneapi-2022.1.2:
    script:
       - set +e
       - source ci-env/latest/rhel-8-icelake-64/inteloneapi-2022.1.2.sh
-      - . r.load.dot ${SSM}/libs /fs/ssm/opt/hdf5-netcdf4/serial/shared/inteloneapi-2022.1.2/01
+      - . r.load.dot ${SSM}/libs /fs/ssm/main/opt/hdf5-netcdf4/serial/shared/inteloneapi-2022.1.2/01
       - set -e
       - mkdir build_icelake-inteloneapi-2022.1.2
       - cd build_icelake-inteloneapi-2022.1.2
@@ -44,7 +44,7 @@ build:amd64-inteloneapi-2022.1.2:
    script:
       - set +e
       - source ci-env/latest/rhel-8-amd-64/inteloneapi-2022.1.2.sh
-      - . r.load.dot ${SSM}/libs /fs/ssm/opt/hdf5-netcdf4/serial/shared/inteloneapi-2022.1.2/01
+      - . r.load.dot ${SSM}/libs /fs/ssm/main/opt/hdf5-netcdf4/serial/shared/inteloneapi-2022.1.2/01
       - set -e
       - mkdir build_amd64-inteloneapi-2022.1.2
       - cd build_amd64-inteloneapi-2022.1.2
@@ -64,7 +64,7 @@ build:amd64-gnu-9.3.0:
    script:
       - set +e
       - source ci-env/latest/rhel-8-amd-64/gnu-9.3.0.sh 
-      - . r.load.dot ${SSM}/libs /fs/ssm/opt/hdf5-netcdf4/serial/shared/inteloneapi-2022.1.2/01
+      - . r.load.dot ${SSM}/libs /fs/ssm/main/opt/hdf5-netcdf4/serial/shared/inteloneapi-2022.1.2/01
       - set -e
       - mkdir build_amd64-gnu-9.3.0
       - cd build_amd64-gnu-9.3.0
