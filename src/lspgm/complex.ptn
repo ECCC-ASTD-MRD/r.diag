@@ -9,7 +9,6 @@
 *
 *
 *     AUTHOR   - B.Dugasr, Oct/94.
-*     LAST REVISION: $Header: /home/cvs/RMNLIB/utils/rdiag/lspgm/complex.ptn,v 4.10 2014/09/25 20:20:46 dugas Exp $
 *
 *
 *     PURPOSE - MODE 1: FILE Y = REAL (X) AND Z = IMAG (X)

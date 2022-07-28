@@ -18,7 +18,6 @@
 *
 *
 *     AUTHOR   - M.Lazare, JUN 22/84.
-*     LAST REVISION: $Header: /home/cvs/RMNLIB/utils/rdiag/lspgm/lpprint.ptn,v 4.18 2014/09/25 20:20:50 dugas Exp $
 *
 *
 *     PURPOSE  - PRINTS VALUES FROM INLP FILE, ONE RECORD AT A TIME.

@@ -9,7 +9,6 @@
 *
 *
 *     AUTHOR  - J.D.Henderson, NOV 24/80.
-*     LAST REVISION: $Header: /home/cvs/RMNLIB/utils/rdiag/lspgm/ggsign.ptn,v 4.6 2014/09/25 20:20:48 dugas Exp $
 *
 *
 *     PURPOSE - DRAWS A COMPACT MAP OF THE SIGN OF EACH GRID POINT FOR EACH

@@ -8,7 +8,6 @@
 * 
 *
 *     AUTHOR  - J.D.Henderson AND R.Laprise, MAY 13/83.
-*     LAST REVISION: $Header: /home/cvs/RMNLIB/utils/rdiag/lspgm/repack.ptn,v 4.18 2014/12/04 00:25:58 dugas Exp $
 * 
 *
 *     PURPOSE - REPACKS A COMPLETE FILE WITH A NEW PACKING DENSITY. 

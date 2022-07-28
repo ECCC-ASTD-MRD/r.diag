@@ -17,7 +17,6 @@
 * 
 *
 *     AUTHOR  - J.D.Henderson, NOV 5/80.
-*     LAST REVISION: $Header: /home/cvs/RMNLIB/utils/rdiag/lspgm/zondev.ptn,v 4.14 2014/09/25 20:20:57 dugas Exp $
 *
 * 
 *     PURPOSE - COMPUTES A SET OF LAT-LON GRIDS CONTAINING DEVIATIONS

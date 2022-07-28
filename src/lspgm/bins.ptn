@@ -9,7 +9,6 @@
 *
 *
 *     AUTHOR  - G.J.Boer, November 1985
-*     LAST REVISION: $Header: /home/cvs/RMNLIB/utils/rdiag/lspgm/bins.ptn,v 4.8 2014/09/25 20:20:45 dugas Exp $
 *
 *
 *     PURPOSE - SIMPLE TIMESTEP BINNING PROGRAM.

@@ -13,7 +13,6 @@
 *
 *
 *     AUTHOR  - D. LIU (BASED ON VSINTH BY R. LAPRISE), Dec 06/1993.
-*     LAST REVISION: $Header: /home/cvs/RMNLIB/utils/rdiag/lspgm/veint.ptn,v 4.9 2014/09/25 20:20:55 dugas Exp $
 *
 *
 *     PURPOSE - COMPUTES THE VERTICAL ETA INTEGRAL FOR DATA ON ETA

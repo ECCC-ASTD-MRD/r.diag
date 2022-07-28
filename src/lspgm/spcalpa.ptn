@@ -12,7 +12,6 @@
 * 
 *
 *     AUTHORS  - J.D.Henderson AND T.Shepherd, JUN 01/79.
-*     LAST REVISION: $Header: /home/cvs/RMNLIB/utils/rdiag/lspgm/spcalpa.ptn,v 4.7 2014/09/25 20:20:53 dugas Exp $
 * 
 *
 *     PURPOSE  - PRODUCES A COMPLEX FILE (OUT) OF THE FACTOR C-ALPHA=N(N+1);

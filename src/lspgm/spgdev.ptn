@@ -9,7 +9,6 @@
 *
 *
 *     AUTHOR  - S.Lambert, SEPT 1979.
-*     LAST REVISION: $Header: /home/cvs/RMNLIB/utils/rdiag/lspgm/spgdev.ptn,v 4.9 2014/09/25 20:20:53 dugas Exp $
 *
 *
 *     PURPOSE - SETS THE SURFACE MEAN OF EACH FIELD IN A SPECTRAL FILE 

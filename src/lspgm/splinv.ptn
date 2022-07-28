@@ -12,7 +12,6 @@
 *
 *
 *     AUTHORS - B.Dugas AND S.J.Lambert, SEPT 13/86.
-*     LAST REVISION: $Header: /home/cvs/RMNLIB/utils/rdiag/lspgm/splinv.ptn,v 4.11 2014/09/25 20:20:53 dugas Exp $
 *
 *
 *     PURPOSE - CALCULATES THE NEGATIVE OF THE INVERSE LAPLACIAN IN 

@@ -10,7 +10,6 @@
 *
 *
 *     AUTHOR  - Rene Laprise , MAY 13/83.
-*     LAST REVISION: $Header: /home/cvs/RMNLIB/utils/rdiag/lspgm/psdiv.ptn,v 4.9 2014/09/25 20:20:52 dugas Exp $
 *
 *
 *     PURPOSE - DIVIDES A FILE OF REAL OR COMPLEX MULTI-LEVEL GRIDS

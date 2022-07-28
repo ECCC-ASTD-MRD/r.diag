@@ -22,7 +22,6 @@
 *
 *
 *     AUTHORS - M.LAZARE AND F.MAJAESS.
-*     LAST REVISION: $Header: /home/cvs/RMNLIB/utils/rdiag/lspgm/gsomgah.ptn,v 4.10 2014/10/16 11:34:06 dugas Exp $
 *
 *
 *     PURPOSE - COMPUTES A GRID FILE OF VERTICAL MOTION (DP/DT) FROM

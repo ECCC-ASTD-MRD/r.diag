@@ -12,7 +12,6 @@
 *
 *
 *     AUTHOR   - M.Lazare, JUN 13/84.
-*     LAST REVISION: $Header: /home/cvs/RMNLIB/utils/rdiag/lspgm/zxprint.ptn,v 4.9 2014/09/25 20:20:57 dugas Exp $
 *
 *
 *     PURPOSE  - PRINT ON LINE PRINTER THE VALUES IN A CROSS-SECTION FILE.

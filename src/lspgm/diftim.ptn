@@ -10,7 +10,6 @@
 *
 *
 *     AUTHOR  - J.D.Henderson, 1981.
-*     LAST REVISION: $Header: /home/cvs/RMNLIB/utils/rdiag/lspgm/diftim.ptn,v 4.12 2014/09/25 20:20:47 dugas Exp $
 *
 *
 *     PURPOSE - SUBTRACTS TWO SETS IN A FILE XIN AS SELECTED ON A CARD AND

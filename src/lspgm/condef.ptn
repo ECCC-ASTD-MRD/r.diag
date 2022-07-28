@@ -9,7 +9,6 @@
 *
 *
 *     AUTHOR  - R.Laprise, NOV 22/83.
-*     LAST REVISION: $Header: /home/cvs/RMNLIB/utils/rdiag/lspgm/condef.ptn,v 4.3 2014/09/25 20:20:46 dugas Exp $
 *
 *
 *     PURPOSE - JCL PRE-PROCESSOR TO BE INVOKED PRIOR TO PARMSUB.  LINES

@@ -21,7 +21,6 @@
 *
 *
 *     AUTHOR   - J.D.Henderson, MAR 30/82.
-*     LAST REVISION: $Header: /home/cvs/RMNLIB/utils/rdiag/lspgm/slice.ptn,v 4.15 2014/09/25 20:20:52 dugas Exp $
 *
 *
 *     PURPOSE  - SELECTS ONE COLUMN OR ROW FROM EACH FIELD IN FILE IN AND

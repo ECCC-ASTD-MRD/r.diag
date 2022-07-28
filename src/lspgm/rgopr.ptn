@@ -9,7 +9,6 @@
 *
 *
 *     AUTHORS - R.Laprise AND J.D.Henderson, MAY 13 1983.
-*     LAST REVISION: $Header: /home/cvs/RMNLIB/utils/rdiag/lspgm/rgopr.ptn,v 4.9 2014/09/25 20:20:52 dugas Exp $
 *
 *
 *     PURPOSE - MULTIPLIES A MULTI-LEVEL PRESSURE FILE BY (RGAS/PRESSURE).

@@ -19,7 +19,6 @@
 *
 *
 *     AUTHORS - J.D.Henderson
-*     LAST REVISION: $Header: /home/cvs/RMNLIB/utils/rdiag/lspgm/gsomega.ptn,v 4.9 2014/10/16 11:34:05 dugas Exp $
 *
 *
 *     PURPOSE - COMPUTES A GRID FILE OF VERTICAL MOTION (DP/DT) FROM

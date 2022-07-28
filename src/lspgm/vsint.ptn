@@ -8,7 +8,6 @@
 *      vsint  - VERTICAL SIGMA INTEGRAL OF A FILE (FULL OR HALF LEVELS)
 *
 *     AUTHOR  - B.Dugas, FEB 25/85.
-*     LAST REVISION: $Header: /home/cvs/RMNLIB/utils/rdiag/lspgm/vsint.ptn,v 4.12 2014/09/25 20:20:56 dugas Exp $
 *
 *
 *     PURPOSE - VERTICAL INTEGRATION OF A FILE OF SETS ON SIGMA LEVELS

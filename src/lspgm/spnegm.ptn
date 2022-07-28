@@ -11,7 +11,6 @@
 *      spnegm  - PRODUCES SPECTRAL HARMONIC "-M CONJUGATE"
 *
 *     AUTHOR  - G.J.Boer, MAR 1985.
-*     LAST REVISION: $Header: /home/cvs/RMNLIB/utils/rdiag/lspgm/spnegm.ptn,v 4.8 2014/10/16 11:34:08 dugas Exp $
 *
 *
 *     PURPOSE - PRODUCES THE SPECTRAL HARMONIC COEFFICIENTS WHICH ARISE

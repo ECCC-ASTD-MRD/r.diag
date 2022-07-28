@@ -16,7 +16,6 @@
 *
 *
 *     AUTHOR   - J.D.Henderson,  Nov 28/80.
-*     LAST REVISION: $Header: /home/cvs/RMNLIB/utils/rdiag/lspgm/cofaps.ptn,v 4.11 2014/10/16 11:34:03 dugas Exp $
 *
 *
 *     PURPOSE  - CONVERTS A FILE OF GLOBAL SPECTRAL HARMONIC FIELDS (SPEC)

@@ -10,7 +10,6 @@
 *
 *
 *     AUTHORS - F.Zwiers, JAN 25/85,
-*     LAST REVISION: $Header: /home/cvs/RMNLIB/utils/rdiag/lspgm/ttesta.ptn,v 4.20 2014/09/25 20:20:55 dugas Exp $
 *
 *
 *     PURPOSE - CONDUCT A DIFFERENCE OF MEANS TEST. THE TEST WHICH IS CONDUCTED

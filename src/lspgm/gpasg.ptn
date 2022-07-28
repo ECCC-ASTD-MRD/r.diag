@@ -23,7 +23,6 @@
 *
 *
 *     AUTHORS - Nils Ek, Bernard Dugas, RPN: Sept 1998 (after GSAPL)
-*     LAST REVISION: $Header: /home/cvs/RMNLIB/utils/rdiag/lspgm/gpasg.ptn,v 4.30 2014/12/03 23:57:22 dugas Exp $
 *
 *
 *     PURPOSE - INTERPOLATES FROM PRESSURE OR ETA (SIGMA/HYBRID/GEM/GEM2/GEM3/GEM4)

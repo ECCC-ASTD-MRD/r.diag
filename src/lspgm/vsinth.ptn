@@ -19,7 +19,6 @@
 *
 *
 *     AUTHOR  - R. LAPRISE, FEB 16/88.
-*     LAST REVISION: $Header: /home/cvs/RMNLIB/utils/rdiag/lspgm/vsinth.ptn,v 4.29 2015/03/30 22:22:32 dugas Exp $
 *
 *
 *     PURPOSE - COMPUTES THE VERTICAL SIGMA INTEGRAL FOR DATA ON ETA

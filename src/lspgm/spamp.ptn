@@ -9,7 +9,6 @@
 *
 *
 *     AUTHOR  - G.J.Boer, MAR 1985.
-*     LAST REVISION: $Header: /home/cvs/RMNLIB/utils/rdiag/lspgm/spamp.ptn,v 4.9 2014/09/25 20:20:53 dugas Exp $
 *
 *
 *     PURPOSE - FILE ARITHMETIC PROGRAM Y = SQROOT( X * CONJG(X) ),

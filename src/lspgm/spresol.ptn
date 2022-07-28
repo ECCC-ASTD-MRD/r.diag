@@ -12,7 +12,6 @@
 * 
 *
 *     AUTHOR  - S.LAMBERT, NOV 1979.
-*     LAST REVISION: $Header: /home/cvs/RMNLIB/utils/rdiag/lspgm/spresol.ptn,v 4.9 2014/09/25 20:20:54 dugas Exp $
 *
 * 
 *     PURPOSE - RETURNS IN SPOUT FILE A LOWER SPECTRAL RESOLUTION SUB-SET OF 

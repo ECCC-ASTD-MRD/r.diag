@@ -10,7 +10,6 @@
 *
 *
 *     AUTHORS - J.D.Henderson, L.Lefaivre AND R.Laprise.
-*     LAST REVISION: $Header: /home/cvs/RMNLIB/utils/rdiag/lspgm/ggplot.ptn,v 4.35 2015/04/02 21:58:28 dugas Exp $
 *
 *
 *     PURPOSE - PLOT MAPS OF Z, Z AND X, VECTOR FIELD OF (U,V), Z AND (U,V),

@@ -9,7 +9,6 @@
 *
 *
 *     AUTHORS  - R.Laprise AND J.D.Henderson, MAY 14 1983.
-*     LAST REVISION: $Header: /home/cvs/RMNLIB/utils/rdiag/lspgm/vpint.ptn,v 4.12 2014/09/25 20:20:55 dugas Exp $
 *
 *
 *     PURPOSE  - COMPUTES THE VERTICAL INTEGRATION OF A FILE OF PRESSURE LEVEL

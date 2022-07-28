@@ -16,7 +16,6 @@
 * 
 *
 *     AUTHOR  - B.Dugas, JAN/06.
-*     LAST REVISION: $Header: /home/cvs/RMNLIB/utils/rdiag/lspgm/meriavg.ptn,v 4.6 2014/09/25 20:20:51 dugas Exp $
 *
 * 
 *     PURPOSE - COMPUTES A VECTOR OF MERIDIONAL MEANS FOR EACH GRID

@@ -20,7 +20,6 @@
 *
 *
 *     AUTHOR  - J.D.Henderson, NOV 06/81.
-*     LAST REVISION: $Header: /home/cvs/RMNLIB/utils/rdiag/lspgm/cofagg.ptn,v 4.12 2014/09/25 20:20:46 dugas Exp $
 *
 *
 *     PURPOSE - READS A FILE OF SPECTRAL COEFFICIENTS (SPFILE), CONVERTS

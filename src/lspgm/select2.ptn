@@ -12,7 +12,6 @@
 *
 * 
 *     AUTHORS   - F.Zwiers AND B.Dugas, JAN 14/85.
-*     LAST REVISION: $Header: /home/cvs/RMNLIB/utils/rdiag/lspgm/select2.ptn,v 4.23 2014/09/25 20:20:52 dugas Exp $
 *
 * 
 *     PURPOSE  - SELECT ALL VARIABLES (OR 1 OR 2 SPECIFIED VARIABLES) BETWEEN

@@ -13,7 +13,6 @@
 *
 *
 *     AUTHOR  - N.Sargent, JUN 06/81.
-*     LAST REVISION: $Header: /home/cvs/RMNLIB/utils/rdiag/lspgm/relabl.ptn,v 4.16 2014/09/25 20:20:52 dugas Exp $
 *
 *
 *     PURPOSE - COPIES A FILE CHANGING LABELS WHERE INDICATED.

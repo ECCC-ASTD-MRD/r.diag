@@ -5,8 +5,6 @@
 *
 *
 *     AUTHOR   - B.Dugas, DECEMBRE 22/85.
-*     LAST REVISION: $Header: /home/cvs/RMNLIB/utils/rdiag/lspgm/anomali.ptn,v 4.10 2014/09/25 20:20:45 dugas Exp $
-*
 *
 *     DESCRIPTION...
 *      anomali - TESTING A SET OF CONDITIONS ON SETS OF TIME SERIES

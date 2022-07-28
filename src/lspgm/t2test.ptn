@@ -11,7 +11,6 @@
 *
 *
 *     AUTHORS - F. Zwiers and F. Majaess, November 06 1987.
-*     LAST REVISION: $Header: /home/cvs/RMNLIB/utils/rdiag/lspgm/t2test.ptn,v 4.15 2014/09/25 20:20:54 dugas Exp $
 *
 *
 *     PURPOSE - CONDUCT A TWO SAMPLE HOTELLING'S T**2 STATISTICAL TEST.

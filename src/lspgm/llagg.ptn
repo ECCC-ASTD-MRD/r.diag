@@ -21,7 +21,6 @@
 *
 *
 *     AUTHOR  - J.D.HENDERSON
-*     LAST REVISION: $Header: /home/cvs/RMNLIB/utils/rdiag/lspgm/llagg.ptn,v 4.48 2014/09/25 20:20:50 dugas Exp $
 *
 *
 *     PURPOSE - CONVERTS A FILE OF LAT-LONG (POSSIBLY MASKED/SHIFTED

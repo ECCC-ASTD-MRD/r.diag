@@ -15,7 +15,6 @@
 *
 *
 *     AUTHORS  - S.Lambert AND T.Shepherd, MAY 13/83.
-*     LAST REVISION: $Header: /home/cvs/RMNLIB/utils/rdiag/lspgm/spcsum.ptn,v 4.20 2014/09/25 20:20:53 dugas Exp $
 *
 *
 *     PURPOSE - SUMS A COMPLEX-VALUED SPECTRAL FILE SC(N,M) EITHER OVER THE

@@ -11,7 +11,6 @@
 *
 * 
 *     AUTHORS  - F. ZWIERS AND B. DUGAS, AUG 15/85.
-*     LAST REVISION: $Header: /home/cvs/RMNLIB/utils/rdiag/lspgm/tsafc.ptn,v 4.10 2014/09/25 20:20:55 dugas Exp $
 *
 * 
 *     PURPOSE  - COMPUTE FINITE FFT'S OF TIME SERIES. 

@@ -15,7 +15,6 @@
 *
 *
 *     AUTHOR  - B.Dugas, JAN/87.
-*     LAST REVISION: $Header: /home/cvs/RMNLIB/utils/rdiag/lspgm/timagg.ptn,v 4.20 2015/02/13 18:53:43 dugas Exp $
 *
 *
 *     PURPOSE - TRANSPOSE A  FILE OF TIME SERIES (OR TIME SPECTRAL COEF-

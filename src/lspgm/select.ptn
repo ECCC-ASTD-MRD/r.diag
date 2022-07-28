@@ -14,7 +14,6 @@
 *
 * 
 *     AUTHOR  - J.D.Henderson AND R.Laprise, MAY 13/83.
-*     LAST REVISION: $Header: /home/cvs/RMNLIB/utils/rdiag/lspgm/select.ptn,v 4.27 2014/09/25 20:20:52 dugas Exp $
 *
 * 
 *     PURPOSE - SELECTS EITHER ALL VARIABLES, OR ONE TO TEN NAMED VARIABLES, 

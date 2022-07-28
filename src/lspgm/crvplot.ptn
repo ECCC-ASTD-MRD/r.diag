@@ -18,7 +18,6 @@
 *
 *
 *     AUTHORS - F.Zwiers, R.Laprise, 1985.
-*     LAST REVISION: $Header: /home/cvs/RMNLIB/utils/rdiag/lspgm/crvplot.ptn,v 4.21 2014/12/22 19:24:53 dugas Exp $
 *
 *
 *     PURPOSE - READ GROUPS OF MULTI-VALUED FUNCTIONS FROM FILE YAXIS AND

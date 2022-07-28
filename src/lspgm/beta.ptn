@@ -9,8 +9,6 @@
 *
 *
 *     AUTHOR  - G.J.Boer, MAR 87.
-*     LAST REVISION: $Header: /home/cvs/RMNLIB/utils/rdiag/lspgm/beta.ptn,v 4.7 2014/09/25 20:20:45 dugas Exp $
-*
 *
 *     PURPOSE - COMPUTES THE FUNCTION "BETA" FOR A FILE OF SURFACE
 *               PRESSURE GRIDS. THE REQUIRED PRESSURE VALUES ARE

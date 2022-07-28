@@ -8,7 +8,6 @@
 *
 *
 *     AUTHOR  - J.D.Henderson, NOV  7/80.
-*     LAST REVISION: $Header: /home/cvs/RMNLIB/utils/rdiag/lspgm/zxdlat.ptn,v 4.8 2014/09/25 20:20:57 dugas Exp $
 *
 *
 *     PURPOSE - COMPUTES IN ZXOUT THE LATITUDE DERIVATIVE OF CROSS-SECTIONS

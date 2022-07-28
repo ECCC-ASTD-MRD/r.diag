@@ -14,7 +14,6 @@
 *
 *
 *     AUTHOR  - R.LAPRISE, CCC  MAY 11/83.
-*     LAST REVISION: $Header: /home/cvs/RMNLIB/utils/rdiag/lspgm/grset.ptn,v 4.17 2014/09/25 20:20:49 dugas Exp $
 *
 *
 *     PURPOSE - CREATES A FILE, GG, CONTAINING NSETS OF ILEV LEVELS OF GRID

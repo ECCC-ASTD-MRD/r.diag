@@ -15,7 +15,6 @@
 *
 *
 *     AUTHOR  - J. Koshyk, July 27/94.
-*     LAST REVISION: $Header: /home/cvs/RMNLIB/utils/rdiag/lspgm/gsathl.ptn,v 4.30 2014/09/25 20:20:49 dugas Exp $
 *
 *
 *     PURPOSE - INTERPOLATES FROM ETA (SIGMA/HYBRID) OR PRESSURE LEVELS TO NTHL

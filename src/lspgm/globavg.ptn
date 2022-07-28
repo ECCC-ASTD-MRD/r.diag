@@ -17,7 +17,6 @@
 *
 *
 *     AUTHOR   - B.Dugas, NOV 23/83.
-*     LAST REVISION: $Header: /home/cvs/RMNLIB/utils/rdiag/lspgm/globavg.ptn,v 4.24 2014/09/25 20:20:49 dugas Exp $
 *
 *
 *     PURPOSE  - CALCULATES THE SURFACE MEAN OF VALUES IN CHAMP FILE WHICH 

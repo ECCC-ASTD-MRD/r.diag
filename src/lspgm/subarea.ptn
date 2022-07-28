@@ -19,7 +19,6 @@
 * 
 *
 *     AUTHORS - M.Sutcliffe, R.Daley AND M.Lazare  AUG 10/87.
-*     LAST REVISION: $Header: /home/cvs/RMNLIB/utils/rdiag/lspgm/subarea.ptn,v 4.12 2014/09/25 20:20:54 dugas Exp $
 *
 * 
 *     PURPOSE - CONVERTS A FILE OF GAUSSIAN OR LAT-LON GRIDS TO A FILE OF POLAR

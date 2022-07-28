@@ -11,7 +11,6 @@
 *
 * 
 *     AUTHORS  - F.Zwiers AND B.Dugas, AUG 26/85.
-*     LAST REVISION: $Header: /home/cvs/RMNLIB/utils/rdiag/lspgm/fcats.ptn,v 4.10 2014/09/25 20:20:47 dugas Exp $
 *
 * 
 *     PURPOSE -  COMPUTE ACTUAL TIME SERIES FROM TIME SERIES FOURIER 

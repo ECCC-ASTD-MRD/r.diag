@@ -14,7 +14,6 @@
 *
 *
 *     AUTHOR  - R. Laprise, FEB 29/88.
-*     LAST REVISION: $Header: /home/cvs/RMNLIB/utils/rdiag/lspgm/gsapl.ptn,v 4.39 2014/09/25 19:53:18 dugas Exp $
 *
 *
 *     PURPOSE - INTERPOLATES FROM ETA (SIGMA/HYBRID/GAL-CHEN/GEM) LEVELS TO

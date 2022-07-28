@@ -5,7 +5,6 @@
 *
 *
 *     AUTHOR - B.Dugas, 19 fevrier 1998.
-*     LAST REVISION: $Header: /home/cvs/RMNLIB/utils/rdiag/lspgm/modulus.ptn,v 4.7 2014/09/25 20:20:51 dugas Exp $
 *
 * 
 *     PURPOSE - CALCULATE THE MODULUS OF ANY NUMERICAL INPUT FIELD.

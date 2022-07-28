@@ -18,7 +18,6 @@
 *
 *
 *     AUTHORS  - F.Zwiers AND B.Dugas, DEC/85.
-*     LAST REVISION: $Header: /home/cvs/RMNLIB/utils/rdiag/lspgm/ggatim.ptn,v 4.22 2014/10/09 21:43:21 dugas Exp $
 *
 *
 *     PURPOSE - TRANSPOSE A FILE OF (REAL OR COMPLEX) GRIDS, ZONAL PROFILES OR

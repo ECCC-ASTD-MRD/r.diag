@@ -9,7 +9,6 @@
 *
 *
 *     AUTHOR  -  F.Zwiers, FEB 16/88.
-*     LAST REVISION: $Header: /home/cvs/RMNLIB/utils/rdiag/lspgm/tscheck.ptn,v 4.11 2014/09/25 20:20:55 dugas Exp $
 *
 *
 *     PURPOSE - PRODUCE A SUMMARY OUTPUT OF THE CONTENTS OF FILES "INx".

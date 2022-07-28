@@ -14,7 +14,6 @@
 *
 *
 *     AUTHOR   - T.Shepherd, JUL 18/1979.
-*     LAST REVISION: $Header: /home/cvs/RMNLIB/utils/rdiag/lspgm/spslope.ptn,v 4.10 2014/09/25 20:20:54 dugas Exp $
 *
 *
 *     PURPOSE - CALCULATES AND PRINTS AN ARRAY OF LOGARITHMIC SLOPES OF A

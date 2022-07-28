@@ -10,7 +10,6 @@
 *
 *
 *     AUTHORS - J.D.Henderson AND B.Dugas, NOV 15 1985.
-*     LAST REVISION: $Header: /home/cvs/RMNLIB/utils/rdiag/lspgm/fmask.ptn,v 4.16 2014/09/25 20:20:47 dugas Exp $
 *
 *
 *     PURPOSE - PRODUCES A FLOATING POINT MASK (0. OR 1.) FROM A FIELD READ

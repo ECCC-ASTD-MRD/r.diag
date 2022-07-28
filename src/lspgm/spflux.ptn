@@ -13,7 +13,6 @@
 *
 *
 *     AUTHOR  - T.Shepherd, JUL 18/79.
-*     LAST REVISION: $Header: /home/cvs/RMNLIB/utils/rdiag/lspgm/spflux.ptn,v 4.10 2014/09/25 20:20:53 dugas Exp $
 *
 *
 *     PURPOSE - COMPUTES THE LEITH FLUX FUNCTION OF A COMPLEX-VALUED SPECTRAL

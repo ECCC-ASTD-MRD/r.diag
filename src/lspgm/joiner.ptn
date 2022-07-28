@@ -9,7 +9,6 @@
 *
 *
 *     AUTHOR  - J.D.Henderson, FEB 13/80.
-*     LAST REVISION: $Header: /home/cvs/RMNLIB/utils/rdiag/lspgm/joiner.ptn,v 4.9 2014/09/25 20:20:50 dugas Exp $
 *
 *
 *     PURPOSE - JOINS TOGETHER TWO TIME ORDERED GCM DIAGNOSTICS FILES INA

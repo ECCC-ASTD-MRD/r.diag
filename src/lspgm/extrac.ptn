@@ -15,7 +15,6 @@
 *
 *
 *     AUTHOR  - B.Dugas, 09 SEPTEMBRE 1985.
-*     LAST REVISION: $Header: /home/cvs/RMNLIB/utils/rdiag/lspgm/extrac.ptn,v 4.23 2014/09/25 20:20:47 dugas Exp $
 *
 *
 *     PURPOSE - EXTRACTS CERTAIN PARTS OF AN ARRAY IN XIN, COMPLEX OR REAL,

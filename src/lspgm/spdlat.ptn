@@ -9,7 +9,6 @@
 *
 *
 *     AUTHOR  - B.Dugas, RPN, FEB 09/94.
-*     LAST REVISION: $Header: /home/cvs/RMNLIB/utils/rdiag/lspgm/spdlat.ptn,v 4.8 2014/09/25 20:20:53 dugas Exp $
 *
 *
 *     PURPOSE - READS A FILE OF SPECTRAL COEFFICIENTS (SPFILE),

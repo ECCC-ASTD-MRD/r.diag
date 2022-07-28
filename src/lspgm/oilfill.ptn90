@@ -10,7 +10,6 @@
 !
 !
 ! Author: M.Valin, UQAM Centre ESCER.
-! Latest revision: $Header: ./oilfill.ptn90,v 1.0 2019/11/19 dugas Exp $
 !
 !
 ! This program will fill a datafield array that has holes (missing values)

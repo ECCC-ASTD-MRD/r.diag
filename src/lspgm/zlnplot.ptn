@@ -9,7 +9,6 @@
 * 
 *
 *     AUTHOR  - M.SUTCLIFFE, JUL 01/87.
-*     LAST REVISION: $Header: /home/cvs/RMNLIB/utils/rdiag/lspgm/zlnplot.ptn,v 4.4 2014/09/25 20:20:56 dugas Exp $
 *
 * 
 *     PURPOSE - PLOTS LONGITUDE-PRESSURE FROM FILE ZXIN, AND POSSIBLY ZXIN2, 

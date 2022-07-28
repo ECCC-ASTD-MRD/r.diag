@@ -16,7 +16,6 @@
 *
 *
 *     AUTHOR  - R. Laprise, FEB 29/88.
-*     LAST REVISION: $Header: /home/cvs/RMNLIB/utils/rdiag/lspgm/gsapzl.ptn,v 4.31 2014/09/25 20:20:49 dugas Exp $
 *
 *
 *     PURPOSE - CALCULATES T AND PHI ON PRESSURE LEVELS FROM "PHI" OR

@@ -9,7 +9,6 @@
 *
 *
 *     AUTHOR  - G. Brunet,  07/94.
-*     LAST REVISION: $Header: /home/cvs/RMNLIB/utils/rdiag/lspgm/memcoef.ptn,v 4.7 2014/09/25 20:20:50 dugas Exp $
 *
 *
 *     PURPOSE - READS A TIME-SERIES AND CALCULATES THE COEFFICIENTS OF 

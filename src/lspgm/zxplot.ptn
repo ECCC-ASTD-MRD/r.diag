@@ -22,7 +22,6 @@
 *
 *
 *     AUTHOR  - J.D.Henderson, MAR 31/81.
-*     LAST REVISION: $Header: /home/cvs/RMNLIB/utils/rdiag/lspgm/zxplot.ptn,v 4.30 2014/12/22 19:24:53 dugas Exp $
 *
 *
 *     PURPOSE - PLOTS CROSS-SECTIONS FROM FILE ZXIN, AND POSSIBLY ZXIN2,

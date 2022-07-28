@@ -12,7 +12,6 @@
 *
 *
 *     AUTHOR  - J.D.Henderson, MAY 11/83.
-*     LAST REVISION: $Header: /home/cvs/RMNLIB/utils/rdiag/lspgm/ggstat.ptn,v 4.25 2014/09/25 20:20:49 dugas Exp $
 *
 *
 *     PURPOSE - PRINTS SIMPLE STATISTICS FOR EACH FIELD IN A SET OF FILES.

@@ -12,7 +12,6 @@
 * 
 *
 *     AUTHOR  - J.D.Henderson, APR 22/80.
-*     LAST REVISION: $Header: /home/cvs/RMNLIB/utils/rdiag/lspgm/cwinds.ptn,v 4.15 2014/10/16 11:34:04 dugas Exp $
 *
 * 
 *     PURPOSE - CONVERTS SPECTRAL VORTICITY (Q) AND DIVERGENCE (D) PAIRS

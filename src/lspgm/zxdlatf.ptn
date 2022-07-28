@@ -8,7 +8,6 @@
 *
 *
 *     AUTHOR  - J.D.Henderson, NOV  7/80.
-*     LAST REVISION: $Header: /home/cvs/RMNLIB/utils/rdiag/lspgm/zxdlatf.ptn,v 4.10 2014/09/25 20:20:57 dugas Exp $
 *
 *
 *     PURPOSE - READS 'G', 'A' OR 'B' GRID CROSS-SECTIONS FROM FILE ZXIN,

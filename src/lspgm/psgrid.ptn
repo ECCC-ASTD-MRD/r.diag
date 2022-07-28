@@ -9,7 +9,6 @@
 *
 *
 *     AUTHOR  - Michel Giguere, 11 mars 1994.
-*     LAST REVISION: $Header: /home/cvs/RMNLIB/utils/rdiag/lspgm/psgrid.ptn,v 4.5 2014/09/25 20:20:52 dugas Exp $
 *
 * 
 *     PURPOSE - CALCUL LES PARAMETRES DE GRILLE POUR UNE GRILLE POLAIRE 

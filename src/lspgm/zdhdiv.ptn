@@ -9,7 +9,6 @@
 *
 *
 *     AUTHOR  - J.D.Henderson, NOV 1980.
-*     LAST REVISION: $Header: /home/cvs/RMNLIB/utils/rdiag/lspgm/zdhdiv.ptn,v 4.8 2014/09/25 20:20:56 dugas Exp $
 *
 *
 *     PURPOSE - DIVIDES A CROSS-SECTION BY THE ZONAL MEAN OF DELTA-HAT.

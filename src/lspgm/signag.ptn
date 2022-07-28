@@ -9,7 +9,6 @@
 *
 *
 *     AUTHOR  - R.Laprise, DEC 06/83.
-*     LAST REVISION: $Header: /home/cvs/RMNLIB/utils/rdiag/lspgm/signag.ptn,v 4.6 2014/09/25 20:20:52 dugas Exp $
 *
 *
 *     PURPOSE - READ INPUT RECORDS CONTAINING A TABLE OF "-", "0" OR "+"

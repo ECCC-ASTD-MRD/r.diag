@@ -9,7 +9,6 @@
 *
 *
 *     AUTHOR  - J.D.Henderson, JUL 08/80.
-*     LAST REVISION: $Header: /home/cvs/RMNLIB/utils/rdiag/lspgm/delhat.ptn,v 4.9 2014/09/25 20:20:46 dugas Exp $
 *
 *
 *     PURPOSE - COMPUTES THE FUNCTION DELTA-HAT FOR A FILE OF SURFACE 

@@ -15,7 +15,6 @@
 *
 *
 *     AUTHOR  - J.D.Henderson, NOV 07/80.
-*     LAST REVISION: $Header: /home/cvs/RMNLIB/utils/rdiag/lspgm/ggdlon.ptn,v 4.13 2014/09/25 20:20:48 dugas Exp $
 *
 *
 *     PURPOSE - COMPUTES LONGITUDE DERIVATIVE OF LAT-LON OR GAUSSIAN

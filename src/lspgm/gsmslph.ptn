@@ -13,7 +13,6 @@
 *
 *
 *     AUTHOR  - M. Lazare, JAN 19/89 (FROM GSMSLP BUT FOR HYBRID MODEL)
-*     LAST REVISION: $Header: /home/cvs/RMNLIB/utils/rdiag/lspgm/gsmslph.ptn,v 4.9 2014/09/25 20:20:49 dugas Exp $
 *
 *
 *     PURPOSE - FROM A SERIES OF HYBRID LEVEL TEMPERATURES (=GSTEMP) AND

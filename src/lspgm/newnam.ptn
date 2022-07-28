@@ -9,7 +9,6 @@
 *
 *
 *     AUTHOR  - J.D.Henderson, JUL 10/81.
-*     LAST REVISION: $Header: /home/cvs/RMNLIB/utils/rdiag/lspgm/newnam.ptn,v 4.8 2014/09/25 20:20:51 dugas Exp $
 *
 *
 *     PURPOSE - COPIES FILE IN TO FILE OUT RE-SETTING THE THIRD WORD OF

@@ -14,7 +14,6 @@
 *
 *
 *     AUTHOR  - R.Laprise, MAY 12/83.
-*     LAST REVISION: $Header: /home/cvs/RMNLIB/utils/rdiag/lspgm/hdplot.ptn,v 4.8 2014/09/25 20:20:50 dugas Exp $
 *
 *
 *     PURPOSE - PLOTS A POLAR PLOT (HARMONIC DIAL) OF ONE SELECTED WAVENUMBER

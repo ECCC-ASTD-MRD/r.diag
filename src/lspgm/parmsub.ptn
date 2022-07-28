@@ -9,7 +9,6 @@
 *
 *
 *     AUTHORS  - R.Laprise, B.Dugas AND J.D.Henderson, MAY 15/83.
-*     LAST REVISION: $Header: /home/cvs/RMNLIB/utils/rdiag/lspgm/parmsub.ptn,v 4.3 2014/09/25 20:20:51 dugas Exp $
 *
 *
 *     PURPOSE  - PARAMETER SUBSTITUTION PROGRAM. 

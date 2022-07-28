@@ -15,7 +15,6 @@
 *
 *
 *     AUTHOR  - J. KOSHYK
-*     LAST REVISION: $Header: /home/cvs/RMNLIB/utils/rdiag/lspgm/gsathlt.ptn,v 4.14 2014/09/25 19:53:18 dugas Exp $
 *
 *
 *     PURPOSE - INTERPOLATES TEMP, PHI, PRES AND DPRES/DTHETA FROM ETA

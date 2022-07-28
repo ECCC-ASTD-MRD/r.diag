@@ -9,7 +9,6 @@
 *
 *
 *     AUTHOR   - D.Neelin, MAY 14 1983.
-*     LAST REVISION: $Header: /home/cvs/RMNLIB/utils/rdiag/lspgm/vpintl.ptn,v 4.13 2014/09/25 20:20:55 dugas Exp $
 *
 *
 *     PURPOSE - VERTICAL INTEGRATION OF A FILE OF PRESSURE LEVEL SETS.

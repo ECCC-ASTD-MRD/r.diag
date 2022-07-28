@@ -15,7 +15,6 @@
 *
 *
 *     AUTHOR  - J.D.Henderson, MAY 07/80.
-*     LAST REVISION: $Header: /home/cvs/RMNLIB/utils/rdiag/lspgm/timavg.ptn,v 4.39 2014/09/25 20:20:54 dugas Exp $
 *
 *
 *     PURPOSE - (1) PERFORMS AS AN ACCUMULATOR: ADDS INFORMATION FROM FILE

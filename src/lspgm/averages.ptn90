@@ -14,8 +14,6 @@
 !
 !
 ! Author: M.Valin, UQAM Centre ESCER.
-! Latest revision: $Header: ./averages.ptn90,v 1.0_rc22 2019/05/14 dugas Exp $
-!
 !
 ! This program calculates time averages and variances of sets of CMC/RPN
 ! files. It can alternatively calculate ensemble means and variances of

@@ -10,7 +10,6 @@
 *
 *
 *     AUTHORS - F. ZWIERS, F. MAJAESS, November 28/1984.
-*     LAST REVISION: $Header: /home/cvs/RMNLIB/utils/rdiag/lspgm/ftest.ptn,v 4.16 2014/09/25 20:20:48 dugas Exp $
 *
 *
 *     PURPOSE - CONDUCT AN EQUALITY OF VARIANCES TEST ( AN F-TEST ) AND
