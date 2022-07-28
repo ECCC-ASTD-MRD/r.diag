@@ -28,7 +28,7 @@ build:icelake-inteloneapi-2022.1.2:
       - set -e
       - mkdir build_icelake-inteloneapi-2022.1.2
       - cd build_icelake-inteloneapi-2022.1.2
-      - cmake ../ -DNetCDF_ROOT=`nc-config --prefix`
+      - cmake ../ -DNetCDF_ROOT=$(dirname $(dirname `which nc-config`))
       - time make -j $NCPUS
    artifacts:
       expire_in: 2 hrs
@@ -48,7 +48,7 @@ build:amd64-inteloneapi-2022.1.2:
       - set -e
       - mkdir build_amd64-inteloneapi-2022.1.2
       - cd build_amd64-inteloneapi-2022.1.2
-      - cmake ../ -DNetCDF_ROOT=`nc-config --prefix`
+      - cmake ../ -DNetCDF_ROOT=$(dirname $(dirname `which nc-config`))
       - time make -j $NCPUS
    artifacts:
       expire_in: 2 hrs
@@ -68,7 +68,7 @@ build:amd64-gnu-9.3.0:
       - set -e
       - mkdir build_amd64-gnu-9.3.0
       - cd build_amd64-gnu-9.3.0
-      - cmake ../ -DNetCDF_ROOT=`nc-config --prefix`
+      - cmake ../ -DNetCDF_ROOT=$(dirname $(dirname `which nc-config`))
       - time make -j $NCPUS
    artifacts:
       expire_in: 2 hrs
