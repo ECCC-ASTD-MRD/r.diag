@@ -1,5 +1,5 @@
 
-      subroutine les_arg( CLES,DEF,def1,DEF2,NBR,VERSION )
+      subroutine les_arg( cles,def,def1,def2,nbr,version )
 
       implicit none
 

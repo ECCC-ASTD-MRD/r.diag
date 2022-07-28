@@ -534,6 +534,8 @@
 
       SUBROUTINE PROGRAM_VERSION ( mode )
 
+#include "r.diag_build_info.h"
+
       IMPLICIT      none
 
       CHARACTER*(*) mode
@@ -552,8 +554,8 @@
 
 !     Identification de la version
 
-      version = '2.3.5'
-      vdate   = 'June 04, 2019'
+      version = CDF_VERSION
+      vdate   = BUILD_TIMESTAMP
 
       AMODE = mode
       CALL LOW2UP( AMODE,AMODE )

@@ -1584,6 +1584,8 @@
       END SUBROUTINE lspgm
       SUBROUTINE PROGRAM_VERSION ( mode )
 
+#include "r.diag_build_info.h"
+
       IMPLICIT      none
 
       CHARACTER*(*) mode
@@ -1592,8 +1594,8 @@
 
 ***    Objet: Imprimer de l'information sur la version courante.
 
-      CHARACTER *80 RDIAG,VERSION,AMODE*3
-      CHARACTER     vdate*20,REV*6
+      CHARACTER *80 rdiag,version,AMODE*3
+      CHARACTER     vdate*20,REV*64
 
       EXTERNAL      RMNLIB_version
 *---------------------------------------------------------------------
@@ -1601,11 +1603,11 @@
       AMODE = mode
       CALL LOW2UP( AMODE,AMODE )
 
-      REV   = '6.4.5'
-      vdate = 'June 04, 2019'
-      RDIAG = 'Version ' // trim( REV ) // ' ' // trim( vdate )
+      REV   = VERSION
+      vdate = BUILD_TIMESTAMP
+      rdiag = 'Version ' // trim( REV ) // ' ' // trim( vdate )
 
-      CALL RMNLIB_version( VERSION, .false.)
+      CALL RMNLIB_version( version, .false.)
 
       IF (AMODE.EQ.'REV')                                      THEN
 
@@ -1619,7 +1621,7 @@
 
       ELSE IF (AMODE.EQ.'ALL' .OR.AMODE.EQ.'OUI')              THEN
 
-          write(6,6000) trim( RDIAG ),trim( VERSION )
+          write(6,6000) trim( rdiag ),trim( version )
 
       END IF
 
