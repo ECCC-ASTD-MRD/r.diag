@@ -865,7 +865,7 @@
       character*512 chaine
 
       integer       iu1,iu2,iu3, i,ipos,nrec,
-     +              nil,  exfin, idatm,iopdatm, inconnu,exdb,
+     +              nil,  exfin, idatm, inconnu,exdb,
      +              indx, idatyp,nextyp, lsr,la,lr,lm,ktr,lrlmt,
      +              imin, imax,  valeur, range, levtyp0,levtyp,
      +              BITSMOT
@@ -929,7 +929,7 @@
       integer   datchek, dtpr,tmpr, complex,complex0
 
       external  cigaxg, cxgaig, exfin,  exdb,
-     +          iopdatm,fixninj,convpr, difdatr
+     +          fixninj,convpr, difdatr
 
       real(8)   :: MisFlag, Epsilon = 0.01
       logical   :: MValue=.false.,MValue_READ=.false.,
@@ -1707,7 +1707,7 @@
 
       if (def1(4).ne.'-1'    )                                 then
           if (def1(4).eq.'JOUR')                               then
-              datei = iopdatm( 'NON' )
+              datei = 010101011
           else
               if (is_off( def1(29) ))                          then
                   read(def1(4),   '(i8)') dtpr
