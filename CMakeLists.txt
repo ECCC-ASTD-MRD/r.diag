@@ -48,10 +48,9 @@ add_subdirectory(src/lssub)
 add_subdirectory(src/lspgm)
 
 ec_install_prefix()
-install(DIRECTORY src/bin     DESTINATION ${CMAKE_INSTALL_PREFIX} USE_SOURCE_PERMISSIONS)
-install(DIRECTORY src/include DESTINATION ${CMAKE_INSTALL_PREFIX} USE_SOURCE_PERMISSIONS)
-install(DIRECTORY src/lib     DESTINATION ${CMAKE_INSTALL_PREFIX} USE_SOURCE_PERMISSIONS)
-install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/src/man DESTINATION ${CMAKE_INSTALL_PREFIX} USE_SOURCE_PERMISSIONS)
+install(DIRECTORY src/bin/     DESTINATION bin USE_SOURCE_PERMISSIONS)
+install(DIRECTORY src/lib/     DESTINATION lib USE_SOURCE_PERMISSIONS)
+install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/src/man/pdoc DESTINATION man USE_SOURCE_PERMISSIONS)
 
 # Packaging
 ec_package_name()                 # Define package prefix  
