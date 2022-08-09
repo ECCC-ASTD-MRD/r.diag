@@ -9,6 +9,7 @@ ec_parse_manifest()        # Parse MANIFEST file
 
 project(${NAME} DESCRIPTION "${DESCRIPTION}")
 set(PROJECT_VERSION ${VERSION}${STATE} CACHE STRING "Define the version of r.diag that will be baked into the various artifacts of this build" FORCE)
+set(${NAME}_VERSION ${PROJECT_VERSION} CACHE INTERNAL "${NAME} version" FORCE) # Needed for cascaded version identification
 
 ec_build_info()            # Generate build information
 
@@ -46,6 +47,7 @@ add_subdirectory(src/cdf2ccc)
 add_subdirectory(src/lssub)
 add_subdirectory(src/lspgm)
 
+ec_install_prefix()
 install(DIRECTORY src/bin     DESTINATION ${CMAKE_INSTALL_PREFIX} USE_SOURCE_PERMISSIONS)
 install(DIRECTORY src/include DESTINATION ${CMAKE_INSTALL_PREFIX} USE_SOURCE_PERMISSIONS)
 install(DIRECTORY src/lib     DESTINATION ${CMAKE_INSTALL_PREFIX} USE_SOURCE_PERMISSIONS)
