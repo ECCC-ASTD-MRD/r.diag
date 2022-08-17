@@ -1,6 +1,6 @@
 NAME       : r.diag
 VERSION    :
-BUILD      : Release
+BUILD      : 
 DESCRIPTION: GEM model and analysis Diagnostics Toolkit
 SUMMARY    : An extensive toolkit available to users wanting to manipulate forecast data in CMC/RPN GEM file format
 MAINTAINER : Djamel Bouhemhem Djamel.Bouhemhem@ec.gc.ca
