@@ -27,9 +27,11 @@ include(CTest)
 add_custom_target(check COMMAND CTEST_OUTPUT_ON_FAILURE=TRUE ${CMAKE_CTEST_COMMAND})
 
 find_package(rmn REQUIRED)
+find_package(NetCDF COMPONENTS Fortran REQUIRED)
+
+set(BLA_STATIC ON)
 find_package(LAPACK REQUIRED)
 find_package(BLAS REQUIRED)
-find_package(NetCDF COMPONENTS Fortran REQUIRED)
 
 include_directories(${CMAKE_SOURCE_DIR}/src/include)
 
@@ -47,7 +49,6 @@ add_subdirectory(src/cdf2ccc)
 add_subdirectory(src/lssub)
 add_subdirectory(src/lspgm)
 
-ec_install_prefix()
 install(DIRECTORY src/bin/     DESTINATION bin USE_SOURCE_PERMISSIONS)
 install(DIRECTORY src/lib/     DESTINATION lib USE_SOURCE_PERMISSIONS)
 install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/src/man/pdoc DESTINATION man USE_SOURCE_PERMISSIONS)

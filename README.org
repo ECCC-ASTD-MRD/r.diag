@@ -169,4 +169,4 @@ make install
 
 ex: 
 . r.load.dot /fs/ssm/main/opt/hdf5-netcdf4/serial/shared/inteloneapi-2022.1.2/01
-cmake .. -Drmn_ROOT=$SSM_DEV/workspace/rmn  -DNetCDF_ROOT=/fs/ssm/main/opt/hdf5-netcdf4/serial/shared/inteloneapi-2022.1.2/01/rhel-8-amd64-64 -DCMAKE_INSTALL_PREFIX=$SSM_DEV/workspace/r.diag
+cmake .. -Drmn_ROOT=$SSM_DEV/workspace/rmn  -DNetCDF_ROOT=/fs/ssm/main/opt/hdf5-netcdf4/serial/static/inteloneapi-2022.1.2/01/rhel-8-amd64-64 -DCMAKE_INSTALL_PREFIX=$SSM_DEV/workspace/r.diag
