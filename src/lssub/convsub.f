@@ -3562,7 +3562,7 @@
      +              TMPDIR /    'TMPDIR'      /,
      +              BIGTMP /   'BIG_TMPDIR'   /
 
-#include <clib_interface.cdk>
+#include <rmn/clib_interface.cdk>
 
 *-------------------------------------------------------------------
       remlocal = rem

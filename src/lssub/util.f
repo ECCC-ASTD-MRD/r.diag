@@ -3904,7 +3904,7 @@ CCC           ERROR = .FALSE.
 
       EXTERNAL      getenvc,messys
 
-#include <clib_interface.cdk>
+#include <rmn/clib_interface.cdk>
 *- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ***    account for blank or empty/null strings.
 

@@ -88,7 +88,7 @@
 
 
 #include <stdlib.h>
-#include <rpnmacros.h>
+#include <rmn/rpnmacros.h>
 #include <string.h>
 
 /* 

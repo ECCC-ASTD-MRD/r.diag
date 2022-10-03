@@ -2,7 +2,7 @@
 #if !defined(__ARMNLIB__)
 #define __ARMNLIB__
 
-#include <rpnmacros.h>
+#include <rmn/rpnmacros.h>
 
 int c_fnom(int *iun,char *filename,char *options,int i);
 int c_fstouv(int iun,char *filename,char *options);
