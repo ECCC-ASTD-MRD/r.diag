@@ -297,10 +297,10 @@ add_dependencies(prog_sq98 diag_sq98)
 install(TARGETS prog_sq98 DESTINATION lib)
 
 add_executable(stable.r.diag driver.f)
-add_dependencies(stable.r.diag prog_sq98 diag_sq98 descrip) 
+add_dependencies(stable.r.diag prog_sq98 diag_sq98 descrip r.diag_build_info)
 target_link_libraries(stable.r.diag PRIVATE prog_sq98 diag_sq98 descrip rmn BLAS::BLAS LAPACK::LAPACK)
 target_compile_definitions(stable.r.diag
-    PRIVATE 
+    PRIVATE
         -DNOPLOT
         -Dnombre_de_taches=1
         -DVERY_NICE=oui
@@ -314,3 +314,63 @@ target_compile_definitions(stable.r.diag
         -DWITHOUT_OpenMP
 )
 install(TARGETS stable.r.diag DESTINATION bin)
+
+set(TEST_DATA_DIR "" CACHE PATH "Directory for input data files for tests")
+
+set(RDIAG_EXEC $<TARGET_FILE:stable.r.diag>)
+if(TEST_DATA_DIR)
+    add_dependencies(check stable.r.diag)
+    set(f1 ${TEST_DATA_DIR}/model/2000110100_00001d)
+    set(f2 ${TEST_DATA_DIR}/model/2000110100_00002d)
+    set(f3 ${TEST_DATA_DIR}/model/2000110100_00003d)
+    set(f4 ${TEST_DATA_DIR}/pres/2000110100_00001d)
+    set(f5 ${TEST_DATA_DIR}/pres/2000110100_00002d)
+    set(f6 ${TEST_DATA_DIR}/pres/2000110100_00003d)
+
+    add_test(NAME r.diag_ggstat
+        COMMAND ${RDIAG_EXEC} ggstat ${f1})
+    add_test(NAME r.diag_enleve
+        COMMAND ${RDIAG_EXEC} enleve ${f2} ./bonjour -name TT)
+    add_test(NAME r.diag_joinup
+        COMMAND ${RDIAG_EXEC} joinup ./${ext}/f1_f2_joinup.rpn ${f1} ${f2})
+    add_test(NAME r.diag_repack
+        COMMAND ${RDIAG_EXEC} repack ${f1} ./${ext}/f1_repack.rpn -npg =-32)
+    add_test(NAME r.diag_select_I0
+        COMMAND ${RDIAG_EXEC} select ${f3} ./${ext}/f3_select.rpn -name I0)
+    add_test(NAME r.diag_select_UU
+        COMMAND ${RDIAG_EXEC} select ${f5} ./${ext}/f5_select.rpn -name UU)
+    add_test(NAME r.diag_subf
+        COMMAND ${RDIAG_EXEC} subf ${f3} ${f2} ./${ext}/f3_f2_subf.rpn)
+    add_test(NAME r.diag_divf
+        COMMAND ${RDIAG_EXEC} divf ${f6} ${f5} ./${ext}/f6_f5_divf.rpn)
+    add_test(NAME r.diag_fstmdiag
+        COMMAND ${RDIAG_EXEC} fstmdiag -s ${f1} -d ./${ext}/f1_fstmdiag -f
+        # ; mv ${ext}/f1_fstmdiag_moyenne ${ext}/f1_fstmdiag_avg.rpn
+        # ; mv ${ext}/f1_fstmdiag_variance ${ext}/f1_fstmdiag_std.rpn
+        )
+    add_test(NAME r.diag_globavg
+        COMMAND ${RDIAG_EXEC} globavg ${f3} ./${ext}/f3_globavg.rpn)
+    add_test(NAME r.diag_mltf
+        COMMAND ${RDIAG_EXEC} mltf ${f5} ${f6} ./${ext}/f5_f6_mltf.rpn)
+    add_test(NAME r.diag_timavg
+        COMMAND ${RDIAG_EXEC} timavg ${f3} ./${ext}/f3_timavg.rpn)
+    add_test(NAME r.diag_xlin
+        COMMAND ${RDIAG_EXEC} xlin ${f6} ./${ext}/f6_xlin.rpn -a 0.0 -b 100.0 -name XLIN)
+    add_test(NAME r.diag_makezg
+        COMMAND ${RDIAG_EXEC} makezg ${f2} ./${ext}/f2_makezg.rpn -i 400 -j 300)
+    add_test(NAME r.diag_zonavg
+        COMMAND ${RDIAG_EXEC} zonavg ${f5} ./${ext}/f5_zonavg.rpn )
+endif()
+
+# Adding a test
+# - If possible, use one of the files in /home/sici000/ci_data/r.diag
+#   and add your test inside the if(TEST_DATA_DIR) block.
+# - If a bug is found that cannot be exposed by a test using one of the files
+#   in TEST_DATA_DIR, then add a test outside of the if(TEST_DATA_DIR) block.
+#
+#       add_test(NAME r.diag_zonavg_xyz
+#           COMMAND ${RDIAG_EXEC} zonavg /home/phc001/a_new_file )
+#
+#   and make sure to mention the new file in your merge request.  Someone from
+#   the maintenance team will copy the file in TEST_DATA_DIR and change the
+#   file path in your test accordingly.

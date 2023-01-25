@@ -141,10 +141,19 @@ This will load the specified compiler and define the ECCI_DATA_DIR variable for 
 #+begin_src
 mkdir build
 cd build
-cmake .. -DCMAKE_INSTALL_PREFIX=${your_choice} -Drmn_ROOT=${librmn_install_path} -DNetCDF_ROOT=${NetCDF_ROOT}
+cmake .. -DCMAKE_INSTALL_PREFIX=${your_choice} -Drmn_ROOT=${librmn_install_path} -DNetCDF_ROOT=${NetCDF_ROOT} [-DTEST_DATA_DIR=${test_data_dir}]
 make -j 4
 make install
 #+end_src
+
+If =-DTEST_DATA_DIR= is used, tests will be defined for =r.diag=.  These
+tests can be run by running =make check= which will ensure that everything
+is built before running them.
+
+When some tests fail, to get more information, tests can be run using
+=ctest --rerun-failed --verbose [--stop-on-failure]= which will run the tests
+that failed.  The =--
+
 
 * Outside CMC (External users)
 
