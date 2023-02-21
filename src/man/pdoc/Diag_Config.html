@@ -1,0 +1,573 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=windows-1252">
+    <title>Variables de Configuration R.DIAG</title>
+  </head>
+  <body> <big><big style="font-family: Helvetica,Arial,sans-serif;"><span style="font-weight: bold;"><big>Variables
+            de configuration utilis&eacute;es par R.DIAG</big><br>
+          <br>
+          1) </span><b>VARIABLES D'ENVIRONNEMENT</b></big><b style="font-family: Helvetica,Arial,sans-serif;"><big><br>
+        </big> <br>
+        ARMNLIB</b><b style="font-family: Helvetica,Arial,sans-serif;"><br>
+      </b></big>
+    <div style="margin-left: 40px; font-family: Helvetica,Arial,sans-serif;"><big>(Variable
+        <span style="font-style: italic; font-weight: bold;">obsol&egrave;te</span> qui
+        &eacute;tait utilis&eacute;e entre autres choses comme point de d&eacute;part de la recherche
+        de la documentation. Cette variable ne devrait plus etre utilis&eacute;e.
+        Remplac&eacute;e par la variable <span style="font-weight: bold;">DIAGNOSTIQUE</span>)
+        <br>
+      </big></div>
+    <big><b style="font-family: Helvetica,Arial,sans-serif;"><br>
+        BIG_TMPDIR</b><span style="font-family: Helvetica,Arial,sans-serif;"> </span><br
+        style="font-family: Helvetica,Arial,sans-serif;">
+    </big>
+    <div style="margin-left: 40px; font-family: Helvetica,Arial,sans-serif;"><big>(R&eacute;pertoire
+temporaire,
+typiquement
+        cr&eacute;&eacute; &agrave; chaque&nbsp;d&eacute;but de session ("login") et d&eacute;truit &agrave;
+        chaque&nbsp;fin de session ("logout"). Voir la variable <b>USE_BIG_TEMPDIR</b>
+        pour plus de d&eacute;tails. Selon la valeur de cette variable, il se peut que
+        les nouveaux fichiers soient par d&eacute;faut cr&eacute;&eacute;s dans ce r&eacute;pertoire, &agrave;
+        moins que leur nom ne contienne une disposition explicite de r&eacute;pertoire
+        telle que dans <span style="font-style: italic;">"<span style="font-weight: bold;">./nomfich"</span></span>.
+        De plus, si un fichier d'entr&eacute;e ne se trouve pas dans le r&eacute;pertoire
+        courant, les applications tenteront de le trouver dans ce <b>BIG_TMPDIR</b>)<br>
+      </big></div>
+    <big><br>
+      <span style="font-family: Helvetica,Arial,sans-serif;"><span style="font-weight: bold;">DATE_FORMAT</span><br>
+      </span></big>
+    <div style="margin-left: 40px; font-family: Helvetica,Arial,sans-serif;"><big>(Chaine
+de
+        caract&egrave;res d&eacute;crivant le format utilis&eacute; &agrave; la lecture d'une date en
+        argument sur la ligne de commande. Les valeurs reconnues vont de
+        'YYYYMMDDHHMMSS' &agrave; 'YYYYMM'. Il est &eacute;galement possible
+        d'utiliser&nbsp;'TIMESTEP' pour sp&eacute;cifier des pas-de-temps. Valeur par
+        d&eacute;faut:&nbsp;<b style="font-style: italic;">'YYYYMMDDHH'</b>)<br>
+      </big></div>
+    <big><br style="font-family: Helvetica,Arial,sans-serif;">
+    </big><big><span style="font-family: Helvetica,Arial,sans-serif;"></span> <b
+        style="font-family: Helvetica,Arial,sans-serif;">ECHO_COMMAND_LINE</b><span
+        style="font-family: Helvetica,Arial,sans-serif;"> </span><br style="font-family: Helvetica,Arial,sans-serif;">
+    </big>
+    <div style="margin-left: 40px; font-family: Helvetica,Arial,sans-serif;"><big>(Demande
+        de reconstruire une copie de la ligne de commande et de l'afficher sur
+        stdout. Valeurs par d&eacute;faut: <b style="font-style: italic;">no/non</b>)<br>
+      </big></div>
+    <big><br style="font-family: Helvetica,Arial,sans-serif;">
+      <b style="font-family: Helvetica,Arial,sans-serif;">DEFAULT_PACKING_TYPE</b><span
+        style="font-family: Helvetica,Arial,sans-serif;"> </span><br style="font-family: Helvetica,Arial,sans-serif;">
+    </big>
+    <div style="margin-left: 40px; font-family: Helvetica,Arial,sans-serif;"><big>(Sp&eacute;cifie
+        le type de compaction &agrave; &ecirc;tre utilis&eacute; pour les fichiers de sortie. Les
+        valeurs support&eacute;es sont pr&eacute;sentement sont <b style="font-style: italic;">PK84</b><span
+          style="font-style: italic;"> </span>(<a href="../../libraries/rmnlib/misc/wkoffit.html">wkoffit</a>
+        = <span style="font-weight: bold;">5</span>), <b style="font-style: italic;">PK92</b><span
+          style="font-style: italic;"> </span>(<a href="../../libraries/rmnlib/misc/wkoffit.html">wkoffit</a>
+        = <span style="font-weight: bold;">4</span>), <b style="font-style: italic;">SQ89</b><span
+          style="font-style: italic;"> </span>(<a href="../../libraries/rmnlib/misc/wkoffit.html">wkoffit</a>
+        = <span style="font-weight: bold;">2</span> ou <span style="font-weight: bold;">3</span>)
+        et <b style="font-style: italic;">SQ98</b><span style="font-style: italic;">
+        </span>(<a href="../../libraries/rmnlib/misc/wkoffit.html">wkoffit</a>=
+        <span style="font-weight: bold;">33</span> ou <span style="font-weight: bold;">34</span>).
+        Les fichiers standards CMC/RPN utilisent par d&eacute;finition un des types <b
+          style="font-style: italic;">SQxx</b><span style="font-style: italic;">.</span>
+        Ceux du CCCma utilisent pr&eacute;sentement le type <b style="font-style: italic;">PK92</b><span
+          style="font-style: italic;">.</span> La valeur par d&eacute;faut de la
+        variable, <b style="font-style: italic;">PK84</b><span style="font-style: italic;">,</span>
+        corresponds &agrave; la version pr&eacute;c&eacute;dente de ces fichiers. Notez que les
+        fichiers RPN standard random 1989 (<a href="../../libraries/rmnlib/misc/wkoffit.html">wkoffit</a>
+        = 1) ne sont pas support&eacute;s par <b>r.diag</b>)<br>
+      </big></div>
+    <big><b style="font-family: Helvetica,Arial,sans-serif;"><br>
+        DIAGNOSTIC_EXIT</b><span style="font-family: Helvetica,Arial,sans-serif;">
+      </span><br style="font-family: Helvetica,Arial,sans-serif;">
+    </big>
+    <div style="margin-left: 40px; font-family: Helvetica,Arial,sans-serif;"><big>(Le
+        nom complet du fichier pouvant contenir les codes de compl&eacute;tions/erreurs
+        des travaux diagnostiques. Si ce fichier existe et est non-vide, <b>r.diag</b>
+        ne fera aucuns calculs. Si la variable est d&eacute;finie, les codes d'erreurs
+        fatales ne seront pas g&eacute;n&eacute;res par un appel &agrave; EXIT et un message sera
+        plut&ocirc;t &eacute;crit dans le fichier correspondant. Valeur par d&eacute;faut: <b style="font-style: italic;">DIAGNOSTIC_EXIT</b>)<br>
+      </big></div>
+    <big><br style="font-family: Helvetica,Arial,sans-serif;">
+    </big><big><b style="font-family: Helvetica,Arial,sans-serif;">DIAGNOSTIQUE</b><span
+        style="font-family: Helvetica,Arial,sans-serif;"> </span><br style="font-family: Helvetica,Arial,sans-serif;">
+    </big>
+    <div style="margin-left: 40px; font-family: Helvetica,Arial,sans-serif;"><big>(Le
+        r&eacute;pertoire d'installation de </big><big><b>r.diag </b></big><big>sous
+        lequel se retrouveront les scripts et binaires du package, les codes
+        sources de ces binaires et toutes les pages de documentation en format
+        html et textuelle. Cette variable devrait &ecirc;tre automatiquement d&eacute;finie
+        lors de l'activation SSM du package. Valeur par d&eacute;faut: <b style="font-style: italic;">nil/aucune</b>)</big></div>
+    <big><br style="font-family: Helvetica,Arial,sans-serif;">
+    </big><big><b style="font-family: Helvetica,Arial,sans-serif;">FREE_FORMAT_LEVEL_IO</b><span
+        style="font-family: Helvetica,Arial,sans-serif;"> </span><br style="font-family: Helvetica,Arial,sans-serif;">
+    </big>
+    <div style="margin-left: 40px; font-family: Helvetica,Arial,sans-serif;"><big>(Indique
+        que la lecture des niveaux verticaux dans le modules concern&eacute;s tels que
+        <a style="font-family: Helvetica,Arial,sans-serif;" href="gsapl.txt">gsapl</a>
+        et <a style="font-family: Helvetica,Arial,sans-serif;" href="gpasg.txt">gpasg</a>
+        se fera en format libre "*"</big><big>. Valeurs par d&eacute;faut: <b style="font-style: italic;">no/non</b>)</big></div>
+    <div style="margin-left: 40px; font-family: Helvetica,Arial,sans-serif;"><big></big></div>
+    <big><br>
+    </big><big> </big><big><b style="font-family: Helvetica,Arial,sans-serif;">INFORM</b><span
+        style="font-family: Helvetica,Arial,sans-serif;"> </span><br style="font-family: Helvetica,Arial,sans-serif;">
+    </big>
+    <div style="margin-left: 40px; font-family: Helvetica,Arial,sans-serif;"><big>(Activer
+        le mode informatif<span style="font-style: italic;"></span><span style="font-style: italic;"></span>.
+        Peut aussi &ecirc;tre activ&eacute; par la cl&eacute; <b>-info</b> &agrave; l'appel</big><big>.
+        Valeur par d&eacute;faut: <span style="font-style: italic; font-weight: bold;">non</span></big><big>)<br>
+      </big></div>
+    <big><br style="font-family: Helvetica,Arial,sans-serif;">
+      <b style="font-family: Helvetica,Arial,sans-serif;">INPUT</b><br style="font-family: Helvetica,Arial,sans-serif;">
+    </big>
+    <div style="margin-left: 40px; font-family: Helvetica,Arial,sans-serif;"><big>&nbsp;(Nom
+        de fichier tenant lieu de <span style="font-style: italic;">stdin</span>)<br>
+      </big></div>
+    <big><span style="font-family: Helvetica,Arial,sans-serif;"> &nbsp;</span><b
+        style="font-family: Helvetica,Arial,sans-serif;"><br>
+        JOB</b><br style="font-family: Helvetica,Arial,sans-serif;">
+    </big>
+    <div style="margin-left: 40px; font-family: Helvetica,Arial,sans-serif;"><big>(Nom
+        du travail. &Eacute;quivalent au param&egrave;tre "JN=" d'une carte JOB de CRAY/OS.
+        Cette variable n'est utilis&eacute;e que lors de l'&eacute;criture de message
+        d'erreur. Il n'y a aucune valeur par d&eacute;faut)<br>
+      </big></div>
+    <big><br style="font-family: Helvetica,Arial,sans-serif;">
+      <b style="font-family: Helvetica,Arial,sans-serif;">LEAP_YEAR_CONTROL</b></big><br>
+    <div style="margin-left: 40px; font-family: Helvetica,Arial,sans-serif;"><big>(Tenir
+        compte ou non des ann&eacute;es bisextiles. Cette variable a pr&eacute;s&eacute;ance sur le
+        param&egrave;tre de ligne de commande <span style="font-weight: bold;">-bisect</span>
+        document&eacute; plus bas et aussi sur la variable d'environnement
+        NEWDATE_OPTIONS mais alors seulement <span style="font-weight: bold;">lorsqu'elle
+          est sp&eacute;cifi&eacute;e</span><span style="font-style: italic; font-weight: bold;"></span>)<br>
+      </big></div>
+    <big><br style="font-family: Helvetica,Arial,sans-serif;">
+    </big><big><b style="font-family: Helvetica,Arial,sans-serif;"><a name="MISSING"></a>MISSING_VALUE<br>
+      </b></big>
+    <div style="margin-left: 40px; font-family: Helvetica,Arial,sans-serif;"><big>&nbsp;(La
+        valeur r&eacute;elle utilis&eacute;e pour identifier les valeurs manquantes dans un
+        fichier. Un sous-ensemble restreint de modules a &eacute;t&eacute; &eacute;quip&eacute; pour tenir
+        compte de ceci et leur documentation en fait alors &eacute;tat. Par d&eacute;faut,
+        aucune valeur n'est d&eacute;finie. Un format de lecture FORTRAN E20.0 est
+        alors utilis&eacute;. Voir &eacute;galement le param&egrave;tre de ligne de commande <b>-mvalue</b>
+        plus bas)<br>
+      </big></div>
+    <span style="font-family: Helvetica,Arial,sans-serif;"><span style="font-weight: bold;"><br>
+      </span></span><big><b style="font-family: Helvetica,Arial,sans-serif;">NEWDATE_OPTIONS</b></big><big><b
+        style="font-family: Helvetica,Arial,sans-serif;"><br>
+      </b></big>
+    <div style="margin-left: 40px; font-family: Helvetica,Arial,sans-serif;"><big>(Variable
+        utilis&eacute;e par la collection de routines NEWDATE de la librairie RMNLIB.
+        Ces routines sont utilis&eacute;es dans tous les calculs de dates. Par d&eacute;faut,
+        le calendrier utilis&eacute; est un calendrier Gr&eacute;gorien. Les valeurs
+        optionelles modifiant ce comportement sont "year=365_day" et
+        "year=360_day"<span style="font-style: italic; font-weight: bold;"></span></big><big>.
+        Tou</big><big>s les calendriers sont valides de l'an 1 &agrave; l'ann&eacute;e 9999)<br>
+      </big></div>
+    <big><b style="font-family: Helvetica,Arial,sans-serif;"><br>
+        OUTPUT<br style="font-family: Helvetica,Arial,sans-serif;">
+      </b> </big>
+    <div style="margin-left: 40px; font-family: Helvetica,Arial,sans-serif;"><big>(Nom
+        de fichier tenant lieu de stdout)<span style="font-weight: bold;"></span><br>
+        <span style="font-weight: bold;"></span></big></div>
+    <big><span style="font-weight: bold; font-family: Helvetica,Arial,sans-serif;"></span><b
+        style="font-family: Helvetica,Arial,sans-serif;"><br>
+        PAGER</b><br style="font-family: Helvetica,Arial,sans-serif;">
+    </big>
+    <div style="margin-left: 40px; font-family: Helvetica,Arial,sans-serif;"><big>(Le
+        nom du programme utilis&eacute; pour l'affichage des &eacute;crans de documentation.
+        Valeur par d&eacute;faut: <span style="font-weight: bold; font-style: italic;">more</span>)<span
+          style="font-weight: bold;"></span><br>
+        <span style="font-weight: bold;"></span></big></div>
+    <big><span style="font-weight: bold; font-family: Helvetica,Arial,sans-serif;"></span></big><br>
+    <big><b style="font-family: Helvetica,Arial,sans-serif;"><big><span style="font-weight: bold; font-style: italic;"></span></big>TMPDIR</b><br
+        style="font-family: Helvetica,Arial,sans-serif;">
+    </big>
+    <div style="margin-left: 40px; font-family: Helvetica,Arial,sans-serif;"><big>(R&eacute;pertoire
+temporaire,
+typiquement
+        cr&eacute;&eacute; &agrave; chaque "login" et d&eacute;truit &agrave; chaque "logout". Voir la variable <b>USE_BIG_TEMPDIR</b>
+        pour plus de d&eacute;tails.&nbsp; Selon la valeur de cette variable, il se
+        peut que les nouveaux fichiers soient par d&eacute;faut crees dans ce
+        r&eacute;pertoire, &agrave; moins que leur nom ne contienne une disposition explicite
+        de r&eacute;pertoire telle que &nbsp;<span style="font-weight: bold; font-style: italic;">"./nomfich"</span>.
+        De plus, si un fichier d'entr&eacute;e ne se trouve pas dans le r&eacute;pertoire
+        courant, les applications tenteront de le trouver dans ce <b>TMPDIR</b>)<br>
+      </big></div>
+    <big><br style="font-family: Helvetica,Arial,sans-serif;">
+      <b style="font-family: Helvetica,Arial,sans-serif;">USE_BIG_TMPDIR</b><br
+        style="font-family: Helvetica,Arial,sans-serif;">
+    </big>
+    <div style="margin-left: 40px; font-family: Helvetica,Arial,sans-serif;"><big>(Placer
+        les fichiers locaux/temporaires&nbsp;dans <b>BIG_TMPDIR</b> plutot que
+        dans&nbsp;<b>TMPDIR</b> ?<b> </b>Sinon,<b> BIG_TMPDIR</b> est ignor&eacute; au
+        profit de<span style="font-weight: bold;"> </span><b>TMPDIR</b>. Si <span
+          style="font-weight: bold;">BIG_TMPDIR</span> n'est pas d&eacute;finie, on
+        essayera d'utiliser <span style="font-weight: bold;">TMPDIR</span>. Au
+        moins l'une de ces deux variables doit &ecirc;tre d&eacute;finie. Valeur par d&eacute;faut:
+        <b style="font-style: italic;">oui</b>)<br>
+      </big></div>
+    <big><br style="font-family: Helvetica,Arial,sans-serif;">
+    </big><big><b style="font-family: Helvetica,Arial,sans-serif;">USE_OLD_STYLE_IP1<br>
+      </b></big>
+    <div style="margin-left: 40px; font-family: Helvetica,Arial,sans-serif;"><big>(Utiliser
+        le type de codage compatible STD89 pour le param&egrave;tre repr&eacute;sentant les
+        niveaux verticaux, i.e. IP1, dans l'&eacute;criture des fichiers STD98.</big><big>
+        Valeur par d&eacute;faut: <span style="font-style: italic; font-weight: bold;">non</span><span
+          style="font-weight: bold;"></span><span style="font-style: italic; font-weight: bold;"></span><span
+          style="font-weight: bold;"></span><span style="font-style: italic; font-weight: bold;"></span><span
+          style="font-style: italic; font-weight: bold;"></span><span style="font-style: italic; font-weight: bold;"></span></big><big>)
+        <br>
+      </big></div>
+    <big><b style="font-family: Helvetica,Arial,sans-serif;"><br>
+      </b></big><big><b style="font-family: Helvetica,Arial,sans-serif;">VERY_NICE_DIAG</b><br
+        style="font-family: Helvetica,Arial,sans-serif;">
+    </big>
+    <div style="margin-left: 40px; font-family: Helvetica,Arial,sans-serif;"><big>(Permets
+        de changer la priorit&eacute; d'ex&eacute;cution de <b>r.diag</b> dans la mesure o&ugrave;
+        celui-ci est g&eacute;n&eacute;ralement configur&eacute; pour tourner avec l'&eacute;quivalent d'un
+        <b>nice -19</b>. Les valeurs possibles sont <span style="font-weight: bold; font-style: italic;">oui,
+          non</span> ou bien une valeur num&eacute;rique entre <span style="font-weight: bold; font-style: italic;">1</span>
+        et <span style="font-weight: bold; font-style: italic;">19</span>)<br>
+      </big></div>
+    <big><br>
+      <big><span style="font-family: Helvetica,Arial,sans-serif;"><br>
+          <a name="Logical_value"></a>Les variables logiques d&eacute;crites dans la
+          section pr&eacute;c&eacute;dente sont lues comme &eacute;tant vraies lorsque qu'elles sont
+          d&eacute;finies avec des valeurs </span></big><big style="font-family: Helvetica,Arial,sans-serif;">&eacute;gale
+        &agrave;&nbsp;<span style="font-style: italic; font-weight: bold; font-family: serif;">oui</span><span
+          style="font-weight: bold; font-family: serif;">,</span><span style="font-family: serif;">
+        </span><span style="font-style: italic; font-weight: bold; font-family: serif;">yes</span><span
+          style="font-weight: bold; font-family: serif;">,</span><span style="font-family: serif;">
+        </span><span style="font-style: italic; font-weight: bold; font-family: serif;">vrai</span><span
+          style="font-family: serif;">, </span><span style="font-style: italic; font-weight: bold; font-family: serif;">true</span><span
+          style="font-family: serif;"> <span style="font-family: Helvetica,Arial,sans-serif;">ou</span>
+        </span><span style="font-style: italic; font-weight: bold;"><span style="font-family: serif;">on</span>.
+        </span>Celles qui devraient &ecirc;tre lues comme &eacute;tant fausses le seront </big></big><big><big><span
+          style="font-family: Helvetica,Arial,sans-serif;">lorsque qu'elles sont
+          d&eacute;finies avec des valeurs </span></big><big style="font-family: Helvetica,Arial,sans-serif;">&eacute;gales
+        &agrave; </big></big><big><big><b style="font-style: italic;">non, no, faux,
+          false</b> ou <b style="font-style: italic;">off</b></big>.&nbsp;</big><big><br
+        style="font-family: Helvetica,Arial,sans-serif;">
+    </big><big> <br style="font-family: Helvetica,Arial,sans-serif;">
+      <big style="font-family: Helvetica,Arial,sans-serif;"><span style="font-weight: bold;"><br>
+          2)&nbsp;CHEMIN D'ACC&Egrave;S (</span></big><big style="font-family: Helvetica,Arial,sans-serif;"><span
+          style="font-weight: bold;">PATH)</span></big><br style="font-family: Helvetica,Arial,sans-serif;">
+      <br style="font-family: Helvetica,Arial,sans-serif;">
+      <span style="font-family: Helvetica,Arial,sans-serif;"> La script acc&eacute;dant
+        &agrave; la plus r&eacute;cente version officielle du programme </span><b style="font-family: Helvetica,Arial,sans-serif;">r.diag</b><span
+        style="font-family: Helvetica,Arial,sans-serif;"> est disponibles dans
+        le r&eacute;pertoire</span><br style="font-family: Helvetica,Arial,sans-serif;">
+      <br style="font-family: Helvetica,Arial,sans-serif;">
+    </big>
+    <div style="margin-left: 40px; font-family: Helvetica,Arial,sans-serif;"><big>
+        ${<b>DIAGNOSTIQUE</b>}/scripts<br>
+      </big></div>
+    <big><br style="font-family: Helvetica,Arial,sans-serif;">
+      <br style="font-family: Helvetica,Arial,sans-serif;">
+      <big style="font-family: Helvetica,Arial,sans-serif;"><span style="font-weight: bold;">
+          3) DOCUMENTATION</span></big><br style="font-family: Helvetica,Arial,sans-serif;">
+      <br style="font-family: Helvetica,Arial,sans-serif;">
+      <span style="font-family: Helvetica,Arial,sans-serif;"> La liste des
+        modules de commande et une courte description de chacun d'entre eux est
+        disponible en ex&eacute;cutant le module "lspgm" &nbsp;sans param&egrave;tre. Chaque
+        commande est de plus document&eacute;e de fa&ccedil;on interne. Pour acc&eacute;der &agrave; cette
+        information, il suffit d'invoquer </span><b style="font-family: Helvetica,Arial,sans-serif;">r.diag</b><span
+        style="font-family: Helvetica,Arial,sans-serif;"> avec comme seul
+        param&egrave;tre le nom de la commande, comme suit</span><br style="font-family: Helvetica,Arial,sans-serif;">
+      <br style="font-family: Helvetica,Arial,sans-serif;">
+    </big>
+    <div style="margin-left: 40px; font-family: Helvetica,Arial,sans-serif;"><big><b>r.diag</b>
+        <b>Command_Name</b> <br>
+      </big></div>
+    <big><br style="font-family: Helvetica,Arial,sans-serif;">
+      <span style="font-family: Helvetica,Arial,sans-serif;"> o&ugrave; </span><b style="font-family: Helvetica,Arial,sans-serif;">Command_Name</b><span
+        style="font-family: Helvetica,Arial,sans-serif;"> est remplac&eacute; par le
+        nom de la commande qui nous inter&eacute;sse.</span><br style="font-family: Helvetica,Arial,sans-serif;">
+      <br style="font-family: Helvetica,Arial,sans-serif;">
+      <span style="font-family: Helvetica,Arial,sans-serif;"> La liste des codes
+        d'erreurs g&eacute;n&eacute;r&eacute;s par les sous-routines de bas niveaux est &eacute;galement
+        disponible. Pour la consulter, il suffit d'ex&eacute;cuter la&nbsp;commande
+        suivante</span><br style="font-family: Helvetica,Arial,sans-serif;">
+      <br style="font-family: Helvetica,Arial,sans-serif;">
+    </big>
+    <div style="margin-left: 40px; font-family: Helvetica,Arial,sans-serif;"><big><b>r.diag</b>
+        <b>lssub<br>
+          <br>
+        </b> </big></div>
+    <big><big style="font-family: Helvetica,Arial,sans-serif;"><b style="font-family: Helvetica,Arial,sans-serif;"><br>
+        </b><span style="font-weight: bold;">4) PARAM&Egrave;TRES G&Eacute;N&Eacute;RIQUES DE LA
+          LIGNE DE COMMANDE</span></big><br style="font-family: Helvetica,Arial,sans-serif;">
+      <br style="font-family: Helvetica,Arial,sans-serif;">
+      <span style="font-family: Helvetica,Arial,sans-serif;"> Tous les commandes
+        connaissent un nombre limit&eacute; de cl&eacute;s "g&eacute;n&eacute;riques" affectant certains
+        aspects de leur fonctionnement. La routine </span><a style="font-family: Helvetica,Arial,sans-serif;"
+        href="../../libraries/rmnlib/misc/ccard.html">ccard</a><span style="font-family: Helvetica,Arial,sans-serif;">
+        est utilis&eacute;e pour le traitement de ces options. Celles-ci sont
+        pr&eacute;sentement: </span><b style="font-family: Helvetica,Arial,sans-serif;"><br>
+        <br>
+        -ipktyp</b><span style="font-family: Helvetica,Arial,sans-serif;">
+        Valeur</span><br style="font-family: Helvetica,Arial,sans-serif;">
+    </big>
+    <div style="margin-left: 40px; font-family: Helvetica,Arial,sans-serif;"><big>(Sp&eacute;cifie
+        le type de compaction &agrave; &ecirc;tre utilis&eacute;e pour les fichiers d'entr&eacute;es. Les
+        valeurs connues sont pr&eacute;sentement <b style="font-style: italic;">PK84</b>
+        et <b style="font-style: italic;">PK92</b>. Cette cl&eacute; permet de lire
+        les fichiers de type 1984 qui ont &eacute;t&eacute; &eacute;crits avec une version pr&eacute;c&eacute;dente
+        de <b>r.diag</b>)<br>
+      </big></div>
+    <big><b style="font-family: Helvetica,Arial,sans-serif;">-opktyp</b><span style="font-family: Helvetica,Arial,sans-serif;">
+        Valeur </span><br style="font-family: Helvetica,Arial,sans-serif;">
+    </big>
+    <div style="margin-left: 40px; font-family: Helvetica,Arial,sans-serif;"><big>(Sp&eacute;cifie
+        le type de compaction a etre utilise pour les fichiers de sorties. Les
+        valeurs connues sont presentement <b style="font-style: italic;">PK84</b><span
+          style="font-style: italic;">, </span><b style="font-style: italic;">PK92</b>,
+        <b style="font-style: italic;">SQ89</b><span style="font-style: italic;">
+        </span>et <b style="font-style: italic;">SQ98</b><span style="font-style: italic;">.</span>
+        Cette cl&eacute; a pr&eacute;s&eacute;ance sur la&nbsp;variable&nbsp;<b>DEFAULT_PACKING_TYPE</b>).<br>
+      </big></div>
+    <big><br style="font-family: Helvetica,Arial,sans-serif;">
+      <b style="font-family: Helvetica,Arial,sans-serif;">-help</b><span style="font-family: Helvetica,Arial,sans-serif;">
+      </span><br style="font-family: Helvetica,Arial,sans-serif;">
+    </big>
+    <div style="margin-left: 40px; font-family: Helvetica,Arial,sans-serif;"><big>(Active
+        le mode documentation. L'absence de tout param&egrave;tre active &eacute;galement ce
+        mode)<br>
+      </big></div>
+    <big><b style="font-family: Helvetica,Arial,sans-serif;">-info</b><span style="font-family: Helvetica,Arial,sans-serif;">
+        [Valeur]</span><br style="font-family: Helvetica,Arial,sans-serif;">
+    </big>
+    <div style="margin-left: 40px; font-family: Helvetica,Arial,sans-serif;"><big>(Sp&eacute;cifie
+        la pr&eacute;sence de messages d'erreurs des sous-routines. Par d&eacute;faut, ceux-ci
+        ne sont pas imprim&eacute;s. La valeur du param&egrave;tre peu indiquer le niveau de
+        s&eacute;v&eacute;rit&eacute; des messages dans le cas des fichiers standards RPN, tel que
+        document&eacute; par <a href="../../libraries/fstd89/fstopc.html">fstopc</a>)<br>
+      </big></div>
+    <big><b style="font-family: Helvetica,Arial,sans-serif;">-vers</b><br style="font-family: Helvetica,Arial,sans-serif;">
+    </big>
+    <div style="margin-left: 40px; font-family: Helvetica,Arial,sans-serif;"><big>(Imprime
+        le num&eacute;ro de r&eacute;vision de <b>r.diag</b> ainsi que celui de la version de
+        la programmath&egrave;que&nbsp;<span style="font-weight: bold;">RMNLIB</span>
+        qu'elle&nbsp;utilise)<br>
+        <br>
+      </big></div>
+    <big><b style="font-family: Helvetica,Arial,sans-serif;">-cendian</b></big><big><span
+        style="font-family: Helvetica,Arial,sans-serif;"></span></big><big><span
+        style="font-family: Helvetica,Arial,sans-serif;"><br>
+      </span></big>
+    <div style="margin-left: 40px;"><big><span style="font-family: Helvetica,Arial,sans-serif;">(Si
+          &eacute;gal &agrave; <span style="font-weight: bold; font-style: italic;">BIG</span><span
+            style="font-style: italic;">,</span> les enregistrements de type
+          caract&egrave;re&nbsp;<span style="font-weight: bold;">CHAR</span> sont
+          trait&eacute;s comme ayant &eacute;t&eacute; &eacute;crits en mode <span style="font-style: italic;">Big
+            Endian</span>. Si &eacute;gal &agrave; <span style="font-weight: bold; font-style: italic;">SMALL</span><span
+            style="font-style: italic;">,</span> ils seront trait&eacute;s comme <span
+            style="font-style: italic;">Little Endian</span>. La valeur par
+          d&eacute;faut est <span style="font-weight: bold; font-style: italic;">BIG</span>)</span><span
+          style="font-family: Helvetica,Arial,sans-serif;"></span><span style="font-weight: bold; font-family: Helvetica,Arial,sans-serif;"></span><span
+          style="font-family: Helvetica,Arial,sans-serif;"></span></big></div>
+    <br style="font-family: Helvetica,Arial,sans-serif;">
+    <big> <b style="font-family: Helvetica,Arial,sans-serif;">-mvalue</b><span
+        style="font-family: Helvetica,Arial,sans-serif;"> Valeur1 [Valeur2]</span><br
+        style="font-family: Helvetica,Arial,sans-serif;">
+    </big>
+    <div style="margin-left: 40px; font-family: Helvetica,Arial,sans-serif;"><big>(Valeur1
+        est ici le nombre r&eacute;el utilis&eacute; pour identifier les valeurs manquantes
+        dans un fichier. De m&ecirc;me, Valeur2 est le facteur relatif de
+        pr&eacute;cision&nbsp;Epsilon qui sera utilis&eacute; dans les comparaisons avec cette
+        valeur manquante. La valeur par d&eacute;faut de cet Epsilon est <span style="font-weight: bold; font-style: italic;">1%</span>.
+        Voir &eacute;galement la variable d'environnement <a href="#MISSING"><b>MISSING_VALUE</b></a>
+        ci-haut; la valeur manquante d&eacute;finie avec cette derniere variable &agrave;
+        pr&eacute;s&eacute;ance sur celle d&eacute;finie ici. Par d&eacute;faut, cette valeur manquante est
+        inexistante)<br>
+      </big></div>
+    <big><br style="font-family: Helvetica,Arial,sans-serif;">
+      <b style="font-family: Helvetica,Arial,sans-serif;">-na</b><br style="font-family: Helvetica,Arial,sans-serif;">
+    </big>
+    <div style="margin-left: 40px; font-family: Helvetica,Arial,sans-serif;"><big>(Sp&eacute;cifie
+        si le programme doit arr&ecirc;ter le traitement en pr&eacute;sence d'erreurs. Cette
+        cl&eacute; controle le comportement dans un nombre tr&egrave;s limit&eacute; de situations)<br>
+      </big></div>
+    <big><br style="font-family: Helvetica,Arial,sans-serif;">
+    </big><big><b style="font-family: Helvetica,Arial,sans-serif;">-bisect</b><span
+        style="font-family: Helvetica,Arial,sans-serif;"> [Valeur]</span><br style="font-family: Helvetica,Arial,sans-serif;">
+    </big>
+    <div style="margin-left: 40px; font-family: Helvetica,Arial,sans-serif;"><big>(Il
+est
+        possible d'activer ou bien de d&eacute;sactiver le traitement des jours
+        bissextiles (eg. "Leap Years control"). La valeur logique de cet
+        argument est interpr&eacute;t&eacute;e de la m&ecirc;me mani&egrave;re que les valeur logique des
+        variables d'environnements, tel que d&eacute;crit un peu <a href="#Logical_value">plus
+          haut</a>. Par d&eacute;faut, les jours bissextiles sont pris en charge.<b></b>)<br>
+      </big></div>
+    <big><b style="font-family: Helvetica,Arial,sans-serif;">-date</b><span style="font-family: Helvetica,Arial,sans-serif;">
+        [Valeur]</span><br style="font-family: Helvetica,Arial,sans-serif;">
+    </big>
+    <div style="margin-left: 40px; font-family: Helvetica,Arial,sans-serif;"><big>(Si
+        ce param&egrave;tre est sp&eacute;cifi&eacute; sans valeur, il indique que le deuxi&egrave;me mot du
+        tampon d'information qui sera lu dans un fichier de type CCC est une
+        date valide du 20<sup>i&egrave;me</sup> si&egrave;cle et non pas un pas de temps. Si
+        de plus, une valeur est sp&eacute;cifi&eacute;e, celle-ci corresponds alors au si&egrave;cle,
+        eg. 1800, 1900 ou 2000. <b>A ne pas confondre avec le param&egrave;tre du m&ecirc;me
+          nom dans le module CONVERT </b><b>et qui doit contenir un
+          DATE-TIME-STAMP CMC/RPN</b>)<br>
+      </big></div>
+    <big><b style="font-family: Helvetica,Arial,sans-serif;">-keepip2</b><br style="font-family: Helvetica,Arial,sans-serif;">
+    </big>
+    <div style="margin-left: 40px; font-family: Helvetica,Arial,sans-serif;"><big>(Lors
+        du traitement de fichiers CMC/RPN, <b>r.diag</b> tente toujours de se
+        conformer aux conventions associ&eacute;es aux cl&eacute;s temporelles, document&eacute;es <a
+          href="../../libraries/fstd/main.html#RTFToC14">ici</a>. Certains
+        fichiers, tels que les fichiers de climatologie, peuvent ne pas adh&eacute;rer
+        &agrave; cette convention. Lorsque cette cle est specifi&eacute;e, une partie de cette
+        convention est ignor&eacute;e, i.e. lorsque le descripteur interne deet est
+        nul. Dans ce cas, les ip2 sont conserv&eacute;s tels quels &agrave; la sortie) <br>
+      </big></div>
+    <big><br style="font-family: Helvetica,Arial,sans-serif;">
+      <b style="font-family: Helvetica,Arial,sans-serif;">-singlz</b><br style="font-family: Helvetica,Arial,sans-serif;">
+    </big>
+    <div style="margin-left: 40px; font-family: Helvetica,Arial,sans-serif;"><big>(Active
+        les modes de lecture et d'&eacute;criture en mode niveaux par niveaux qui
+        peuvent etre utilis&eacute;s avec les coupes zonales)<br>
+      </big></div>
+    <big><br style="font-family: Helvetica,Arial,sans-serif;">
+      <span style="font-family: Helvetica,Arial,sans-serif;"> Notez que la cl&eacute; </span><b
+        style="font-family: Helvetica,Arial,sans-serif;">-ipktyp</b><span style="font-family: Helvetica,Arial,sans-serif;">
+        ne devrait &ecirc;tre utilis&eacute;e qu'en dernier ressort. </span><b style="font-family: Helvetica,Arial,sans-serif;">r.diag</b><span
+        style="font-family: Helvetica,Arial,sans-serif;"> tente toujours de
+        d&eacute;terminer lui-m&ecirc;me le type de fichier d'entr&eacute;e qu'on lui passe (voir
+        l'utilitaire RPN </span><a style="font-family: Helvetica,Arial,sans-serif;"
+        href="../../libraries/rmnlib/misc/wkoffit.html">wkoffit</a><span style="font-family: Helvetica,Arial,sans-serif;">
+        pour en savoir plus long sur la technique employ&eacute;e).</span><br style="font-family: Helvetica,Arial,sans-serif;">
+      <br style="font-family: Helvetica,Arial,sans-serif;">
+      <span style="font-family: Helvetica,Arial,sans-serif;"> Enfin, certaines
+        commandes peuvent &ecirc;tre invoqu&eacute;es avec un mode de fonctionnement
+        particulier en utilisant la cl&eacute; </span><b style="font-family: Helvetica,Arial,sans-serif;">-def</b><span
+        style="font-family: Helvetica,Arial,sans-serif;">
+        [Valeur1][...][ValeursN]. Cette cl&eacute; signifie que la commande devra soit
+        d'utiliser ses valeurs par d&eacute;faut (e.g. </span><a style="font-family: Helvetica,Arial,sans-serif;"
+        href="xlin.txt">xlin</a><span style="font-family: Helvetica,Arial,sans-serif;">),
+        soit d'utiliser un mode de fonctionnement alternatif (e.g. </span><a style="font-family: Helvetica,Arial,sans-serif;"
+        href="timcov.txt">timcov</a><span style="font-family: Helvetica,Arial,sans-serif;">).
+        Dans tous les cas, la pr&eacute;sence de cette cl&eacute; emp&ecirc;chera la lecture d'un
+        premier groupe d'arguments qui pourraient &ecirc;tre d&eacute;finis via un
+        enregistrement (ligne) STDIN et ce, tel que d&eacute;crit dans la documentation
+        des diff&eacute;rents modules. Si d'autres variables sont normalement d&eacute;finies
+        via des enregistrements STDIN suppl&eacute;mentaires, celles-ci pourraient
+        &eacute;galement ne plus l'&ecirc;tre ou l'&ecirc;tre diff&eacute;remment, d&eacute;pendant des valeurs
+        qui auront &eacute;t&eacute; d&eacute;finies avec cette cl&eacute; (e.g. la liste de niveaux
+        verticaux qui seront utilis&eacute;s dans <a href="gsapl.txt">gsapl</a> et <a
+          href="pgen.txt">pgen</a>) .</span> <br style="font-family: Helvetica,Arial,sans-serif;">
+      <br style="font-family: Helvetica,Arial,sans-serif;">
+      <br style="font-family: Helvetica,Arial,sans-serif;">
+      <big style="font-family: Helvetica,Arial,sans-serif;"><span style="font-weight: bold;">
+          5) PARAM&Egrave;TRES SP&Eacute;CIFIQUES DE LA LIGNE DE COMMANDE</span></big><br style="font-family: Helvetica,Arial,sans-serif;">
+      <br style="font-family: Helvetica,Arial,sans-serif;">
+      <span style="font-family: Helvetica,Arial,sans-serif;"> Un deuxi&egrave;me jeu de
+        cl&eacute;s d&eacute;crivant des param&egrave;tres sp&eacute;cifiques aux diff&eacute;rents modules tels
+        que les nombres de latitudes et longitudes, la troncature spectrale ou
+        bien le facteur de compaction est g&eacute;n&eacute;ralement disponible. Consultez la
+        documentation des diff&eacute;rents modules pour en savoir plus long. Notez que
+        certaines valeurs telles que </span><b style="font-family: Helvetica,Arial,sans-serif;">-cle=<span
+          style="font-style: italic;">"****"</span></b><span style="font-family: Helvetica,Arial,sans-serif;">
+        , </span><span style="font-weight: bold; font-style: italic; font-family: Helvetica,Arial,sans-serif;">"N/A"</span><span
+        style="font-family: Helvetica,Arial,sans-serif;"> ou </span><span style="font-weight: bold; font-style: italic; font-family: Helvetica,Arial,sans-serif;">"S/O"</span><span
+        style="font-family: Helvetica,Arial,sans-serif;"> seront interpr&eacute;t&eacute;es
+        comme une cl&eacute; non sp&eacute;cifi&eacute;e dans ce contexte. Ceci peut &ecirc;tre utile
+        lorsqu'on veut sp&eacute;cifier une seule valeur d'une cl&eacute; pouvant en avoir
+        plusieurs.</span><br style="font-family: Helvetica,Arial,sans-serif;">
+      <br style="font-family: Helvetica,Arial,sans-serif;">
+      <span style="font-family: Helvetica,Arial,sans-serif;"> Par exemple, dans
+        cet&nbsp;appel de la commande </span><span style="font-weight: bold; font-family: Helvetica,Arial,sans-serif;">zxplot</span><span
+        style="font-family: Helvetica,Arial,sans-serif;">, la premi&egrave;re valeur de
+        la cl&eacute; </span><span style="font-weight: bold; font-family: Helvetica,Arial,sans-serif;">-lv1</span><span
+        style="font-family: Helvetica,Arial,sans-serif;"> ne sera pas d&eacute;finie:</span><br
+        style="font-family: Helvetica,Arial,sans-serif;">
+      <br style="font-family: Helvetica,Arial,sans-serif;">
+    </big>
+    <div style="margin-left: 40px; font-family: Helvetica,Arial,sans-serif;"><big><span
+          style="font-weight: bold;">r.diag zxplot fichier_zonal -lv1 N/A FULL<br>
+        </span> </big></div>
+    <big><br style="font-family: Helvetica,Arial,sans-serif;">
+      <span style="font-family: Helvetica,Arial,sans-serif;">Notons que la liste
+        de toutes les cl&eacute;s support&eacute;es sera affich&eacute;e aussit&ocirc;t qu'une commande est
+        d&eacute;marr&eacute;e avec une cl&eacute; non reconnue (i.e. </span><b style="font-family: Helvetica,Arial,sans-serif;">-wxyz</b><span
+        style="font-family: Helvetica,Arial,sans-serif;">). </span><br style="font-family: Helvetica,Arial,sans-serif;">
+      <br style="font-family: Helvetica,Arial,sans-serif;">
+      <span style="font-family: Helvetica,Arial,sans-serif;"> Enfin, un nom de
+        fichier peut &ecirc;tre substitu&eacute; par un </span><b style="font-weight: bold; font-style: italic; font-family: Helvetica,Arial,sans-serif;">"+</b><span
+        style="font-weight: bold; font-style: italic; font-family: Helvetica,Arial,sans-serif;">"</span><span
+        style="font-family: Helvetica,Arial,sans-serif;"> &nbsp;&agrave; l'appel. Ceci
+        indique &agrave; la commande (par le biais de la routine </span><span style="font-weight: bold; font-family: Helvetica,Arial,sans-serif;">jclpnt</span><span
+        style="font-family: Helvetica,Arial,sans-serif;">) que l'unit&eacute; d'E/S
+        correspondante ne doit pas etre ouverte. Cette substitution ne devrait
+        &ecirc;tre utilis&eacute;e qu'avec des commandes lisant/&eacute;crivant un nombre variable
+        de fichiers d'E/S.</span><br style="font-family: Helvetica,Arial,sans-serif;">
+      <br style="font-family: Helvetica,Arial,sans-serif;">
+      <br style="font-family: Helvetica,Arial,sans-serif;">
+      <big style="font-family: Helvetica,Arial,sans-serif;"><span style="font-weight: bold;">6)
+          NOTES</span></big><br style="font-family: Helvetica,Arial,sans-serif;">
+      <br style="font-family: Helvetica,Arial,sans-serif;">
+    </big>
+    <ul style="font-family: Helvetica,Arial,sans-serif;">
+      <big> </big>
+      <li><big>Il n'est pas permis d'utiliser dans un m&ecirc;me appel des fichiers <b
+            style="font-style: italic;">SQxx</b> et des fichier de type <b style="font-style: italic;">PKxx</b>.
+          La seule exception concerne le module <a href="convert.txt">convert</a>
+          qui en plus de convertir d'un type de fichier &agrave; l'autre (et vice
+          versa), tente d'effectuer une traduction des noms de variables et de
+          leurs unit&eacute;s afin que ces variables se conforment aux standards
+          appropri&eacute;s.</big></li>
+      <li><big><b>Sauf exceptions</b>, et seulement lorsqu'il est question de
+          fichiers CMC/RPN, les modules qui effectuent des traitement temporels
+          tels que <a href="accumul.txt">accumul</a>, <a href="timavg.txt">timavg</a>,
+          <a href="timcov.txt">timcov</a> et <a href="fstmdiag.txt">fstmdiag</a>
+          (entre autres), modifient les descripteurs internes de ces fichiers de
+          telle sorte que la plus ancienne date d'&eacute;chantillonnage sera sauv&eacute;e
+          dans DATEO, tandis que la plus r&eacute;cente pourra &ecirc;tre reconstruite &agrave;
+          partir des valeurs finales des param&egrave;tres DATEO, NPAS and DEET (i.e
+          dans DATEV). Le param&egrave;tre IP3 indiquera alors le nombre d'&eacute;chantillons
+          temporels utilis&eacute;s lors des calculs effectu&eacute;s dans les diff&eacute;rents
+          modules. Lorsque l'ensemble des &eacute;chantillons est complet (i.e.sans
+          trou), l'intervalle d'&eacute;chantillonnage sera sauv&eacute; dans le param&egrave;tre
+          DEET. De plus, le second caract&egrave;re du&nbsp; param&egrave;tre TYPVAR indiquera
+          le type de donn&eacute;es temporelles en pr&eacute;sence: <b>/</b> pour les
+          moyennes, <b>%</b> pour les variances, <b>1</b> pour les minimums, <b>5</b>
+          pour les m&eacute;dianes, <b>7</b> pour les &eacute;carts types et <b>9</b> pour
+          les maximums. Les autres modules tels que <a href="timegen.txt">timegem</a>
+          et les diff&eacute;rents modules de tests statistiques tels que <a href="ftest.txt">ftest</a>
+          et <a href="ttesta.txt">ttesta</a> peuvent directement utiliser ces
+          informations. Notez que tous ces comportements peuvent par contre &ecirc;tre
+          d&eacute;sallou&eacute;s. Voir la documentation des diff&eacute;rents modules pour plus de
+          d&eacute;tails.<br>
+        </big></li>
+      <big> </big>
+      <li><big>Les types de grilles CMC/RPN support&eacute;es par <b>r.diag</b> sont:
+          <b>A,B,G,L,N,S,U,Y,Z</b>,#.<br>
+        </big></li>
+      <big> </big>
+    </ul>
+    <big><br style="font-family: Helvetica,Arial,sans-serif;">
+    </big>
+    <div style="text-align: center;"><big><span style="font-family: Helvetica,Arial,sans-serif;">
+          ------------------------------------------------</span></big><br style="font-family: Helvetica,Arial,sans-serif;">
+      <big> <span style="font-family: Helvetica,Arial,sans-serif;"></span></big><big><span
+          style="font-family: Helvetica,Arial,sans-serif;">Contact :
+          Dugas.Bernard@uqam.ca</span></big><br>
+      <big><span style="font-family: Helvetica,Arial,sans-serif;"></span></big><big><span
+          style="font-family: Helvetica,Arial,sans-serif;">&nbsp;Derni&egrave;re
+          mise-&agrave;-jour : d&eacute;cembre 2018<br>
+        </span></big><big><span style="font-family: Helvetica,Arial,sans-serif;">
+          ------------------------------------------------</span></big><br style="font-family: Helvetica,Arial,sans-serif;">
+      <big> <span style="font-family: Helvetica,Arial,sans-serif;"></span></big><big><span
+          style="font-family: Helvetica,Arial,sans-serif;"></span></big><br style="font-family: Helvetica,Arial,sans-serif;">
+    </div>
+    <big> <span style="font-family: Helvetica,Arial,sans-serif;"> </span><span
+        style="font-family: Helvetica,Arial,sans-serif;"></span><br style="font-family: Helvetica,Arial,sans-serif;">
+      <br style="font-family: Helvetica,Arial,sans-serif;">
+    </big>
+  </body>
+</html>

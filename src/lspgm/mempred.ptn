@@ -1,0 +1,13 @@
+      PROGRAM mempred
+
+      integer nf
+
+      nf = 1
+
+      call jclpnt( nf, 6 )
+
+      write(6,'(" Ce programme ne fait toujours rien...")')
+
+      call xit(' Mempred', 0 )
+
+      end

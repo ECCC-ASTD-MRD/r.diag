@@ -1,0 +1,618 @@
+# if !defined (VERSION)
+#     define   VERSION '1.0 2019/11/19'
+# endif
+# if defined (AUTO_DOC)
+!
+!
+!  Usage: oilfill -s source-file -d destination-file \ 
+!                [-r RVAL] [-mask mask-file] [-stats] \ 
+!                [-global] [-h|--help] [-version]
+!
+!
+! Author: M.Valin, UQAM Centre ESCER.
+!
+!
+! This program will fill a datafield array that has holes (missing values)
+! using the valid values. The optional mask array tells whether data points
+! are valid or missing mask(i,J)==0 means datafield(i,j) is missing (a hole).
+!
+! If a mask file is not provided, the program will attempt to determine if
+! the source-file data contains any "CMC/RPN standard file"-coded missing
+! values. In the case it does, these missing values will provide the mask.
+!
+! Missing values are filled using adjacent data points. In order to fill
+! missing value datafield(i,j), it is necessary to have at least TWO valid 
+! (non missing) adjacent datapoints. The number of adjacent point is usually
+! 8, except if point (i,j) lies on the boundary (first/last row or first/last
+! column). This means that multiple filling passes will have to be performed
+! in order to fill all missing values. Values filled during pass N can be
+! used to compute fill values during subsequent passes (but not
+! during pass N)
+!
+! The program returns the number of points it has not been able to fill.
+! If a pass was unable to fill any point while there were still holes in the 
+! array, the program quits before entering an endless loop.
+!
+!         (i-1,j+1)        (i  ,J+1)      (i+1,j+1)
+!
+!
+!         (i-1,j  )        (i  ,J  )      (i+1,j  )
+!                        point to fill
+!
+!         (i-1,j-1)        (i  ,J-1)      (i+1,j-1)
+!
+! The above schema only looks at immediate neighbouring points. Specifying
+! the argument '-r 2' will extend this to next outlying points. The default
+! R-value is thus '1'. The optimal R-value (execution time-wise) will be
+! case dependant. But values of 1 or 2 are still expected to be optimal.
+! The maximum supported value of R is 10.
+!
+! Note that with 'A', 'B' and 'G' type input grids, continuity in longitude
+! is assumed when searching for nearby valid points, as these grids are either
+! hemispheric or global. For other type of grids, this is not the case by
+! default. However, even then, continuity in longitude can still be
+! activated by specifying the '-global' command-line argument.
+!
+! Specifying the argument '-stats' will output a record describing how many
+! passes were required to fill each missing value point. Point with a stat
+! value of 0 did not have missing values. For display purposes, the field
+! that is actually saved is the log-base-3 of the number of passes + 1. So,
+! a stats value of 0 will still mean that no filling was required, while a
+! value of "1" will correspond to "2" passes (3**(log-base-3 "1")-1). A
+! stats value of "2" will correspond to "8" passes, "3" to "26", etc.
+! The greater the stats value, the further it was from any valid data.
+!
+!
+!  Error exits
+!   1 Option is too long
+!   2 Missing value after argument -s
+!   3 Missing value after argument -d
+!   4 Missing value after argument -mask
+!   5 Missing or bad numerical value associated to argument -r
+!   6 Unsupported source file type
+!   7 Unsupported mask file type
+!   8 Inconsistent dimensions
+# endif
+# if !defined (NO_SOURCE)
+  PROGRAM oilfill
+
+    implicit none
+
+  ! Author Michel Valin, Centre ESCER/UQAM, 2012-2019
+
+  ! Revision history :
+  ! Nov 19, 2019 by B.Dugas (ESCER/UQAM) - Adapted to the r.diag framework
+  ! Nov 22, 2019 by B.Dugas (ESCER/UQAM) - (Optional) Mask values determined from
+  !                                        any missing values in the source file
+  ! Nov 27, 2019 by B.Dugas (ESCER/UQAM) - Border protection in ii for non-global
+  !                                        input data in main oil_spill_fill loop
+  ! Nov 28, 2019 by B.Dugas (ESCER/UQAM) - Optimize the border protection code in
+  !                                        ii for non-global input data
+  ! Dec 09, 2019 by B.Dugas (ESCER/UQAM) - Add some 'STAT'istics output
+  ! Dec 10, 2019 by B.Dugas (ESCER/UQAM) - Change the 'STAT'istics output and add
+  !                                        '^>' to the list of special variables
+  ! Apr 17, 2020 by B.Dugas (ESCER/UQAM) - Set the ReWrite flag to .False. in all
+  !                                        of the FSTECR calls
+ 
+  ! Declarations for arguments
+    integer, parameter  :: nkey = 7
+    CHARACTER (len=8)   :: cles(nkey)
+    character (len=128) :: nam(nkey),def(nkey), dummy
+
+  ! Include external functions
+    integer, external :: fnom, fstouv, fclos, fstfrm, wkoffit, longueur
+    integer, external :: fstinf, fstinfx, fstluk, fstprm, fstecr, fstinl
+
+  ! Variables needed to read field descriptions (fstprm)
+    integer h, handle, ni, nj, nk, dgid
+    integer dateo,deet,npas,nbits,datyp
+    integer ip1,ip2,ip3,swa,lng,dltf,ubc
+    integer ig1,ig2,ig3,ig4,extra1,extra2,extra3
+    character*1  grtyp
+    character*2  typvar
+    character*4 nomvar
+    character*12 etiket
+   
+    logical :: MaskFile, Global, Stats
+    character (len=2048) :: ifile, mfile, ofile, rval
+    character (len=8) :: option, Globalc
+
+    real    :: Log3
+    logical :: strict
+    integer iun, mun, oun, ier, ftyp, nim, njm, nkm
+
+    real(8), dimension (:,:), allocatable :: Field
+    real,    dimension (:,:), allocatable :: Field4,mask,StatsOut
+
+    integer holes_left, oil_spill_fill
+    integer i,j, nr,nw, r
+
+    character (len=256) :: progname
+    common   /PROGNAM/ progname
+
+    real,       save :: misf=9.96921e+36                ! a very large float
+    real   (8), save :: misd=9.96921e+36                ! very large double
+    integer,    save :: misi =transfer(Z'80000000',1_4) ! largest negative 32 bit integer
+    integer,    save :: misui=transfer(Z'FFFFFFFF',1_4) ! largest 32 bit unsigned integer
+    integer(2), save :: misa =transfer(Z'8000'    ,1_2) ! largest negative 16 bit integer
+    integer(2), save :: misus=transfer(Z'FFFF'    ,1_2) ! largest 16 bit unsigned integer
+    integer(1), save :: misb =transfer(Z'80'      ,1_1) ! largest negative 8 bit integer
+    integer(1), save :: misub=transfer(Z'FF'      ,1_1) ! largest  8 bit unsigned integer
+    external :: set_missing_value_flags
+
+    integer, save :: verbose = 2 ! ERROR + WARNING
+    integer :: curarg, arg_count, arg_len, status, io, nil
+    integer, external :: exdb, exfin
+    character (len=512) :: evalue, diagext
+    logical              dexit,set_dexit,diagext_exist
+    common       /dexit/ dexit,set_dexit,diagext
+    
+    DATA cles /'S.' ,'D.' ,'MASK.','R'  ,'H'  ,'HELP','VERSION'/
+    DATA def  /'   ','   ','   '  ,'   ','   ','   ' ,'   '    /
+    DATA nam  /'   ','   ','   '  ,'   ','   ','   ' ,'   '    /
+
+    ! -------------------------------------------------------------------
+
+    Log3    = log( 3.0 )
+    Stats   = .False.
+    Globalc = 'False'
+    diagext = 'DIAGNOSTIC_EXIT'
+    progname = 'oilfill.ptn90' ! Pour documentation automatique
+
+  ! First, check for a non-empty DIAGNOSTIC_EXIT file.
+    dexit = .false. ; set_dexit = .false. ; evalue = ' '
+  ! The name of this file should be specified
+  ! via the DIAGNOSTIC_EXIT environment variable.
+    call getenvc( diagext,evalue )
+    if (evalue.ne.' ') then
+       set_dexit = .true. ; diagext = evalue
+       inquire( file=diagext, err=98,iostat=io,exist=diagext_exist )
+       if (diagext_exist) then
+          ! The file exists.
+          status = fnom( 99, trim(diagext), 'FTN+FMT', 0 )
+          ! Any abort code will be written to this file
+          ! rather than generating a physical abort code.
+          dexit = .true. ; 
+          ! Try reading the file's first line to see if it is
+          ! empty or not. If it is not empty, quit immediatly.
+          read( 99,'(a256)',end=98,iostat=io) evalue
+          ier = fclos( 99 )
+          if (evalue.ne.' ') call qqexit( 0 )
+       endif
+    endif
+
+ 98 ifile = '/dev/null' ; ofile = '/dev/null' ; strict = .false.
+    mfile = '/dev/null' ; r = 1 ; nr = 0 ; nw = 0
+
+    curarg    = 2                         ! current argument number (starts after 'r.diag averages')
+    arg_count = command_argument_count()
+
+    if(arg_count < 3) then      ! no arguments, OUCH !! GoTo Help mode
+       if (arg_count == 2) then
+          call get_command_argument(curarg,option,arg_len,status)
+          if (trim(option) == '-version') then
+             print *,'Program version = ',VERSION
+          else if (trim(option) /= '-h' .and. trim(option) /= '-help') then
+             print *,'Unknow argument ... ', trim(option)
+          else
+             call qqqdoc( )
+          endif
+       else
+          call qqqdoc( )
+       end if
+       call qqexit( 0 )
+    endif
+
+    nil = exdb( 'OilFill', 'V '//VERSION, 'NON' )  ! print version number
+    
+    do while(curarg <= arg_count)   ! process options
+
+      call get_command_argument(curarg,option,arg_len,status)
+      if(option(1:1) /= '-') exit ! does not start with -, NO MORE OPTIONS
+      curarg = curarg + 1
+      
+      if(status /= 0) then
+        print *,"FATAL: option is too long :'"//trim(option)//"..."//"'"
+        nil = exfin( 'OilFill', 'Error 1', 'NON' )
+        call quit( 'OillFill', 1 )
+      endif
+
+      if( option == '-h' .or. option == '--help' ) then
+        call qqqdoc( )
+        call qqexit( 0 )
+
+      else if( option == '-version' ) then
+        print *,'Program version = ',VERSION
+        call qqexit( 0 )
+
+      else if( option == '-global' ) then
+        print *,'Assuming global field in x direction...'
+        Globalc = 'True'
+
+      else if( option == '-stats' ) then
+        print *,'Requesting statistics output...'
+        Stats = .True.
+
+      else if( option == '-s' ) then       ! -s  file_for_oilfill
+        if(curarg > arg_count) then
+          print *,'FATAL: missing argument after -s'
+          nil = exfin( 'OillFill', 'Error 2', 'NON' )
+          call quit( 'OillFill', 2 )
+        endif
+        call get_command_argument(curarg,ifile,arg_len,status) ! get filename of input file
+        curarg = curarg + 1
+
+      else if( option == '-d'  ) then      ! -d file_for_oilfill
+        if(curarg > arg_count) then
+          print *,'FATAL: missing argument after -d'
+          nil = exfin( 'OillFill', 'Error 3', 'NON' )
+          call quit( 'OillFill', 3 )
+        endif
+        call get_command_argument(curarg,ofile,arg_len,status) ! get filename of input file
+        curarg = curarg + 1
+
+      else if( option == '-mask' ) then     ! -mask file_for_oilfill
+        if(curarg > arg_count) then
+          print *,'FATAL: missing argument after -mask'
+          nil = exfin( 'OillFill', 'Error 4', 'NON' )
+          call quit( 'OillFill', 4 )
+        endif
+        call get_command_argument(curarg,mfile,arg_len,status) ! get name of mask file
+        curarg = curarg + 1
+
+      else if( option == '-r' ) then     ! -r value_for_oilfill
+        if(curarg > arg_count) then
+          print *,'FATAL: missing argument after -r'
+          nil = exfin( 'OillFill', 'Error 5', 'NON' )
+          call quit( 'OillFill', 5 )
+        endif
+        call get_command_argument(curarg,rval,arg_len,status) ! get r value
+        if (rval /= ' ') read(rval,'(I2)',err=99) r
+        if (r > 10) goto 99
+        curarg = curarg + 1
+
+      else if( option == '-strict' ) then   ! set strict mode
+        strict = .true.                     ! abort on ERROR 
+
+      else if( option == '-q' ) then
+        if(.not. strict) verbose = 1    ! ERROR messages only
+
+      else if( option == '-qq' ) then
+        if(.not. strict) verbose = 0    ! NO messages at all
+
+      else if( option == '-v' ) then
+        verbose = 3                     ! + INFO messages
+
+      else if( option == '-vv' ) then
+        verbose = 4                     ! + NOTE messages
+
+      else if( option == '-vvv' ) then
+        verbose = 5                     ! + DEBUG messages
+
+
+      endif
+    enddo
+
+    goto 100
+99  print *,'FATAL: problem with -r value ',trim( rval )
+    nil = exfin( 'OillFill', 'Error 5', 'NON' )
+    call quit( 'OillFill', 5 )
+    
+    ! Open input file
+100 iun   = 0 
+    ier   = fnom(iun, ifile, 'STD+RND+R/O', 0)
+
+    ! unless in debug mode, keep standard file package silent
+    if(verbose < 4) call fstopi("MSGLVL",4,.false.)
+
+    ! Check file type of input file
+    ftyp  = WKOFFIT(ifile)
+    if (ftyp.ne.1.and.ftyp.ne.2.and.ftyp.ne.33.and.ftyp.ne.34) then
+       print *,'Wrong source file type, ABORT!'
+       print *,' expecting one of types 1,2,33,34, found ',ftyp
+       print *,' see the WKOFFIT subroutine documentation for more details'
+       nil = exfin( 'OillFill', 'Error 6', 'NON' )
+       call quit( 'OillFill', 6 )
+    end if
+    ier = fstouv(iun,'STD+RND')
+    write(*,'(/"  input file = ",A)') trim( ifile )
+
+    if (mfile /= '/dev/null') then
+       ! Open mask file
+       mun   = 0 ; MaskFile = .true.
+       ier   = fnom(mun, mfile, 'STD+RND+R/O', 0)
+       ! Check file type of mask file
+       ftyp  = WKOFFIT(mfile)
+       if (ftyp.ne.1.and.ftyp.ne.2.and.ftyp.ne.33.and.ftyp.ne.34) then
+          print *,'Wrong mask file type, ABORT!'
+          print *,' expecting one of types 1,2,33,34, found ',ftyp
+          print *,' see the WKOFFIT documentation for more details'
+          nil = exfin( 'OillFill', 'Error 7', 'NON' )
+          call quit( 'OillFill', 7 )
+       end if
+       ier = fstouv(mun,'STD+RND')
+       write(*,'("   mask file = ",A)') trim( mfile )
+    else
+       MaskFile = .false.
+    endif
+
+    ! Open output file
+    oun   = 0
+    ier   = fnom(oun, ofile, 'STD+RND', 0)
+    ier   = fstouv(oun,'STD+RND')
+    write(*,'(" output file = ",A/)') trim( ofile )
+
+    ! -------------------------------------------------------------------
+
+    if (MaskFile) then
+       ! Read mask
+       handle = fstinf( mun, nim,njm,nkm, -1,' ',-1,-1,-1,' ', ' ' )
+       allocate (mask(nim,njm))
+       ier = fstluk( mask, handle, nim, njm, nkm )
+    else
+       call set_missing_value_flags( &
+            misf, misi, misui, misd, misa, misus, misb, misub )
+    endif
+ 
+    handle = 0
+    
+    ! Loop over all records in source-file
+101 continue
+       ! Get handle of next record 
+       handle = fstinfx( handle, iun, ni,nj,nk, -1, ' ', &
+                                      -1,-1,-1, ' ', ' ' )
+
+       ! If no record is found leave loop
+       if ( handle < 0 ) goto 102
+
+       if (Stats) allocate( StatsOut(ni,nj) )
+
+       allocate( Field(ni,nj) )
+       ier = fstprm( handle,dateo,deet,npas,ni,nj,nk,nbits,  &
+                     datyp,ip1,ip2,ip3,typvar,nomvar,etiket, &
+                     grtyp,ig1,ig2,ig3,ig4,swa,lng,dltf,     &
+                     ubc,extra1,extra2,extra3 )
+
+       if (Globalc == 'True' .or. & ! Force global treatment
+           grtyp   == 'A'    .or. &
+           grtyp   == 'B'    .or. &
+           grtyp   == 'G' )  then
+          Global = .true.
+       else
+          Global = .false.
+       endif
+       
+       ! Read Field
+       if (nbits <= 32) then
+          allocate( Field4(ni,nj) )
+          ier = fstluk( Field4, handle, ni, nj, nk )
+          Field = Field4
+       else
+          ier = fstluk( Field,  handle, ni, nj, nk )
+       endif
+
+       holes_left = -1 ! Flag that says nothing was done
+
+       if ( nomvar /= '^^'  .and. &
+            nomvar /= '>>'  .and. &
+            nomvar /= '^>'  .and. &
+            nomvar /= '!!'  .and. &
+            nomvar /= 'HY' ) then
+
+          if (MaskFile    .and. &
+             (ni /= nim   .or.  &
+              nj /= njm   .or.  &
+              nk /= nkm))  then
+             print *,'FATAL: Inconsistent dimensions'
+             print *,' source file dimensions are ',ni, nj, nk
+             print *,'   mask file dimensions are ',nim,njm,nkm
+             nil = exfin( 'OillFill', 'Error 8', 'NON' )
+             call quit( 'OillFill', 8 )
+          else if (.not.MaskFile) then
+             allocate( mask(ni,nj) )
+          endif
+       
+          ! Missing values datyp ==> datyp+64 ...
+          if (MaskFile .or. IAND( datyp,64 ) > 0) then          
+
+             if (.not.MaskFile) then
+                !Build the missing value mask from the data itself
+                do j=1,nj
+                   do i=1,ni
+                      if (Field(i,j) == misd) then
+                         mask(i,j) = 0.0
+                      else
+                         mask(i,j) = 1.0
+                      endif
+                   enddo
+                enddo
+             endif
+
+             holes_left = oil_spill_fill( Field,StatsOut,ni,nj,mask,r, Global,Stats )
+
+             ! In what follows, setting datyp = 134 assumes that
+             ! there are no more misd-valued missing values...
+             
+             if (holes_left > 0) then
+                print *,'There are',holes_left,' holes left in array no. ',nr+1
+                if (IAND( datyp,64 ) == 0) datyp = 134
+             else
+                datyp = 134
+             endif
+
+             nbits = max( 16, nbits )
+
+             nr = nr + 1
+       
+          endif
+
+          if (.not.MaskFile) deallocate( mask )
+
+       end if
+
+       ! Write the appropriate record into destination-file
+       if (nbits <= 32) then
+          Field4 = Field
+          ier = fstecr( Field4,Field4, &
+                       -nbits,oun,dateo,deet,npas,ni,nj,nk,  &
+                        ip1,ip2,ip3,typvar,nomvar,etiket,    &
+                        grtyp,ig1,ig2,ig3,ig4,datyp,.false. )
+       else
+          ier = fstecr( Field,Field, &
+                       -nbits,oun,dateo,deet,npas,ni,nj,nk,  &
+                        ip1,ip2,ip3,typvar,nomvar,etiket,    &
+                        grtyp,ig1,ig2,ig3,ig4,datyp,.false. )
+       endif
+
+       nw = nw + 1
+
+       ! Save statistics on the number of passes ?
+       if (Stats .and. holes_left >= 0) then
+          ! Of no interest beyond 15 passes
+          ! StatsOut = min( StatsOut, 15. )
+          StatsOut = log( StatsOut+1.0 ) / Log3
+          nbits = 16 ; nomvar = 'STAT' ; nw = nw + 1
+          ier = fstecr( StatsOut,StatsOut, &
+                       -nbits,oun,dateo,deet,npas,ni,nj,nk,  &
+                        ip1,ip2,ip3,typvar,nomvar,etiket,    &
+                        grtyp,ig1,ig2,ig3,ig4,datyp,.false. )
+       endif
+
+       deallocate( Field )
+       if (Stats) deallocate( StatsOut )
+       if (allocated( Field4 )) deallocate( Field4 )
+
+    goto 101
+
+102 continue
+
+    ! Close all open CMC/RPN Standard files
+    ier = fstfrm( iun ) ; ier = fclos ( iun )
+    ier = fstfrm( oun ) ; ier = fclos ( oun )
+    if (mfile /= '/dev/null') then
+       ier = fstfrm( mun ) ; ier = fclos ( mun )
+    endif
+
+    write(*,'(/" Treated ",I4," record(s)" )') nr
+    write(*,'( "   Wrote ",I4," record(s)"/)') nw
+    
+    nil = exfin( 'OilFill', 'SUCCESS', 'NON' )
+    call quit( 'OillFill', 0 )
+    
+  END PROGRAM oilfill
+
+! ====================================================================
+
+  INTEGER function oil_spill_fill( datafield,StatsOut,ni,nj,mask,R, Global,Stats )
+
+    Implicit none
+
+    ! Arguments
+    integer ni,nj,R
+    logical Global,Stats
+    real(8), dimension(ni,nj) :: datafield
+    real   , dimension(ni,nj) :: mask,StatsOut
+
+    ! Local variables
+    integer, dimension(ni,nj,0:1) :: tempmask
+    integer inmask,outmask
+    integer i,j,ii,jj,iii,jjj,iimin,iimax
+    integer not_filled, neighbors, not_filled_on_last_pass, nbpass
+    real(8) sum, sumweight, weight
+
+    tempmask(:,:,0) = 0
+    do j=1,nj  ! loop over input grid
+       do i=1,ni
+          if ( mask(i,j) > 0.5 ) tempmask(i,j,0) = 1
+       end do
+    end do
+
+    ! tempmask(:,:,0)=mask
+    inmask = 0 ; outmask = 1-inmask  ! if inmask is 0, then outmask is 1 and vice versa
+    not_filled = ni*nj-1 ; not_filled_on_last_pass = ni*nj
+
+    if (Stats) StatsOut = 0 ; nbpass = 0
+
+    do while( not_filled /= 0)   ! loop until there are no missing values left
+
+       not_filled_on_last_pass = not_filled ; not_filled = 0 ; nbpass = nbpass+1
+
+       do j=1,nj  ! loop over input grid
+          do i=1,ni
+
+             tempmask(i,j,outmask) = tempmask(i,j,inmask)
+
+             if (tempmask(i,j,inmask) /= 0) cycle ! this point exists, no need to fill
+             if (tempmask(i,j,inmask) == 1) print *,'point',i,j,' exists'
+
+             sum = 0.0 ; sumweight = 0.0 ; neighbors = 0
+
+             if (Global) then
+
+                do jj=max(1,j-R),min(nj,j+R) ! scan neighbors (with protection for border)
+                   do ii=i-R,i+R             ! scan neighbors (possibly going over the border)
+
+                      iii = ii ; jjj=jj
+                      if (ii <= 0) iii=ni-ii
+                      if (ii > ni) iii=ii-ni
+
+                      if (iii /= i .or. jjj /= j) then  ! ignore the point itself
+                         if (tempmask(iii,jjj,inmask) /= 0) then  !  point is not missing in grid
+                         ! weight is inverse of distance in grid points
+                            weight = 1.0/sqrt( 1.0*((ii-i)*(ii-i) + (jj-j)*(jj-j)) )
+                            sumweight = sumweight+weight          ! sum of weights
+                            sum = sum+weight*datafield(iii,jjj)   ! weighted sum
+                            neighbors = neighbors+1
+                         endif
+                      endif
+
+                   enddo
+                enddo
+
+             else
+
+                do jj=max(1,j-R),min(nj,j+R)     ! scan neighbors (with protection for border)
+                   do ii= max(1,i-R),min(ni,i+R) ! scan neighbors (also with protection for border)
+
+                      iii = ii ; jjj=jj
+
+                      if (iii /= i .or. jjj /= j) then  ! ignore the point itself
+                         if (tempmask(iii,jjj,inmask) /= 0) then  !  point is not missing in grid
+                            ! weight is inverse of distance in grid points
+                            weight = 1.0/sqrt( 1.0*((ii-i)*(ii-i) + (jj-j)*(jj-j)) )
+                            sumweight = sumweight+weight          ! sum of weights
+                            sum = sum+weight*datafield(iii,jjj)   ! weighted sum
+                            neighbors = neighbors+1
+                         endif
+                      endif
+
+                   enddo
+                enddo
+
+             endif
+
+             if (neighbors > 1) then ! we need at least two existing neighboring points
+                datafield(i,j) = sum/sumweight  ! weighted average of existing neighbors
+                tempmask(i,j,outmask) = 1       ! this point now exists (for next pass)
+                if (Stats) StatsOut(i,j) = nbpass
+             else
+                not_filled = not_filled+1       ! this point could not be filled
+             endif
+
+          enddo
+       enddo
+
+       inmask  = outmask   ! swap inmask and outmask (this output is the input for next pass)
+       outmask = 1-inmask  ! if inmask is 0, then outmask is 1 and vice versa
+
+       ! we are stuck, no missing values got filled on this pass
+       if (not_filled == not_filled_on_last_pass) exit
+
+    enddo
+
+    oil_spill_fill = not_filled ! return number of holes left
+
+    return
+     
+  END FUNCTION oil_spill_fill
+# endif

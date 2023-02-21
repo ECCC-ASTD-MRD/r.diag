@@ -1,0 +1,25 @@
+#     if defined (AUTO_DOC)
+*
+*     This deck is no longer active.
+*     Please consult program ZONAVG for details.
+*
+#     endif
+#     if !defined (NO_SOURCE)
+      PROGRAM cmlt
+
+      CHARACTER    NOMPRG*256
+      COMMON      /PROGNAM/ NOMPRG
+
+      NOMPRG =
+     +'$Source: /home/cvs/RMNLIB/utils/rdiag/lspgm/rzonavg.ptn,v $'
+
+      call jclpnt( 1, 6 )
+
+      write(6,'(a)') 'This deck is no longer active.'
+      write(6,'(a)') 'Please consult program ZONAVG for details.'
+
+      call                                         XIT(' rzonavg',-1 )
+
+      stop
+      END 
+#     endif

@@ -1,0 +1,1446 @@
+# if !defined (nombre_maximal_de_fichiers)
+#     define   nombre_maximal_de_fichiers 128
+# endif
+#     if defined (AUTO_DOC)
+*
+* Sequence d'appel...
+*  fsttri  -s source1 [source2 [sources3 ... ]] \ 
+*          -d destination   [-dateo  [*]]       \ 
+*         [-typvar [*]]     [-etiket [*]] [-nomvar [*]]  \ 
+*         [-info  [valeur]] [-npas   [*]] [-ip1    [*]]  \ 
+*         [-rnd]  [-help]   [-nobox]      [-ip3    [*]]  \ 
+*         [-split [valeur]] [-sqi]   [-desc]       [-f]  \ 
+*         [-e     [valeur]]
+*
+*
+* Auteur: B.Dugas, RPN - avril 1991.
+*
+*
+* Objet:
+* -----
+*  FSTTRI   Trie un ou plusieurs fichiers standarts RPN/RND.
+*           L'ordre du tri se fait selon l'ordre suivant :
+*
+*              IP3/DATEO/NPAS/TYPVAR/ETIKET/NOMVAR/IP1
+*
+*           Cet ordre ne peut etre modifie mais les cles
+*           peuvent etre desactivees en invoquant la cle
+*           elle-meme en argument (ce qui place une "*"
+*           dans la liste a la position correspondante).
+*
+*
+* Parametres d'appel:
+* ------------------
+*  s         Fichiers sources (supporte jusqu'a 128 fichiers)
+*  d         Fichier destination. Celui-ci ne doit pas exister
+*            a l'entree, sauf si la cle f est egalement specifiee.
+*
+*  split     Separer le resultat du tri, une date-time-stamp unique
+*            par fichier. Valeurs optionnelles: "PARJOUR" ou "BYDAY".
+*
+*  ip3  \ 
+*  dateo \   Cles selon laquelle le tri sera effectue (et ce, dans
+*  npas   \  cet ordre). Specifier une de ces cles sans valeur (ou
+*  typvar  > avec la valeur "*") pour desactiver le tri du
+*  etiket /  parametre correspondant de la liste.
+*  nomvar/ 
+*  ip1  / 
+*  info      Niveau des messages retournes (ERRORS/INFORM/DEBUG).
+*  rnd       Le type du fichier de sortie est RND (def STD2000).
+*  sqi       Le type du fichier de sortie est SQI (def STD1989).
+*  nobox     Ne pas imprimer de boites d'informations.
+*  help      Afficher ce texte sur stdout et quitter.
+*  desc      Ne pas faire le tri sur les enregistrements de renvois.
+*  f         Forcer la re-ecriture du fichier de sortie.
+*  e         Re-ecrire (i.e. etamper) ou non les enregistrements
+*            ayant des descripteurs identiques (DEF = NON)
+*
+*
+* Codes de sortie:
+* ----------------
+*       0 Pas d'erreur
+*       1 Deux noms de fichiers sont requis a l'entree
+*       2 Impossible d'associer un nom a une unite d'E/S
+*       3 Le fichier source doit exister au depart
+*       4 Le fichier destination existe deja
+*       5 Erreur durant ecriture (fstecr)
+*       6 Le fichier source n'est pas de type RND
+*       7 Erreur durant la lecture (fstluk)
+*       8 Erreur durant la lecture (fstprm)
+*       9 Tri de 2 sections '++' de tailles differentes
+*      10 Erreur d'allocation memoire (allocate)
+*      11 Erreur de decodage de date (newdate)
+*      12 Incapable de forcer la re-ecriture
+*      13 Plus d'un type de fichier d'entree
+*      14 Incapable de lier les fichiers d'entree
+*
+#     endif
+#     if !defined (NO_SOURCE)
+      PROGRAM fsttri
+*    1              (      fstin,       fstout,       output,
+*    2               tape1=fstin, tape2=fstout, tape6=output ) 
+
+***    Auteur: B. Dugas, RPN - Avril 1991: Version 1.0
+
+***    Historique des modifications:
+***   
+*      $Log: fsttri.ptn,v $
+*      Revision 4.52 2020/10/28 18:18  dugas
+*      Trier les IP3 selon leurs valeurs decodees (reelles).
+*
+*      Revision 4.51 2020/04/02 14:14  dugas
+*      Corrections du traitement des enregistrements de renvois.
+*
+*      Revision 4.50 2020/02/05 16:16  dugas
+*      Initialiser DATEO8 lorsque DATEO=0.
+*
+*      Revision 4.49 2019/12/12 17:17  dugas
+*      Ajouter '^>' a la liste des enregistrements de renvoi.
+*
+*      Revision 4.48 2019/12/05 15:15  dugas
+*      Faire appel a DIAG_CCARD plutot qu'a la routine CCARD.
+*
+*      Revision 4.47 2019/04/04 15:15  dugas
+*      Utiliser la variable REV dans les appels a EXDB.
+*
+*      Revision 4.46 2017/12/12 12:12:12  dugas
+*      Desallouer l'argument -rewrit (qui avait ete introduit pour
+*      traiter les variables de renvois) et plutot utiliser le code
+*      associe a la valeur logique Elim pour eliminer les doublons pour
+*      les  variables regulieres. L'utilisation de rewrit=Vrai semble ne
+*      pas fonctionner correctement (par exemple, ne tenant pas compte
+*      de differentes valeurs de dateo). Par contre, pour les variables
+*      de renvois, on definit maintenant rewrit=Elim lors de l'appel
+*      a FSTECR.
+*
+*      Revision 4.45 2017/10/25 12:12:12  dugas
+*      Verifier que IP2 ne contient pas un niveau avant de tenter
+*      un recodage de l'echeance de prevision lorsqu'on detecte
+*      une echeance sous la forme "heures.minutes".
+*
+*      Revision 4.44 2017/09/28 16:16:16  dugas
+*      - Ajouter l'argument -REWIT (re: argument de FSTECR).
+*      - Tenir compte des minutes et des secondes dans le tri
+*        des dates. Ces dates etendues sont maintenant placees
+*        dans un INTEGER(8) avant l'appel a CSORTL.
+*      - Sauver IP2 en KIND_HOURS si on detecte la presence
+*        d'echantillons valides a l'interieur d'une heure.
+*      - Ajouter un tri prealable selon le type de donnees
+*        verticales (i.e. KIND) lorsqu'on decide d'effectuer
+*        in tri selon IP1 (i.e. separer les M et les Hy).
+*
+*      Revision 4.43 2017/08/31 08:08:08  dugas
+*      - Le nombre de fichier d'entree passe de 1 a 128
+*        et ajouter les messages d'erreurs 13 et 14.
+*      - Ajouter des messages descriptifs lors de l'execution.
+*      - La variable REWRIT0 est initialiseea .TRUE. ce qui
+*        force la re-ecriture (etamper) des enregistrements
+*        ayant les memes descripteurs.
+*
+*      Revision 4.42 2017/08/01 17:17:17  dugas
+*      - Utiliser des structures "do while" dans la section de tris.
+*      - Re-organiser la documentation en specifiant l'ordre
+*        dans lequel les cles seront considerees.
+*
+*      Revision 4.41  2014/09/25 20:20:47  dugas
+*      Inserer le texte de la licence LPGPL 2.1 pour R.DIAG.
+*
+*      Revision 4.40  2012/05/17 20:14:57  dugas
+*      - Ajouter 3 nouveaux codes d'erreur.
+*      - Utiliser ALLOCATE plutot que HPALLOC.
+*      - Enlever du code conditionnel F77.
+*      - Corrections au mode "FORCE re-write".
+*      - Le fichier source est ouvert en mode R/O.
+*      - Trier 1/lev si lev est une hauteur pour forcer le toit en premier.
+*      - Utiliser NEWDATE plutot DATMGP2 pour decoder le DateTimeStamp.
+*      - Appel a QQEXIT plutot que STOP a la fin du code.
+*
+*      Revision 4.39  2011/07/15 20:05:10  dugas
+*      Ajouter le mode SPLIT de fonctionnement.
+*
+*      Revision 4.38  2011/06/06 19:25:38  dugas
+*      Noms de fichiers a 512 caracteres max.
+*
+*      Revision 4.37  2010/06/10 21:29:55  dugas
+*      Tenir comte des enregistrements TocToc.
+*
+*      Revision 4.36  2009/09/08 20:44:06  dugas
+*      Enlever tout traitement des jours juliens.
+*
+*      Revision 4.35  2008/05/03 21:06:30  dugas
+*      Modification generale pour r.gppf.
+*
+*      Revision 4.34  2008/04/28 15:41:58  dugas
+*      Ne plus tenir compte du cas non-SQ98.
+*
+*      Revision 4.33  2006/07/13 21:50:27  dugas
+*      Supporter le nouveau format Z32 (DATYP=8) pour les donnees complexes
+*       dans les fichiers standards RPN/CMC (i.e. type SPEC/FOUR/CMPL).
+*
+*      Revision 4.32  2005/12/12 22:53:29  dugas
+*      - Ajouter les messages informatifs de XDF (XDFOPT) avec mode -info.
+*      - Corriger les appels a FSTOPC.
+*
+*      Revision 4.31  2004/12/10 00:40:31  dugas
+*      Modifier le COMMON DEXIT.
+*
+*      Revision 4.30  2004/04/16 17:37:57  dugas
+*      Ajouter un tri sur IP3
+*
+*      Revision 4.29  2003/12/10 22:32:12  dugas
+*      Corriger la documentation automatique
+*
+*      Revision 4.28  2002/02/02 00:50:44  dugas
+*       Les tampons I/O sont doubles (alloues en 64 bits).
+*       Le nombre max d'enregistrements passa a 200000.
+*       Leur taille minimale passe a 4096 unites.
+*
+*      Revision 4.27  2002/01/14 15:41:48  dugas
+*      Remplacer le parametre '-zdesc' par le nouveau parametre '-desc'.
+*      Ajouter le support du descripteur de coordonnee verticale 'HY'.
+*
+*      Revision 4.26  2001/05/01 15:45:02  armnrbd
+*      Ajouter la cle "-sqi" pour forcer le type SEQ a la sortie.
+*
+*      Revision 4.25  2001/02/09 00:51:12  armnrbd
+*      Rendre le message 6102 conditionel a la valeur de elimin.
+*
+*      Revision 4.24  2001/02/09 00:47:45  armnrbd
+*      Ajouter la cle "-e" pour eliminer les redondances.
+*
+*      Revision 4.23  2000/07/14 15:46:22  armnrbd
+*      Modifier les appels a WOKFFIT pour compenser un comportement
+*      etrange de F90 sur pollux avec l'option de compilation -O1.
+*
+*      Revision 4.22  2000/04/06 18:01:46  armnrbd
+*      Corriger la partie Ip1 des formats 6100 et 6101.
+*
+*      Revision 4.21  2000/03/24 21:08:21  armnrbd
+*      Meilleure allocation de BUFF et IBUF.
+*
+*      Revision 4.20  2000/03/20 21:31:28  armnrbd
+*      Utiliser l'allocation F90 pour les champs de type caracteres.
+*
+*      Revision 4.19  2000/03/20 19:43:27  armnrbd
+*      Enlever l'allocation de memoire dynamique pour CHAINE1 et CHAINE2.
+*
+*      Revision 4.18  1999/07/14 14:40:04  armnrbd
+*      Ajouter de la documentation sur les codes de sortie.
+*
+***    ... Le 18 mars 1992, B. Dugas, RPN (V1.10)  -  On ajoute la cle
+***        HELP (appellant) la routine QQQDOC et le bloc AUTO_DOC.
+
+      use           diag_convert_ip123, only: KIND_HOURS
+
+      implicit      none
+
+***   *****
+
+      character(4)  :: REV='4.47' ! FSTTRI internal revision level
+  
+      integer,      parameter :: NBRFICH = nombre_maximal_de_fichiers
+      integer,      parameter :: NBRARGS = 19, NBRCLE=NBRFICH+NBRARGS+1
+
+      integer    :: NMAX = 20000
+
+      real*8        heur8
+!**   integer       anne,mois,jour,heur
+
+      real          press,heures,HOLD,ip3reel
+      integer       YYYYMMDD,YYYYMMDD0,HHMMSShh,valnum, kind,bidon
+      real,         allocatable,dimension(:) :: niveau1,fset1
+      integer,      allocatable,dimension(:) :: niveau2, 
+     +              sindex, liste, heure, delt, listerenv,
+     +              fset2, kind1, pas1, pas2, date2
+      integer(8),   allocatable,dimension(:) :: date18 
+
+      integer(8) :: dateo8 ,valnum8
+
+      character(len=4)   nuls
+      character(len=24)  exempl
+      character(len=24), allocatable, dimension(:) :: chaine1,chaine2
+
+C     real          press,niveau1(NMAX)
+C     character*24  chaine1(NMAX),chaine2(NMAX),exempl
+C     integer       liste(NMAX),  date1(NMAX),  date2(NMAX),
+C    +              delt(NMAX),   niveau2(NMAX),heure(NMAX),
+C    +              pas1(NMAX),   pas2(NMAX),   index(NMAX),
+C    +              valnum,kind
+
+      character*512 evalue,diagext
+      logical              dexit,set_dexit,exist
+      common       /dexit/ dexit,set_dexit,diagext
+
+      character*16  cles(2:NBRCLE+1),blanc,option
+      character*512 def1(2:NBRCLE+1),def2(2:NBRCLE+1),nomfich
+      character*512 name1(NBRFICH),name2,nomrenv
+      integer       iu1(NBRFICH),iu2,iu3, ipos,icle, i,ier,io,j,
+     +              nil,exfin,   idatm, exdb,
+     +              ind01,ind11,ind21,ind31,ind41, i0,i1,i2,i3,i4,
+     +              ind02,ind12,ind22,ind32,ind42,
+     +              nwds ,nwds0,cmpl
+
+      logical       Vrai,  Faux,
+     +              box,   message, sqi,   Force, Desc,  Elim,
+     +              noDAT, noTYP,   noETI, noNOM, noPAS, noIP1,
+     +              noIP3, SplitD,  ByDay, Message_Heures
+
+      integer    :: elimin, nw, nbr, nbrrenv, infonbr,nbro=0
+
+      real,         allocatable, dimension(:) :: buff
+      integer,      allocatable, dimension(:) :: ibuf
+
+***   *****
+***    Variables et fonctions necessaires a la lecture des fichiers.
+***   *****
+
+      character typvar*2,                  nomvar*4,
+     +          etiket*12,                 grtyp
+
+      integer   dateo,datev,               ni,nj,nk,  
+     +          ip1,ip2,ip3,               datyp,nbits,
+     +          infon,deet,npas,           extra1,extra2,extra3,
+     +          ig1,ig2,ig3,ig4,           swa,lng,dltf,ubc,
+     +          lenn1,lenn2
+
+      integer   datev0,datevm3h
+
+      logical   rewrit,minutes
+
+***    Variable utilisee par le mode Elim.
+
+      character typvarb*2,                 nomvarb*4,
+     +          etiketb*12,                grtypb
+
+      integer   dateob,datypb,             nib,njb,nkb,  
+     +          ig1b,ig2b,ig3b,ig4b,       deetb,npasb,
+     +          ip1b,ip2b,ip3b
+
+      logical,  external ::     is_off, is_on, diag_is_a_level
+
+***    Declarations pour les fonctions FST/RMN
+
+      integer,  external ::     fstfrm, fstecr,
+     +          fstprm, fstopc, fstopl, xdfopt,
+     +          fstluk, fstinl, fstouv, fstlnk,
+     +          fnom,   fclos,  wkoffit,newdate
+      external  csortc, csorte, exfin,  exdb,
+     +          csortd, csortr, csortl,
+     +          getenvc,convpr, incdatr,quit
+
+      integer :: ifrm,  iecr,  iprm,  iopt,  ilnk,
+     +           inf,   infl,  inbr3, inbr2, inbr, inbr1=0,
+     +           ierr1, ierr2, ftyp0, ftyp1, ftyp2
+
+      character nomprg*256
+      common   /PROGNAM/ nomprg
+      external  qqqdoc
+
+***   *******
+***    Parametres d'appel:
+***    ------------------
+
+*      NBRARGS=(2:20), i.e. 19 Arguments generaux
+      data cles(02)/ 'D.'     /,def1(02)/' '      /,def2(02)/'TAPE2'  /,
+     +     cles(03)/ 'DATEO'  /,def1(03)/'DATEO'  /,def2(03)/'*'      /,
+     +     cles(04)/ 'TYPVAR' /,def1(04)/'TYPVAR' /,def2(04)/'*'      /,
+     +     cles(05)/ 'ETIKET' /,def1(05)/'ETIKET' /,def2(05)/'*'      /,
+     +     cles(06)/ 'NOMVAR' /,def1(06)/'NOMVAR' /,def2(06)/'*'      /,
+     +     cles(07)/ 'IP1'    /,def1(07)/'IP1'    /,def2(07)/'*'      /,
+     +     cles(08)/ 'NPAS'   /,def1(08)/'NPAS'   /,def2(08)/'*'      /,
+     +     cles(09)/ 'INFO'   /,def1(09)/'ERRORS' /,def2(09)/'INFORM' /,
+     +     cles(10)/ 'RND'    /,def1(10)/'NON'    /,def2(10)/'OUI'    /,
+     +     cles(11)/ 'NOBOX'  /,def1(11)/'NON'    /,def2(11)/'OUI'    /,
+     +     cles(12)/ 'HELP'   /,def1(12)/'NON'    /,def2(12)/'OUI'    /,
+     +     cles(13)/ 'F'      /,def1(13)/'NON'    /,def2(13)/'OUI'    /,
+     +     cles(14)/ 'DESC'   /,def1(14)/'NON'    /,def2(14)/'OUI'    /,
+     +     cles(15)/ 'ZDESC'  /,def1(15)/'NON'    /,def2(15)/'OUI'    /,
+     +     cles(16)/ 'E'      /,def1(16)/'NON'    /,def2(16)/'OUI'    /,
+     +     cles(17)/ 'SQI'    /,def1(17)/'NON'    /,def2(17)/'OUI'    /,
+     +     cles(18)/ 'IP3'    /,def1(18)/'IP3'    /,def2(18)/'*'      /,
+     +     cles(19)/ 'SPLIT'  /,def1(19)/'NON'    /,def2(19)/'OUI'    /,
+     +     cles(20)/ 'REWRIT' /,def1(20)/'EXUQ0W0QUXE' /,def2(20)/'*' /
+
+      ! +1 Argument positionel (nom du module r.diag)
+      data cles(NBRCLE+1) / '-.' /,
+     +     def1(NBRCLE+1) / ' ' /,
+     +     def2(NBRCLE+1) / ' ' /
+      data blanc / ' ' / 
+
+      data message,box,Minutes /    3*.false.   /,
+     +     Force, Desc, Elim   /    3*.false.   /,
+     +     Message_Heures      /      .true.    /
+      data noDAT, noTYP, noETI,
+     +     noNOM, noPAS, noIP1,
+     +     SplitD,ByDay, noIP3 /    9*.false.   /
+      data Vrai, Faux, sqi   / .true.,2*.false. /
+
+***    Numeros d'E/S, etc...
+
+      data   iu2 / 2 /
+
+***    Initialiser les pointeurs de tri.
+
+      data   ind01,ind11,ind21,ind31 / 4*1 /,
+     +       ind02,ind12,ind22,ind32 / 4*2 /
+
+*----------------------------------------------------------------------
+      diagext = 'DIAGNOSTIC_EXIT' ; iu1 = 0
+
+      ! Initialisation explicite des +NBRFICH
+      ! arguments de noms de fichiers d'entree
+      do  i=(NBRARGS+1)+1,(NBRARGS+1)+NBRFICH
+          cles(i) = 'S.' ; def1(i) = ' ' ; def2(i) = '****'
+      end do
+
+***    Check for a non-empty DIAGNOSTIC_EXIT file.
+
+          dexit = Faux
+      set_dexit = Faux
+
+***    The name of this file could also be specified
+***    with the DIAGNOSTIC_EXIT environment variable.
+
+      call getenvc( diagext,evalue )
+
+      If (evalue.ne.' ')                                       Then
+          diagext   = evalue
+          set_dexit = Vrai
+      End If
+
+      Inquire( file=diagext,err=025,iostat=io,exist=exist )
+
+      if (exist)                                               then
+
+***        The file exists.
+
+          open( unit=99, file=diagext, err=025,iostat=io,
+     +                   status='old', access='sequential',
+     +                                 form='formatted' )
+
+***        Any abort code will be written to this file
+***        rather than generating a physical abort code.
+
+          dexit = Vrai
+
+***        Try reading the file's first line to see if it is
+***        empty or not. if it is not empty, quit immediatly.
+
+          read(99,'(a256)',end=025,iostat=io) evalue
+          close ( 99 )
+
+          if (evalue.ne.' ') call qqexit( 0 )
+
+      end if
+
+***    Aller chercher les noms des deux fichiers d'E/S et
+***    traiter les differents parametres d'entrees.
+
+  025 ipos = -1  ; icle = NBRCLE
+      call diag_ccard( cles,def2,def1,NBRCLE,ipos )
+
+      if (is_on( def1(12) ) .or.
+     +   (def1((NBRARGS+1)+1).eq.' ' .and. def1(2).eq.' ' ))    then
+          nomprg = 'fsttri.ptn'
+          call qqqdoc( )
+          stop 0
+      end if
+
+***    Traiter les cles de type "TRI".
+
+      if (def1 (3).eq.'*') noDAT = Vrai
+      if (def1 (4).eq.'*') noTYP = Vrai
+      if (def1 (5).eq.'*') noETI = Vrai
+      if (def1 (6).eq.'*') noNOM = Vrai
+      if (def1 (7).eq.'*') noIP1 = Vrai
+      if (def1 (8).eq.'*') noPAS = Vrai
+      if (def1(18).eq.'*') noIP3 = Vrai
+
+***    Specifier les modes FASTIO et IMAGE. 
+
+                               iopt = fstopl( 'FASTIO', Vrai     , 0 )
+                               iopt = fstopl( 'IMAGE' , Vrai     , 0 )
+
+***    Specifier le type de messages qu'on veut recevoir.
+
+      if (def1(6).eq.'DEBUGS') def1(6) = 'DEBUG'
+
+                               iopt = fstopc( 'MSGLVL', def1(9)  , 0 )
+      if (def1(9).eq.'DEBUG' ) iopt = xdfopt( 'MSGLVL','TRIVIAL ', 0 ) 
+      if (def1(9).eq.'INFORM') iopt = xdfopt( 'MSGLVL','INFORM  ', 0 ) 
+      if (def1(9).eq.'WARNIN') iopt = xdfopt( 'MSGLVL','WARNING ', 0 ) 
+      if (def1(9).eq.'ERRORS') iopt = xdfopt( 'MSGLVL','ERROR   ', 0 ) 
+      if (def1(9).eq.'FATALE') iopt = xdfopt( 'MSGLVL','ERRFATAL', 0 ) 
+      if (def1(9).eq.'SYSTEM') iopt = xdfopt( 'MSGLVL','SYSTEM  ', 0 ) 
+      if (def1(9).eq.'CATAST') iopt = xdfopt( 'MSGLVL','SYSTEM  ', 0 ) 
+
+***    Traiter les cles de type "divers".
+
+      if ('DEBUG'  == def1(9)   .or.
+     +    'INFORM' == def1(9))      message = Vrai
+      if ( is_on  (   def1(17) ))   sqi     = Vrai 
+      if ( is_off (   def1(11) ))   box     = Vrai
+      if ( is_on  (   def1(13) ))   Force   = Vrai
+      if ( is_on  (   def1(14) ).or.
+     +     is_on  (   def1(15) ))   Desc    = Vrai
+      if ( is_on  (   def1(16) ))   Elim    = Vrai
+
+      call low2up( def1(19),option )
+      if (option == 'BYDAY' .or.
+     +    option == 'PARJOUR')      ByDay   = Vrai
+
+      if (ByDay)                                               then
+                                    SplitD  = Vrai
+      else
+          if (is_on(  def1(19) ))   SplitD  = Vrai
+      end if
+
+      if (Elim)                     elimin  = 0
+      if (SplitD)                   Desc    = Vrai 
+
+      if (def1(20) /= 'EXUQ0W0QUXE')                           then
+          write(6,6300) ! L'argument -rewrit a ete retire
+          if (box) nil = exfin( 'FstTRI', 'Erreur 99', 'NON' )
+          call quit( ' FstTri ',99 )
+      end if
+
+      if (def1((NBRARGS+1)+1) == blanc .or.
+     +   (def1(2)             == blanc .and. .not.Splitd))     then
+          if (box) nil = exdb ( 'FstTRI', 'Rev. '//REV, 'NON' )
+          write(6,6001)
+          if (box) nil = exfin( 'FstTRI', 'Erreur 1', 'NON' )
+          call quit( ' FstTri ',1 )
+      end if
+
+***    Commencer le traitement.
+
+      if (box) idatm = exdb( 'FstTRI', 'Rev. '//REV, 'NON' )
+
+      name1(1:NBRFICH) = def1((NBRARGS+1)+1:(NBRARGS+1)+NBRFICH)
+      name2 = def1(2)
+
+***    Verifier si le ficher de sortie existe deja (i.e. n'est pas
+***    vide) en aviser l'usager et quitter.
+
+      if (.not.SplitD)
+     +ftyp2 = wkoffit( '+' // trim( name2 ) )
+
+      if (.not.Splitd)                                         then
+      if (ftyp2.gt.-2)                                         then
+
+***        Le fichier de sortie n'est pas vide.
+
+          if (.not.Force)                                      then
+
+              write(6,6004)
+              if (box) nil = exfin( 'FstTRI', 'Erreur 4', 'NON' )
+              call quit( ' FstTri ',4 )
+
+          else
+
+***            On l'efface ...
+
+              Call system( 'rm -rf '// trim( name2 ) )
+              ftyp2 = wkoffit(  '+' // trim( name2 ) )
+
+              if (ftyp2.gt.-2)                                 then
+                  write(6,6012)
+                  if (box) nil = exfin( 'FstTRI', 'Erreur 12', 'NON' )
+                  call quit( ' FstTri ',12 )
+              end if
+
+          end if
+
+      end if
+      end if
+
+      do nbr=1,NBRFICH
+
+          ! Verifier l'existence et le type des fichiers d'entree
+
+          ftyp1 = wkoffit( '+' // trim( name1(nbr) ) )
+
+          ! Verifier que le premier fait reference a un fichier de 
+          ! type valide. Si les autres existent deja (i.e. ne sont pas
+          ! vides, et possiblement) en aviser l'usager et quitter.
+
+          if (ftyp1 < -1)                                      then
+
+              ! Le premier fichier est vide ou inexistant.
+ 
+              write(6,6003) trim( name1(nbr) )
+              if (box) nil = exfin( 'Fsttri','Erreur 3','NON' )
+              call quit( ' Fsttri ',3 )
+
+          end if
+
+          if (nbr == 1 .and. def1(2) == def1((NBRARGS+1)+1))
+     +        name2 = name1(nbr) ! Re-Definir name2
+
+          if (ftyp1 /= 1 .and. ftyp1 /= 33)                    then
+
+              ! Ce fichier n'est pas un fichier RND.
+
+              write(6,6006)
+              if (box) nil = exfin( 'Fsttri','Erreur 6','NON' )
+              call quit( ' Fsttri ',6 )
+
+          end if
+
+          if (nbr > 1 .and. ftyp0 /= ftyp1)                    then
+
+              ! Plus d'un type de fichier d'entree.
+
+              write(6,6013)
+              if (box) nil = exfin( 'Fsttri','Erreur 13','NON' )
+              call quit( ' Fsttri ',13 )
+
+          end if
+
+          ftyp0 = ftyp1
+
+          if (nbr < NBRFICH .and.
+     +       (name1(nbr+1) == ' ' .or. name1(nbr+1) == '****')) exit
+
+      end do
+
+      if (nbr == NBRFICH+1) nbr = NBRFICH ! Nombre de fichiers d'Input
+
+***    Associer des unites I/O aux fichiers d'I/O et les ouvrir.
+
+      if (.not.SplitD)                                         then
+          if (sqi)                                             then
+             ierr2 = fnom( iu2, '+' // trim( name2 ),'STD+SEQ',0 )
+          else
+             ierr2 = fnom( iu2, '+' // trim( name2 ),'STD+RND',0)
+          end if
+       else
+          ierr2  = 0; iu2 = 0 ; iu3 = 0
+       end if
+
+      if (.not.SplitD)                                         then
+          if (sqi)                                             then
+              inbr2  = fstouv( iu2,'SEQ' )
+          else
+              inbr2  = fstouv( iu2,'RND' )
+          end if
+      end if
+
+      do i=1,nbr
+ 
+          ierr1 = fnom( iu1(i), '+' // trim( name1(i) ), 'STD+R/O',0 )
+  
+          if (ierr1 /= 0)                                      then
+             write(6,6002)
+             if (box) nil = exfin( 'Fstmdiag', 'Erreur 2', 'NON' )
+             call quit( ' Fsttri ',2 )
+          end if
+
+          ! Ouvrir les fichiers.
+
+          inbr  = fstouv( iu1(i),'RND' ) ; inbr1 = inbr + inbr1
+
+          if (inbr <= 0)                                       then
+             write(6,'(A,I6,A)') 'Erreur FSTOUV ',inbr,' sur unit '
+     +                         // trim( name1(i) )
+             if (box) nil = exfin( 'Fsttri', 'Erreur 3', 'NON' )
+             call quit( ' Fsttri ',3 )
+
+          end if
+
+      end do
+
+      NMAX = max( NMAX, inbr1+1 )
+
+      ilnk = 0 ; if (nbr > 1) ilnk = fstlnk( iu1,nbr )
+
+      if (ilnk > 0)                                            then
+          write(6,6014) nbr,ilnk
+          if (box) nil = exfin( 'Fsttri', 'Erreur 14', 'NON' )
+          call quit( ' Fstmdiag ',14 )
+      end if
+
+      if (.not.SplitD)                                         then
+          if (nbr == 1)                                        then
+              write(6,6202) trim( name1(1) ),trim( name2 )
+          else if (nbr == 2)                                   then
+              write(6,6203) nbr,trim( name1(1) ),trim( name1(nbr) ),
+     +                          trim( name2 )
+          else
+              write(6,6204) nbr,trim( name1(1) ),trim( name1(nbr) ),
+     +                          trim( name2 )
+          end if
+      else
+          if (nbr == 1)                                        then
+              write(6,6202) trim( name1(1) )
+          else if (nbr == 2)                                   then
+              write(6,6203) nbr,trim( name1(1) ),trim( name1(nbr) )
+          else
+              write(6,6204) nbr,trim( name1(1) ),trim( name1(nbr) )
+          end if
+      end if
+
+*-----------------------------------------------------------------------
+***    Aller lire le directeur. Trouver combien de IP1,NOMVAR,
+***    ETIKET,DATEO,NPAS,TYPVAR nous avons. La liste des cles
+***    va dans "liste".
+
+      allocate( liste(NMAX), stat=ier ) ; if (ier /= 0) goto 999
+
+      infl = fstinl( iu1, ni,nj,nk, -1,' ',-1,-1,-1,' ',' ',
+     +                    liste,infon,NMAX )
+
+***    Allocate the other basic work fields.
+
+      allocate( date18 (infon+1),   date2  (infon+1),   kind1 (infon+1),
+     +          niveau1(infon+1),   niveau2(infon+1),   delt  (infon+1), 
+     +          pas1   (infon+1),   pas2   (infon+1),   heure (infon+1),
+     +          fset1  (infon+1),   fset2  (infon+1),   sindex(infon+1),
+     +          chaine1(1:infon+1), chaine2(1:infon+1), stat=ier ) 
+      if (ier /= 0) goto 999
+
+***    Taille des tampons de lectures.
+
+      nwds0 = ni*nj*nk+4
+      nwds  = nwds0
+      nw    = max( 4096,2*nwds ) + taille_entete
+
+***        Allouer l'espace de travail necessaire.
+
+      if (Desc)
+     +    allocate( buff(nw),ibuf(nw),stat=ier )
+      if (ier /= 0) goto 999
+
+***    Lire l'information sur tous les champs. Initialiser sindex.
+
+      chaine2(infon+1) = ' '
+      niveau2(infon+1) =  0
+      nbrrenv = 0
+
+      do i=1,infon
+
+          sindex(i) = i
+
+          iprm      = fstprm( liste(i),
+     +                dateo,deet,npas, ni,nj,nk, nbits,datyp,
+     +                ip1,ip2,ip3, typvar,nomvar,etiket, 
+     +                grtyp,ig1,ig2,ig3,ig4, swa,lng,dltf,ubc, 
+     +                extra1,extra2,extra3 )
+
+                          cmpl = 1
+          if (datyp.eq.8) cmpl = 2
+
+          nwds = max( nwds,ni*nj*nk*cmpl+4 )
+
+          if (Desc  .and.
+     +       (nomvar.eq.'>>' .or.
+     +        nomvar.eq.'^^' .or.
+     +        nomvar.eq.'^>' .or.
+     +        nomvar.eq.'!!' .or.
+     +        nomvar.eq.'HY' )  )                              then
+
+              if (SplitD .and. iu2 == 0)                       then
+                  if (name2 == blanc)                          then
+                      write(nomrenv,6660) trim( name1(1) )
+                  else
+                      write(nomrenv,6660) trim( name2 )
+                  end if
+                  if (fnom( iu2,trim( nomrenv ),'STD',0) == 0) then
+                      inbr2 = fstouv( iu2,'RND' )
+                  else
+                      write(6,6002) trim( nomrenv )
+                      if (box) nil = exfin('FstTRI','Erreur 2','NON')
+                      call quit( ' FstTri ',2 )
+                  end if
+                  if (inbr2 < 0)                               then
+                      write(6,6222) inbr2,trim( nomrenv )
+                      if (box) nil = exfin('FstTRI','Erreur 2','NON')
+                      call quit( ' FstTri ',2 )
+                  end if
+                  rewrit = Vrai
+              else
+                  rewrit = Elim
+              end if
+
+***            Les enregistrements de renvois sont sauves immediatement.
+
+              inf  = fstluk( buff, liste(i),ni,nj,nk )
+
+              if (inf.lt.0)                                    then
+                  write(6,6007) inf
+                  if (box) nil = exfin( 'FstTRI','Erreur 7','NON' )
+                  call quit( ' FstTri ',7 )
+              end if
+
+              iecr = fstecr( buff,ibuf,
+     +                      -nbits, iu2, dateo,deet,npas,
+     +                       ni,nj,nk, ip1,ip2,ip3, typvar,nomvar,
+     +                       etiket,grtyp, ig1,ig2,ig3,ig4,
+     +                       datyp, rewrit )
+
+              if (iecr.lt.0)                                   then
+                  write(6,6005) iecr
+                  if (box) nil = exfin( 'FstTRI','Erreur 5','NON' )
+                  call quit( ' FstTri ',5 )
+              end if
+
+              nbrrenv = nbrrenv+1
+
+          end if
+
+          if (nomvar          .eq.'++' .and.
+     +        chaine2(infon+1).eq.'  ' )                       then
+
+***            Sauver le premier enregistrement '++'.
+
+              liste(infon+1)   = liste(i)
+              chaine2(infon+1) ='++'
+              niveau2(infon+1) = nk
+
+          else if (nomvar          .eq.'++'
+     +      .and.  niveau2(infon+1).ne. nk  )                  then
+
+              write(6,6009) niveau2(infon+1),nk
+              if (box) nil=exfin( 'FstTri','Erreur 9','NON' )
+              call quit( ' FstTri ',9 )
+                  
+          end if
+
+          write(chaine2(i),0001) typvar,etiket,nomvar
+
+          if (nomvar /= '>>' .and.
+     +        nomvar /= '^^' .and.
+     +        nomvar /= '^>' .and.
+     +        nomvar /= '!!') then
+            ! Decoder IP1
+              call convpr(  ip1,press,kind1(i),-1 )
+              if (press > 0. .and.
+     +           (kind1(i) == 0 .or. kind1(i) == 4))
+     +            press = 1./press
+            ! Decoder IP3
+              call convpr( ip3,ip3reel,kind,-1 )
+              if (ip3reel > 0. .and.
+     +           (kind == 0 .or. kind == 4))
+     +            ip3reel = 1./ip3reel
+          else
+              press   = ip1 ; kind1(i) = -1
+              ip3reel = ip3 ! kindip3(i) = -1
+          end if
+
+          niveau2(i)  = ip1
+          heure(i)    = ip2
+          fset2(i)    = ip3
+          date2(i)    = dateo
+          pas2(i)     = npas
+          delt(i)     = deet
+
+          if (noDAT)                                           then
+
+              dateo8 = -1
+
+          else if (dateo /= 0)                                 then
+
+***            Extraire l'annee, le mois, le
+***            jour et l'heure correspondante.
+
+              ier = newdate( dateo, YYYYMMDD,HHMMSShh, -3 )
+
+              if (ier /= 0)                                    then
+
+                  write(6,6011) ier, dateo
+                  if (box) nil=exfin( 'FstTri','Erreur 11','NON' )
+                  call quit( ' FstTri ',11 )
+                  
+              end if
+
+              if (mod( HHMMSShh/100,10000 ) /= 0) Minutes = Vrai
+
+              dateo8 = (YYYYMMDD*1000000_8)+(HHMMSShh/100)
+
+          else
+
+              dateo8 = dateo
+
+          end if
+
+          if (noPAS) npas     = -1
+          if (noIP1) press    = -1.
+          if (noIP1) kind1(i) = -1.
+          if (noIP3) ip3reel  = -1
+
+          if (noTYP) typvar = ' '
+          if (noETI) etiket = ' '
+          if (noNOM) nomvar = ' '
+
+          write(chaine1(i),0001) typvar,etiket,nomvar
+          niveau1 (i) = press
+          pas1    (i) = npas
+          date18  (i) = dateo8
+          fset1   (i) = ip3reel
+
+          if (.not.Minutes)                                    then
+              Minutes = ( mod( npas*(deet*1_8),3600_8 ) /= 0_8 )
+          end if
+
+      end do
+
+***    Trier cette information. Commencer selon IP3.
+
+      call csortr( fset1,sindex,infon )
+
+      do while (ind01 < infon)
+
+         ip3reel = fset1(sindex(ind01))
+
+***       Passer au niveau suivant ...
+
+         do  i0=ind02,infon
+            if (fset1(sindex(i0)) /= ip3reel) exit
+         end do
+
+***       I0 contient le debut du prochain groupe IP3.
+***       Trier la section courante, ... selon DATEO.
+
+         if (i0-ind02 > 0)                                     then
+
+            call csortl( date18,sindex(ind01),i0-ind01 )
+
+***          Passer au niveau suivant ... 
+
+            ind11  = ind01
+            ind12  = ind11+1
+
+            do while (ind11 < i0)
+
+               valnum8 = date18(sindex(ind11))
+
+               do  i1=ind12,i0-1
+                  if (date18(sindex(i1)) /= valnum8) exit
+               end do
+
+***             I1 contient le debut du prochain groupe DATEO.
+***             Trier la section courante, ... selon NPAS.
+
+               if (i1-ind12 > 0)                               then
+
+                  call csorte( pas1,sindex(ind11),i1-ind11 )
+
+***                Passer au pas de temps suivant ...
+
+                  ind21  = ind11
+                  ind22  = ind21+1
+
+                  do while (ind21 < i1)
+
+                     valnum = pas1(sindex(ind21))
+
+                     do  i2=ind22,i1-1
+                        if (pas1(sindex(i2)) /= valnum) exit
+                     end do
+
+***                   I2 contient le debut du prochain groupe NPAS.
+***                   Trier la section courante ... selon chaine
+***                   (i.e. selon TYPVAR/ETIKET/NOMVAR).
+
+                     if (i2-ind22 > 0)                         then
+ 
+                        call csortc( chaine1,sindex(ind21),i2-ind21 )
+
+***                      Passer au TYPVAR/ETIKET/NOMVAR suivant ...
+
+                        ind31  = ind21
+                        ind32  = ind31+1
+
+                        do while ( ind31 < i2 )
+
+                           exempl = chaine1(sindex(ind31))
+
+                           do  i3=ind32,i2-1
+                              if (chaine1(sindex(i3)) /= exempl) exit
+                           end do
+
+***                         I3 contient le debut du prochain groupe
+***                         TYPVAR/ETIKET/NOMVAR. Trier la section
+***                         courante, ... selon le type de niveau
+***                         vertical (pression/sigma/etc).
+
+                           if (i3-ind32 > 0)                   then
+
+                              call csorte(kind1,sindex(ind31),i3-ind31)
+
+***                            Passer au niveau vertical suivant ...
+
+                              ind41  = ind31
+                              ind42  = ind41+1
+
+                              do while (ind41 < i3 )
+
+                                 valnum = kind1(sindex(ind41))
+
+                                 do  i4=ind42,i3-1
+                                    if (kind1(sindex(i4))/=valnum) exit
+                                 end do
+
+***                               I4 contient le debut du prochain groupe
+***                               KIND. Trier la section courante,
+***                               ... selon la pression/sigma.
+
+                                 if (i4-ind42 > 0)
+     +                           call 
+     +                           csortr(niveau1,sindex(ind41),i4-ind41)
+
+***                               Passer au prochain bloc de KIND.
+
+                                 ind41 = i4
+                                 ind42 = ind41+1
+
+                              end do
+
+                           end if
+
+***                         Passer au prochain bloc de (TYPVAR/ETIKET/NOMVAR).
+
+                           ind31 = i3
+                           ind32 = ind31+1
+
+                        end do
+
+                     end if
+
+***                   Passer au prochain bloc de NPAS.
+
+                     ind21 = i2
+                     ind22 = ind21+1
+
+                  end do
+
+               end if
+
+***             Passer au prochain bloc de DATEO.
+
+               ind11 = i1
+               ind12 = ind11+1
+
+            end do
+
+         endif
+
+***       Passer au prochain bloc de IP3.
+
+         ind01 = i0
+         ind02 = ind01+1
+
+      end do
+
+      if (message)                                             then
+
+***        On ecrit un sommaire du resultat du tri.
+
+          write(6,6100)
+          do i=1,infon
+              if (chaine2(sindex(i))(15:18).ne.'++')
+     +        write(6,6101) i,sindex(i), chaine2(sindex(i))(1:2),
+     +                                   chaine2(sindex(i))(15:18),
+     +                                   niveau2(sindex(i)),  
+     +                                     fset2(sindex(i)),
+     +                                      pas2(sindex(i)),
+     +                                   chaine2(sindex(i))(3:14),
+     +                                     date2(sindex(i))
+          end do
+
+      end if
+
+*-----------------------------------------------------------------------
+***    Le tri est termine. On sauve le (ou les) nouveau(x) fichier(s).
+
+      if (.not.Desc .or. nwds.gt.nwds0)                        then
+
+          ier =0 ; if (Desc) deallocate( buff,ibuf, stat=ier ) 
+          if (ier /= 0) goto 999
+
+***        Allouer l'espace de travail necessaire.
+
+          nwds0 = nwds
+          nw    = max( 4096,2*nwds ) + taille_entete
+
+          allocate( buff(nw),ibuf(nw),stat=ier )
+          if (ier /= 0) goto 999
+       
+      end if
+
+      if (SplitD .and. iu2 > 0)                                then
+
+          write(6,6103) trim( nomrenv )
+          ifrm = fstfrm( iu2 ) ; ifrm = fclos ( iu2 ) ; iu2  = 0
+
+          if (nbrrenv > 0)                                     then
+
+              allocate( listerenv(nbrrenv),stat=ier )
+              if (ier /= 0) goto 999
+
+              ! Ouvrir de nouveau le fichier nomrenv mais sous iu3
+              if (fnom( iu3,trim( nomrenv ),'STD',0) == 0)     then
+                  inbr3 = fstouv( iu3,'RND' )
+              else
+                  write(6,6002) trim( nomrenv )
+                  if (box) nil = exfin( 'FstTRI', 'Erreur 2', 'NON' )
+                  call quit( ' FstTri ',2 )
+              end if
+              if (inbr3 < 0)                                   then
+                  write(6,6222) inbr3,trim( nomrenv )
+                  if (box) nil = exfin( 'FstTRI', 'Erreur 2', 'NON' )
+                  call quit( ' FstTri ',2 )
+              end if
+              infl = fstinl( iu3, ni,nj,nk, -1,' ',-1,-1,-1,' ',' ',
+     +                            listerenv,infonbr,nbrrenv )
+
+          end if
+
+      end if
+
+      rewrit = Elim ; YYYYMMDD0 = -1 ; datev0 = -1 ; nomfich = blanc
+
+      do i=1,infon
+
+***        Caracteriser le prochain enregistrement.
+
+          read(chaine2(sindex(i)),0001) typvar,etiket,nomvar
+          ip1   = niveau2(sindex(i))
+          ip2   = heure(sindex(i))
+          ip3   = fset2(sindex(i))
+          dateo = date2(sindex(i))
+          npas  = pas2(sindex(i))
+          deet  = delt(sindex(i))
+
+          if (nomvar.eq.'++') cycle
+
+***        Notons que si Desc est Vrai, les enregistrements
+***        crochets ont deja ete sauves.
+
+          if (Desc  .and.
+     +       (nomvar == '>>' .or.
+     +        nomvar == '^^' .or.
+     +        nomvar == '^>' .or.
+     +        nomvar == '!!' .or.
+     +        nomvar == 'HY' )  ) cycle
+
+***        Trouver l'heure de validite la plus proche.
+
+          if (npas*deet.ne.0)                                  then
+              heur8 = npas*DBLE( deet )/3600
+              call incdatr( datev,dateo,heur8 )
+          else
+              datev = dateo
+          end if
+
+          ier = newdate( datev, YYYYMMDD,HHMMSShh, -3 )
+
+          if (ByDay)                                           then
+              ! Notons que 00Z est plutot traite
+              ! comme 24Z, i.e. dans le jour precedent
+              if (HHMMSShh == 0)                               then
+                  heur8 = -3.; call incdatr( datevm3h,datev,heur8 )
+                  ier = newdate( datevm3h, YYYYMMDD,HHMMSShh, -3 )
+              end if
+              datev0 = datev
+          else
+              YYYYMMDD0 = YYYYMMDD
+          end if
+
+          if (SplitD)                                          then
+              if ((.not.ByDay .and. datev    /= datev0   )
+     +       .or. (     ByDay .and. YYYYMMDD /= YYYYMMDD0))    then
+
+***                Changer de fichier de sortie.
+
+                  if (nomfich /= blanc)                        then
+
+                      ! Copier tous les enregistrements de renvois
+                      do j=1,nbrrenv !  avant de fermer ce fichier
+                          inf  = fstluk( buff, listerenv(j),ni,nj,nk )
+                          iprm = fstprm( inf, dateo,deet,npas, ni,nj,nk,
+     +                          nbits,datyp, ip1,ip2,ip3, typvar,nomvar,
+     +                          etiket,grtyp,ig1,ig2,ig3,ig4, swa,lng,
+     +                          dltf,ubc,extra1,extra2,extra3 )
+                          iecr = fstecr( buff,ibuf,
+     +                          -nbits, iu2, dateo,deet,npas,
+     +                           ni,nj,nk, ip1,ip2,ip3, typvar,nomvar,
+     +                           etiket,grtyp, ig1,ig2,ig3,ig4,
+     +                           datyp, rewrit )
+                      end do
+
+                      ifrm = fstfrm( iu2 )
+                      ifrm = fclos ( iu2 )
+
+                  end if
+
+                  nbro = nbro+1
+
+***                Construire le nouveau nom avec datev ou YYYYMMDD.
+
+                  if (ByDay)                                   then
+                      if (def1(2) == blanc)                    then
+                          write(nomfich,6666) trim( name1(1) ),YYYYMMDD
+                      else
+                          write(nomfich,6666) trim( name2 ),YYYYMMDD
+                      end if
+                  else
+                      if (def1(2) == blanc)                    then
+                          write(nomfich,6666) trim( name1(1) ),
+     +                                        YYYYMMDD,HHMMSShh
+                      else
+                          write(nomfich,6666) trim( name2 ),
+     +                                        YYYYMMDD,HHMMSShh
+                      end if
+                  end if
+
+***                On ouvre le fichier.
+
+                  if (fnom( iu2,trim( nomfich ),'STD',0) == 0) then
+                      inbr2 = fstouv( iu2,'RND' )
+                  else
+                      write(6,6002) trim( nomfich(2:512) )
+                      if (box) nil = exfin('FstTRI','Erreur 2','NON')
+                      call quit( ' FstTri ',2 )
+                  end if
+                  if (inbr2 < 0)                               then
+                      write(6,6222) inbr2,trim( nomfich(2:512) )
+                      if (box) nil = exfin('FstTRI','Erreur 2','NON')
+                      call quit( ' FstTri ',2 )
+                  end if
+
+                  write(6,6205) nbro, trim( nomfich(2:512) )
+
+***                Sauver les valeurs courantes de datev et YYYYMMDD.
+
+                  datev0 = datev ; YYYYMMDD0 = YYYYMMDD
+
+              end if
+          end if
+              
+***        Lire le prochain enregistrement trie.
+
+          inf  = fstluk( buff, liste(sindex(i)),ni,nj,nk )
+
+          if (inf.lt.0)                                        then
+              write(6,6007) inf
+              if (box) nil = exfin( 'FstTRI','Erreur 7','NON' )
+              call quit( ' FstTri ',7 )
+          end if
+
+          iprm = fstprm( INF, dateo,deet,npas, ni,nj,nk,
+     +               nbits,datyp, ip1,ip2,ip3, typvar,nomvar,etiket, 
+     +               grtyp,ig1,ig2,ig3,ig4, swa,lng,dltf,ubc, 
+     +               extra1,extra2,extra3 )
+ 
+          if (Elim)                                            then
+
+              if ( i       .ne. 1
+     +       .and. dateob  .eq. dateo
+     +       .and. deetb   .eq. deet
+     +       .and. npasb   .eq. npas
+     +       .and. nib     .eq. ni
+     +       .and. njb     .eq. nj
+     +       .and. nkb     .eq. nk
+     +       .and. datypb  .eq. datyp
+     +       .and. ip1b    .eq. ip1
+     +       .and. ip2b    .eq. ip2
+     +       .and. ip3b    .eq. ip3
+     +       .and. typvarb .eq. typvar
+     +       .and. nomvarb .eq. nomvar
+     +       .and. etiketb .eq. etiket
+     +       .and. grtypb  .eq. grtyp
+     +       .and. ig1b    .eq. ig1
+     +       .and. ig2b    .eq. ig2
+     +       .and. ig3b    .eq. ig3
+     +       .and. ig4b    .eq. ig4)                           then
+
+                 elimin = elimin+1
+                 cycle
+
+              end if
+
+              dateob  = dateo
+              deetb   = deet
+              npasb   = npas
+              nib     = ni
+              njb     = nj
+              nkb     = nk
+              datypb  = datyp
+              ip1b    = ip1
+              ip2b    = ip2
+              ip3b    = ip3
+              typvarb = typvar
+              nomvarb = nomvar
+              etiketb = etiket
+              grtypb  = grtyp
+              ig1b    = ig1
+              ig2b    = ig2
+              ig3b    = ig3
+              ig4b    = ig4
+
+          end if
+                  
+          if (iprm.lt.0)                                       then
+              write(6,6008) iprm
+              if (box) nil = exfin( 'FstTRI','Erreur 8','NON' )
+              call quit( ' FstTri ',8 )
+          end if
+
+***        Celui-ci est-il associe a un enregistrement '++' ?
+
+          if (chaine2(infon+1).eq.'++'              .and.
+     +       (niveau2(infon+1).eq.nk .and. nk.ne.1) .and. 
+     +       (ni.eq.1 .or. nj.eq. 1))                          then
+              ip1 = 32767
+          else if (ip1.eq.32767)                               then
+              ip1 = 0
+          end if
+
+!**        A-t'on detecte des intervals aux minutes ?
+
+          if (Minutes)                                         then
+              heures = npas*(dble( deet )/3600.)
+              if (heures <= 1000000.)                          then
+                  ! Verifier que IP2 ne contient pas un niveau.
+                  call Diag_CONVIP_plus( ip2,hold,kind,-2,nuls,Faux )
+                  if (.not.diag_is_a_level( kind ))            then
+                      if (Message_Heures)                      then
+                          write(6,6250) KIND_HOURS
+                          Message_Heures = Faux
+                      end if
+                      CALL Diag_CONVIP_plus( ip2,heures,KIND_HOURS,
+     +                                       +2,nulS,Faux )
+                  end if
+              end if
+          end if
+
+***        Ecrire les donnees. Notons qu'ici, rewrit=Faux,
+***        puisqu'on s'est explicitement occupe des doublons
+***        avec le "if (Elim)" precedent.
+
+          iecr = fstecr( buff,ibuf,
+     +                  -nbits, iu2, dateo,deet,npas,
+     +                   ni,nj,nk, ip1,ip2,ip3, typvar,nomvar,
+     +                   etiket,grtyp, ig1,ig2,ig3,ig4,
+     +                   datyp, Faux )
+
+***        Verifier que l'operation s'est bien deroulee.
+
+          if (iecr.lt.0)                                       then
+              write(6,6005) iecr
+              if (box) nil = exfin( 'FstTRI','Erreur 5','NON' )
+              call quit( ' FstTri ',5 )
+          end if
+
+          if (ip1.eq.32767)                                    then
+
+***            Ecrire un enregistrement '++' s'il le faut.
+
+              inf = fstluk( buff, liste(infon+1), ni,nj,nk )
+
+              iprm = fstprm( inf, bidon,bidon,bidon, ni,nj,nk,
+     +                            nbits,datyp, ip1,ip2,ip3,
+     +                            typvar,nomvar,etiket,
+     +                            grtyp,ig1,ig2,ig3,ig4,
+     +                            swa,lng,dltf,
+     +                            ubc,extra1,extra2,extra3 )
+
+              iecr = fstecr( buff,ibuf,
+     +                      -nbits, iu2, dateo,deet,npas,
+     +                       ni,nj,nk, ip1,ip2,ip3, typvar,nomvar,
+     +                       etiket,grtyp, ig1,ig2,ig3,ig4,
+     +                       datyp, Faux )
+
+***            On ne fait ceci qu'une seule fois.
+
+              niveau2(infon+1) = 0
+
+          end if
+
+      end do
+
+      if (SplitD .and. nbrrenv > 0)                            then
+
+          ! Copier tous les enregistrements de renvois
+          !  avant de fermer ce dernier fichier
+
+          if (nomfich(2:512) /= blanc)                         then
+              do j=1,nbrrenv
+                  inf  = fstluk( buff, listerenv(j),ni,nj,nk )
+                  iprm = fstprm( inf, dateo,deet,npas, ni,nj,nk,
+     +                          nbits,datyp, ip1,ip2,ip3, typvar,nomvar,
+     +                          etiket,grtyp,ig1,ig2,ig3,ig4, swa,lng,
+     +                          dltf,ubc,extra1,extra2,extra3 )
+                  iecr = fstecr( buff,ibuf,
+     +                          -nbits, iu2, dateo,deet,npas,
+     +                           ni,nj,nk, ip1,ip2,ip3, typvar,nomvar,
+     +                           etiket,grtyp, ig1,ig2,ig3,ig4,
+     +                           datyp, rewrit )
+              end do
+          end if
+
+      end if
+
+*-----------------------------------------------------------------------
+***    On fait le menage...
+
+CCC   call dmmsdbg( 1 )
+CCC   call hpcheck( ier )
+CCC   if (ier.ne.0) print *,'erreur dans hpcheck=',ier
+
+      ifrm = fstfrm (iu1)
+      ifrm = fstfrm (iu2)
+
+      write(6,6000) infon
+      if (Elim .and. elimin.gt.0) write(6,6102) elimin
+      if (box) nil = exfin( 'FstTRI','*Reussite*','NON' )
+      call qqexit( 0 )
+
+  999 write(6,6010) ier 
+      if (box) nil = exfin( 'FstTRI','Erreur 10','NON' )
+      call quit( ' FstTri ',10 )
+*-----------------------------------------------------------------------
+ 0001 format(a2,a12,a4,2x)
+
+ 6000 format(/'   Tri de ',i5,' champs effectuee.'/)
+ 6100 format(/14x,'Typ Nom',8x,'Ip1',3x,'IP3',3x,'Npas',
+     +        3x,'Etiket',10x,'Dateo'/)
+ 6101 format( 5x,i4,1x,i4,1x,a2,1x,a4,2x,i8,i6,i7,2x,a12,1x,i10)
+ 6102 format( '   Elimination de ',I6,' enregistrements redondants.'/)
+ 6103 format( '   Enregistrements de renvois sauves dans...'/
+     +        '   ', A/)
+
+ 6202 format(/6x,   ' Source... ',10x,A/:,3x,'Destination... ',A/)
+ 6203 format(/3x,I3,' Fichiers Sources... ',A/27x,A/:,
+     +        6x,   ' Destination... ',5x,A/)
+ 6204 format(/3x,I3,' Fichiers Sources... ',A/27x,'...'/27x,A/:,
+     +        6x,   ' Destination... ',5x,A/)
+ 6205 format( 6x,   ' Destination... ',I3,2x,A/)
+ 6250 format(/'   Codage des IP2 en heures (IP type ',I2,')'/)
+ 6300 format(/"   L'argument -rewrit n'est plus supporte."/)
+
+ 6001 format(/'   Deux noms de fichiers sont requis a l''entree...'/)
+ 6002 format(/"   Impossible d'associer un nom a une unite d'E/S"
+     +        /:3x,A/)
+ 6222 format(/'   Erreur ',i5," durant l'ouverture (fstouv) "/:3x,A/)
+ 6003 format(/'   Un fichier source doit exister au depart...'/:3x,A)
+ 6004 format(/'   Le fichier destination existe deja...'/)
+ 6005 format(/'   Erreur ',i5,' durant ecriture (fstecr).'/)
+ 6006 format(/"   Le fichier source n'est pas de type RND."/)
+ 6007 format(/'   Erreur ',i5,' durant la lecture (fstluk).'/)
+ 6008 format(/'   Erreur ',i5,' durant la lecture (fstprm).'/)
+ 6009 format(/"   Tri de 2 sections '++' de tailles differentes:",2I5/)
+ 6010 format(/"   Erreur d'allocation memoire (allocate) ",I4/)
+ 6011 format(/'   Erreur de decodage de date (newdate) ',2I8/)
+ 6012 format(/'   Incapable de forcer la re-ecriture.'/)
+ 6013 format(/"   Plus d'un type de fichier d'entree."/)
+ 6014 format(/'   Incapable de lier les ',I3.3," fichiers d'entree."/
+     +        '   Erreur (fstlnk) =',I3/)
+
+ 6660 format(A,'_renvois')
+ 6666 format('+',A,'_',I8.8,:,'-',I8.8)
+
+      end
+#     endif
+
