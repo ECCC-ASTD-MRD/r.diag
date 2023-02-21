@@ -146,6 +146,14 @@ make -j 4
 make install
 #+end_src
 
+Tests can be run by running =make check= which will ensure that everything
+is built before running them.
+
+When some tests fail, to get more information, tests can be run using
+=ctest --rerun-failed --verbose [--stop-on-failure]= which will run the tests
+that failed.  The =--
+
+
 * Outside CMC (External users)
 
 ** Build dependencies

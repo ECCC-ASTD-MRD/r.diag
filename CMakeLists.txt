@@ -48,6 +48,7 @@ add_subdirectory(src/extras)
 add_subdirectory(src/cdf2ccc)
 add_subdirectory(src/lssub)
 add_subdirectory(src/lspgm)
+add_subdirectory(test)
 
 install(DIRECTORY src/bin/     DESTINATION bin USE_SOURCE_PERMISSIONS)
 install(DIRECTORY src/lib/     DESTINATION lib USE_SOURCE_PERMISSIONS)
