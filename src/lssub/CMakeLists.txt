@@ -59,7 +59,7 @@ add_library(diag_sq98
 )
 # target_compile_options(lssub PRIVATE -free)
 target_compile_definitions(diag_sq98 PRIVATE -Dtaille_entete=32 -Dnombre_de_taches=1 -DLittle_Endian -DWITH_intel -DAMD64 -DLINUX_X86_64 -DWITHOUT_OpenMP)
-target_link_libraries(diag_sq98 PRIVATE rmn)
+target_link_libraries(diag_sq98 PRIVATE rmn::rmn)
 
 add_dependencies(diag_sq98 descrip)
 install(TARGETS diag_sq98 DESTINATION lib)

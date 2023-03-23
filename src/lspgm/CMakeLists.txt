@@ -298,7 +298,7 @@ install(TARGETS prog_sq98 DESTINATION lib)
 
 add_executable(stable.r.diag driver.f)
 add_dependencies(stable.r.diag prog_sq98 diag_sq98 descrip r.diag_build_info)
-target_link_libraries(stable.r.diag PRIVATE prog_sq98 diag_sq98 descrip rmn BLAS::BLAS LAPACK::LAPACK)
+target_link_libraries(stable.r.diag PRIVATE prog_sq98 diag_sq98 descrip rmn::rmn BLAS::BLAS LAPACK::LAPACK)
 target_compile_definitions(stable.r.diag
     PRIVATE
         -DNOPLOT
