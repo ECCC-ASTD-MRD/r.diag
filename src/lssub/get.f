@@ -4347,7 +4347,7 @@ CCC   MAXWRD0 = MAX( NWDS*NLEV , MAXWRD0 , MAXSWRD0 )
       !  Tenir compte de la signature de moyennes (/) ou de
       !  variances (%) dans le deuxieme caracteres du TYPVAR
 
-      use          diag_convert_ip123, only : KIND_HOURS, KIND_SAMPLES
+      use          convert_ip123_int, only : KIND_HOURS, KIND_SAMPLES
       use          stats_signatures
 
       IMPLICIT     none
@@ -4449,7 +4449,7 @@ CCC   MAXWRD0 = MAX( NWDS*NLEV , MAXWRD0 , MAXSWRD0 )
 
           IP3   = MAX( 1, GETHIGH('IP3' ,IBUF ) )
 
-          CALL Diag_CONVIP_plus( IP3,VIP3,IKIND,-2,NULS,.FALSE. )
+          CALL diag_convip_plus( IP3,VIP3,IKIND,-2,NULS,.FALSE. )
 
           IF (IKIND == KIND_SAMPLES)                           THEN
               IPMODE = 1 ; NSAMPZ = NINT( VIP3 )
@@ -4463,7 +4463,7 @@ CCC   MAXWRD0 = MAX( NWDS*NLEV , MAXWRD0 , MAXSWRD0 )
               ! ip2 = npas*deet a 5 secondes pres ==>
               VIP2 = IP2 ; IKIND = KIND_HOURS
           ELSE
-              CALL Diag_CONVIP_plus( IP2,VIP2,IKIND,-2,NULS,.FALSE. )
+              CALL diag_convip_plus( IP2,VIP2,IKIND,-2,NULS,.FALSE. )
           END IF
 
           IF (IKIND == KIND_HOURS)                             THEN
@@ -4520,7 +4520,7 @@ CCC   MAXWRD0 = MAX( NWDS*NLEV , MAXWRD0 , MAXSWRD0 )
               ! ip2 = npas*deet a 5 secondes pres ==>
               VIP2 = IP2 ; IKIND = KIND_HOURS
           ELSE
-              CALL Diag_CONVIP_plus( IP2,VIP2,IKIND,-2,NULS,.FALSE. )
+              CALL diag_convip_plus( IP2,VIP2,IKIND,-2,NULS,.FALSE. )
           END IF
 
           VIP2_5 = NINT( VIP2*720._8, 8 )
@@ -4570,7 +4570,7 @@ CCC   MAXWRD0 = MAX( NWDS*NLEV , MAXWRD0 , MAXSWRD0 )
 
           IF (IP3 > 32767)                                     THEN
 
-              CALL Diag_CONVIP_plus( IP3,VIP3,IKIND,-2,NULS,.FALSE. )
+              CALL diag_convip_plus( IP3,VIP3,IKIND,-2,NULS,.FALSE. )
 
               IF (IKIND == KIND_SAMPLES)                       THEN
                   NSAMPZ = NINT( VIP3 ) ; IPMODE = 1

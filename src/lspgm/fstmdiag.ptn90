@@ -204,7 +204,7 @@
   ! Version initiale.
   !
 
-  use           diag_convert_ip123
+  use           convert_ip123_int
   use           stats_signatures
 
   implicit      none
@@ -295,7 +295,7 @@
 
   external  diag_ccard,  incdatr, getenvc,convpr, quit
 
-  logical, external :: is_off, is_on, diag_is_a_level
+  logical, external :: is_off, is_on, is_level
 
   character nomprg*256
   common   /PROGNAM/ nomprg
@@ -889,7 +889,7 @@
 
           ! Evaluer RANGE_KIND,HIVAL,LOVAL
 
-          status = diag_decode_ip( RP1,RP2,RP3,ip1,ip2,ip3 )
+          status = decode_ip( RP1,RP2,RP3,ip1,ip2,ip3 )
 
           if (status == CONVERT_ERROR)                     then
               write(6,6014) status,ip1,ip2,ip3
@@ -1578,12 +1578,12 @@
       if (Info) write(6,Format1) heuremax,heuremin,heures,Deltat
 
       if (.not.NoModT)                                     then
-          if (diag_is_a_level( RANGE_KIND ))               then
+          if (is_level( RANGE_KIND ))               then
               ! PLacer le nombre d'echantillons ns dans IP3
               ! IP2 sera automatiquement utilise pour RP1%lo              
               RP1%hi = HIVAL ; RP1%lo = LOVAL ; RP1%kind = RANGE_KIND
               RP2%hi = ns    ; RP2%lo = ns    ; RP2%kind = KIND_SAMPLES
-              status = diag_encode_ip( ip1,ip2,ip3, RP1,RP2,RP3 ) 
+              status = encode_ip( ip1,ip2,ip3, RP1,RP2,RP3 ) 
               if (status == CONVERT_ERROR)                 then
                   write(6,6614) status,RP1%hi,RP1%lo,RP1%kind, &
                                        RP2%hi,RP2%lo,RP2%kind
@@ -1633,7 +1633,7 @@
           ! Re-Coder (HIVAL,LOVAL) dans (IP2,IP3)
           RP1%hi = vip1  ; RP1%lo = vip1  ; RP1%kind = k1
           RP2%hi = HIVAL ; RP2%lo = LOVAL ; RP2%kind = KIND_HOURS
-          status = diag_encode_ip( ip1,ip2,ip3, RP1,RP2,RP3 ) 
+          status = encode_ip( ip1,ip2,ip3, RP1,RP2,RP3 ) 
           if (status == CONVERT_ERROR)                     then
               write(6,6614) status,RP1%hi,RP1%lo,RP1%kind, &
                                  RP2%hi,RP2%lo,RP2%kind
@@ -1650,7 +1650,7 @@
           ! Coder (heuremax,heuremin) dans (IP2,IP3)
           RP1%hi = vip1     ; RP1%lo = vip1    ; RP1%kind = k1
           RP2%hi = heuremax ; RP2%lo =heuremin ; RP2%kind = KIND_HOURS
-          status = diag_encode_ip( ip1,ip2,ip3, RP1,RP2,RP3 )
+          status = encode_ip( ip1,ip2,ip3, RP1,RP2,RP3 )
           if (status == CONVERT_ERROR)                     then
               write(6,6614) status,RP1%hi,RP1%lo,RP1%kind, &
                                  RP2%hi,RP2%lo,RP2%kind
@@ -1664,7 +1664,7 @@
           ! Coder (heures,0.0) dans (IP2,IP3)
           RP1%hi = vip1   ; RP1%lo = vip1 ; RP1%kind = k1
           RP2%hi = heures ; RP2%lo = 0.0  ; RP2%kind = KIND_HOURS
-          status = diag_encode_ip( ip1,ip2,ip3, RP1,RP2,RP3 )
+          status = encode_ip( ip1,ip2,ip3, RP1,RP2,RP3 )
           if (status == CONVERT_ERROR)                     then
               write(6,6614) status,RP1%hi,RP1%lo,RP1%kind, &
                                  RP2%hi,RP2%lo,RP2%kind

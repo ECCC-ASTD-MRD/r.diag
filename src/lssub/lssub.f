@@ -15,7 +15,7 @@
 *Clrlmt		-1	dimgt.ftn	Problems with input LR,LM,KTR values
 *Clrlmt		-2	dimgt.ftn	Problem with LRLMT_DIGITS environment variable
 *Convhour		-1	coord.ftn	IP2 does not represent an hourly value
-*Convip_plus	-4	diag_convip_plus.ftn90	Illegal KIND conversion requested
+*diag_convip_plus	-4	diag_convip_plus.ftn90	Illegal KIND conversion requested
 *Coordab		-1	coord.ftn	COORD parameter not recognized
 *Create_Page	-1	averages_common.cdk90	Invalid page number (FATAL)
 *Create_Page	-2	averages_common.cdk90	Page is already allocated (FATAL)

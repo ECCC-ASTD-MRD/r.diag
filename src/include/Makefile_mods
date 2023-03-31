@@ -39,10 +39,10 @@ default: mods
 	cd $(LSSDIR) ; $(MAKE) $@
 
 MODDECKS= \
-	diag_convert_ip123.mod	diag_toc.mod \
+	convert_ip123_int.mod	diag_toc.mod \
 	stats_signatures.mod		averages_common.mod    
 
-#diag_convert_ip123.mod: $(LSSDIR)/diag_convert_ip123.cdk90
+#convert_ip123_int.mod: $(LSSDIR)/convert_ip123_int.cdk90
 #diag_toc.mod: $(LSSDIR)/diag_toc.cdk90
 #stats_signatures.mod:  $(LSSDIR)/stats_signatures.cdk90
 

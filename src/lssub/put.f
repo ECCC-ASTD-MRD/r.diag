@@ -1813,7 +1813,7 @@ C
       !  differentes quantites temporelles dans
       !  le deuxieme caractere du TYPVAR
 
-      use          diag_convert_ip123
+      use          convert_ip123_int
       use          stats_signatures
 
       IMPLICIT     none
@@ -1831,11 +1831,10 @@ C
       LOGICAL                INFO
       COMMON       /ZZVERBO/ INFO
 
-      logical,     EXTERNAL :: diag_is_a_level
       REAL,        EXTERNAL :: GETHIR
       INTEGER,     EXTERNAL :: GETHIGH
       CHARACTER*4, EXTERNAL :: GETHIC
-      EXTERNAL     PUTHIGH, PUTHIR, Diag_CONVIP_plus
+      EXTERNAL     PUTHIGH, PUTHIR, convip_plus
 
 !------------------------------------------------------------------------------
       IF (NSAMPZ <= 1) RETURN ! Not a time-mean average. Do nothing !
@@ -1876,12 +1875,12 @@ C
           ! un ensemble complet et IP2 pourrait alors contenir
           ! l'heure absolue de prevision (KIND_HOURS).
 
-          if (diag_is_a_level( RANGE_KIND ))                   then
+          if (is_level( RANGE_KIND ))                   then
               ! PLacer le nombre d'echantillons ns dans IP3
               ! IP2 sera automatiquement utilise pour RP1%lo              
               RP1%hi = HIVAL  ; RP1%lo = LOVAL ; RP3%kind = RANGE_KIND
               RP2%hi = NSAMPZ ; RP2%lo = NSAMPZ; RP2%kind = KIND_SAMPLES
-              stat   = diag_encode_ip( ip1,ip2,ip3, RP1,RP2,RP3 ) 
+              stat   = encode_ip( ip1,ip2,ip3, RP1,RP2,RP3 ) 
               if (stat == CONVERT_ERROR)                       then
                   IF (INFO)
      +            write(6,6003) stat,RP1%hi,RP1%lo,RP1%kind,
@@ -1895,24 +1894,24 @@ C
                   ! IP2 et le nombre d'echantillons dans IP3.
                   if (HIVAL <= 1000000.)                       then
                       ! Coder HIVAL dans IP2
-                      call diag_convip_plus( ip2,HIVAL,
+                      call convip_plus( ip2,HIVAL,
      +                                   KIND_HOURS,+2,nuls,.false. )
                   else if (HIVAL-LOVAL <= 1000000.)            then
                       ! Coder HIVAL-LOVAL dans IP2
-                      call diag_convip_plus( ip2,HIVAL-LOVAL,
+                      call convip_plus( ip2,HIVAL-LOVAL,
      +                                   KIND_HOURS,+2,nuls,.false. )
                   end if
               else
                   ! Placer le nombre total d'heures dans IP2
                   HEURES = NPAS*((dble( deet )/60.)/60.)
-                  call diag_convip_plus( ip2,HEURES,
+                  call convip_plus( ip2,HEURES,
      +                                   KIND_HOURS,+2,nuls,.false. )
               end if
               if (NSAMPZ < 2000000)                            then
               ! 1 999 999 est la limite superieure des valeurs qui pourront
               ! etre codees correctement en mode NEW-STYLE pour KIND_SAMPLES
               ! Coder le nombre d'echantillons dans IP3 ...
-                  call diag_convip_plus( ip3,float(NSAMPZ),
+                  call convip_plus( ip3,float(NSAMPZ),
      +                                   KIND_SAMPLES,+2,nuls,.false. )
               else
      +        if (NSAMPZ < 254903968)                          then
@@ -1934,7 +1933,7 @@ C
           ! Coder (ou re-coder) (HIVAL,LOVAL) dans (IP2,IP3)
           RP1%hi = 0.0   ; RP1%lo = 0.0   ; RP1%kind = KIND_PRESSURE
           RP2%hi = HIVAL ; RP2%lo = LOVAL ; RP2%kind = KIND_HOURS
-          stat = diag_encode_ip( ip1,ip2,ip3, RP1,RP2,RP3 ) 
+          stat = encode_ip( ip1,ip2,ip3, RP1,RP2,RP3 ) 
           IF (stat == CONVERT_ERROR)                           THEN
               IF (INFO) 
      +             WRITE(6,6001) stat,RP2%hi,RP2%lo,RP2%kind
@@ -1947,7 +1946,7 @@ C
      +IF (RANGE_KIND >= 0 .AND. RANGE_KIND /= KIND_HOURS)      THEN
           ! Interval de coordonee verticale dans IP1 et IP3.
           ! On a mets le nombre d'echantillon dans IP2.
-          CALL Diag_CONVIP_plus( IP2,FLOAT( NSAMPZ ),
+          CALL convip_plus( IP2,FLOAT( NSAMPZ ),
      +                           kIND_SAMPLES,+2,NULS,.FALSE. )
           CALL PUTHIGH( IP2,'IP2',IBUF )
       ELSE
@@ -1965,8 +1964,8 @@ C
               HOLD   = NSAMPZ * DBLE( DEET ) / 3600.
           END IF
           IF (HOLD <= 1000000.)
-     +    CALL Diag_CONVIP_plus( IP2,HOLD,kIND_HOURS,+2,NULS,.FALSE. )
-          CALL Diag_CONVIP_plus( IP3,FLOAT( NSAMPZ ),
+     +    CALL convip_plus( IP2,HOLD,kIND_HOURS,+2,NULS,.FALSE. )
+          CALL convip_plus( IP3,FLOAT( NSAMPZ ),
      +                           kIND_SAMPLES,+2,NULS,.FALSE. )
           CALL PUTHIGH( IP2,'IP2',IBUF )
           CALL PUTHIGH( IP3,'IP3',IBUF )

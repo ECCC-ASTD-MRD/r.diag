@@ -162,7 +162,7 @@ C
 ***              CONSIDERS A REPEAT RANGE AS THE BEGINNING OF
 ***              A NEW SET OF LEVELS (aka CHECKS FOR IP3).
 
-      use         diag_convert_ip123, only : KIND_HOURS
+      use         convert_ip123_int, only : KIND_HOURS
 
       IMPLICIT    none
   
@@ -292,6 +292,7 @@ C
                   CALL GETLEV( NF,LEVELS,NLEV,JBUF, GETOK )
 
                   IF (.NOT.GETOK .AND. INFMOT(NF).EQ.-1)       THEN
+
                       CALL SETKIND( 'ARBITRAIRE' )
                       INITLK = GETKIND( )
                       DO  I=1,NLEV
@@ -468,7 +469,7 @@ C
 
           WRITE(KIND,4)     KBUF(1)
           WRITE(NAME,4)     KBUF(3)
-  
+
           IF (TIME  .NE. KBUF(2) .OR.
      +        INAME .NE. NAME    .OR.
      +       (INITL .EQ. KBUF(4) .AND.

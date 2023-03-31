@@ -657,13 +657,13 @@
         endif
         npas = nint(hours*3600/deet)
         r4 = ip3       ! force ip3 to new style coding
-        call convip_plus( ip3, r4, 15, 2, string, .false. ) ! ip kind 15,  number of samples
+        call diag_convip_plus( ip3, r4, 15, 2, string, .false. ) ! ip kind 15,  number of samples
         if( p%level2 > 0 ) then   ! 2 level data, put level2 in ip2 for output instead of hours since beginning of integration
           ip2 = p%level2
         else
           call difdatr(new_dateo,p%dateo,hours)   ! ip2 = hours from start of model run
           r4 = hours       ! force ip2 to new style coding
-          call convip_plus( ip2, r4, 10, 2, string, .false. ) ! ip kind 10,  hours
+          call diag_convip_plus( ip2, r4, 10, 2, string, .false. ) ! ip kind 10,  hours
         endif
       endif
       p%typvar(2:2) = time_mean_signature

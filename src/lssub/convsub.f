@@ -11,10 +11,10 @@
 !     Revision 3.135  2021/01/26  dugas
 !     - Modifier le code qui identifie les intervals
 !       verticaux dans IBUFILL i.e. accepter que le
-!       statut de diag_decode_ip puisse alors aussi
+!       statut de decode_ip puisse alors aussi
 !       etre CONVERT_GOOD_GUESS
-!     - Inverser l'ordre des appels a DIAG_CONVIP_PLUS
-!       et a DIAG_DECODE_IP dans IBUFILL
+!     - Inverser l'ordre des appels a diag_convip_plus
+!       et a decode_ip dans IBUFILL
 !
 !     Revision 3.134  2020/06/01  dugas
 !     - Ajouter le point d'entree getUres a savUref
@@ -468,7 +468,7 @@
 ***    all the necessary parameters.
 
       use DIAG_TOC, only: LirTOC
-      use diag_convert_ip123
+      use convert_ip123_int
 
       IMPLICIT    none
 
@@ -602,7 +602,7 @@
 ***    Evaluer RANGE_KIND,HIVAL,LOVAL tout de suite.
 ***    Ils seront saives dans les mots 29,30,31 de IBUF.
 
-      stat = diag_decode_ip( RP1,RP2,RP3,ip1,ip2,ip3 )
+      stat = decode_ip( RP1,RP2,RP3,ip1,ip2,ip3 )
 
       if (debug .and. stat == CONVERT_ERROR)                   then
           write(6,6002) stat,ip1,ip2,ip3
@@ -1025,7 +1025,7 @@
 *------------------------------------------------------------------------------
  0004 FORMAT(A4)
 
- 6002 FORMAT(' Ibufill: DIAG_DECODE_ip error=',I3,', IP1,IP2,IP3=',3I11)
+ 6002 FORMAT(' Ibufill: decode_ip error=',I3,', IP1,IP2,IP3=',3I11)
  6003 FORMAT(' Ibufill: grtyp ',A,' not supported by r.diag.')
 
  6101 FORMAT('*DEBUG:IBUFILL (1) DATEO=',I12,', NPAS=',I9,

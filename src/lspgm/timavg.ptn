@@ -341,7 +341,7 @@
 *     MAY 07/80 - J.D.HENDERSON
 
 *---------------------------------------------------------------------------
-      use         diag_convert_ip123, only : KIND_HOURS, KIND_SAMPLES
+      use         convert_ip123_int, only : KIND_HOURS, KIND_SAMPLES
       use         stats_signatures
 
       IMPLICIT    none

@@ -295,6 +295,7 @@ target_compile_definitions(prog_sq98
 
 add_dependencies(prog_sq98 diag_sq98) 
 install(TARGETS prog_sq98 DESTINATION lib)
+target_link_libraries(prog_sq98 PRIVATE rmn::rmn)
 
 add_executable(stable.r.diag driver.f)
 add_dependencies(stable.r.diag prog_sq98 diag_sq98 descrip r.diag_build_info)

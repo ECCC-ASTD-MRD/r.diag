@@ -1,7 +1,7 @@
 
       subroutine rdlatlon2 (NCID,FUNIT)
 
-      use      diag_convert_ip123
+      use      convert_ip123_int
       use      stats_signatures
 
       implicit none
@@ -243,7 +243,7 @@
 
       CHARACTER(len=4), external :: GETYP
       logical,     external :: checkres,idnan,monotone
-      external     puthic,puthigh,putsamplz,Diag_CONVIP_plus
+      external     puthic,puthigh,putsamplz,diag_convip_plus
 
       LOGICAL, dimension(nvars) :: fill_message
 
@@ -1122,7 +1122,7 @@
                            npas = nint( tdelta ) ; deet = 3600
                            if (tim2-tim1 <= 1000000._8)         then
                                hold = tim2-tim1 
-                               CALL Diag_CONVIP_plus &
+                               CALL diag_convip_plus &
                                ( IP2,hold,KIND_HOURS,+2,NULS,.FALSE. )
                            else
                                IP2 = nint( tim2-tim1 )

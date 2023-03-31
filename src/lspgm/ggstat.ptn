@@ -59,7 +59,7 @@
 *     Inserer le texte de la licence LPGPL 2.1 pour R.DIAG.
 *
 *     Revision 4.24  2013/10/16 21:03:32  bernard
-*     Modifier le format de sortie 6005 pour tenir compte de diag_convert_ip123.
+*     Modifier le format de sortie 6005 pour tenir compte de convert_ip123_int.
 *
 *     Revision 4.23  2012/05/29 21:10:24  dugas
 *     Corriger un probleme avec les enregistrements '++'.

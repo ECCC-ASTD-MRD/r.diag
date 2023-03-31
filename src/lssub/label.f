@@ -878,7 +878,7 @@ CCC           call swapa4( ibuf(1) )
       END 
       SUBROUTINE prtlab2 (PREFIX,IBUF)
 
-      use           diag_convert_ip123, only : KIND_HOURS
+      use           convert_ip123_int, only : KIND_HOURS
 
       IMPLICIT      none
 
@@ -1018,7 +1018,7 @@ CCC           call swapa4( ibuf(1) )
       END 
       SUBROUTINE prtlab3 (CHAINE,IBUF)
 
-      use           diag_convert_ip123
+      use           convert_ip123_int
       use           stats_signatures
 
       IMPLICIT      none
@@ -1045,7 +1045,6 @@ CCC           call swapa4( ibuf(1) )
 
       real,    external :: GETHIR
       integer, external :: GETHIGH
-      logical, external :: diag_is_a_level 
       character(len=4),external  :: GETHIC
 
       LOGICAL              INFO
@@ -1066,7 +1065,7 @@ CCC           call swapa4( ibuf(1) )
       npas  = GETHIGH('NPAS'  ,IBUF )
       rkind = GETHIGH('RKIND' ,IBUF )
 
-      is_a_level = diag_is_a_level( rkind )
+      is_a_level = is_level( rkind )
 
       ! Signature d'une operation temporelle ?
       lMeanVar = .false.
@@ -1090,7 +1089,7 @@ CCC           call swapa4( ibuf(1) )
               IP1  = IBUF(4)
               IP2  = GETHIGH('IP2',IBUF )
               IP3  = GETHIGH('IP3',IBUF )
-              status = diag_decode_ip( RP1,RP2,RP3,ip1,ip2,ip3 )
+              status = decode_ip( RP1,RP2,RP3,ip1,ip2,ip3 )
               if (status == CONVERT_ERROR)                     THEN
                   if (info) write(6,6001) status,ip1,ip2,ip3
                   call xit(' Prtlab3',-1 )

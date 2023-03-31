@@ -722,8 +722,8 @@
               mykey='VIPM' ; call GetTOC_iv (NF, mykey,IPM,TOC_IP(1,J,NF),TOC_IP(2,J,NF) )
 
               mode = -2 ; flag = .false.
-              call Diag_CONVIP_plus( IPM(1),hyb1, kind,mode,string,flag )
-              call Diag_CONVIP_plus( IPM(2),hyb2, kind,mode,string,flag )
+              call diag_convip_plus( IPM(1),hyb1, kind,mode,string,flag )
+              call diag_convip_plus( IPM(2),hyb2, kind,mode,string,flag )
 
               ! How to Auto-Compute effective ptop_out for modes
               ! 5005/5100 as found in the vgrid.c (v 6.4) code

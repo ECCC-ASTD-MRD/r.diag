@@ -22,10 +22,10 @@
 *     Inserer le texte de la licence LPGPL 2.1 pour R.DIAG
 *
 *     Revision 3.42  2014/03/12 14:37:34  dugas
-*     Appeller DIAG_CONVIP_PLUS au lieu de CONVIP_PLUS dans CONVIP1.
+*     Appeller diag_convip_plus au lieu de diag_convip_plus dans CONVIP1.
 *
 *     Revision 3.41  2013/10/08 01:01:28  bernard
-*      - CONVIP1 fait mainenant appel a CONVIP_PLUS et TASSAD
+*      - CONVIP1 fait mainenant appel a diag_convip_plus et TASSAD
 *      - Ajouters le support des types 'hours' et 'integers' a SETKIND et GETKINDC
 *        de meme que les type numeriques correspondants 10,15 et 31 a SETKINDI.
 *
@@ -1120,6 +1120,7 @@ C
 
       call CONVIP1( ip, pr, kind, mode, string,.true. )
 
+
       return
 *------------------------------------------------------------------
 
@@ -1203,7 +1204,6 @@ C
       character *(*) STRING 
 
       call diag_convip_plus (IP, P, KINDP, MODE, STRING, FLAG)
-
       if (FLAG) call tasadr( STRING,STRING )
 
       return

@@ -230,7 +230,7 @@
 ***    ... Le 18 mars 1992, B. Dugas, RPN (V1.10)  -  On ajoute la cle
 ***        HELP (appellant) la routine QQQDOC et le bloc AUTO_DOC.
 
-      use           diag_convert_ip123, only: KIND_HOURS
+      use           convert_ip123_int, only: KIND_HOURS
 
       implicit      none
 
@@ -316,7 +316,7 @@ C    +              valnum,kind
      +          ig1b,ig2b,ig3b,ig4b,       deetb,npasb,
      +          ip1b,ip2b,ip3b
 
-      logical,  external ::     is_off, is_on, diag_is_a_level
+      logical,  external ::     is_off, is_on, is_level
 
 ***    Declarations pour les fonctions FST/RMN
 
@@ -1303,13 +1303,13 @@ C    +              valnum,kind
               heures = npas*(dble( deet )/3600.)
               if (heures <= 1000000.)                          then
                   ! Verifier que IP2 ne contient pas un niveau.
-                  call Diag_CONVIP_plus( ip2,hold,kind,-2,nuls,Faux )
-                  if (.not.diag_is_a_level( kind ))            then
+                  call diag_convip_plus( ip2,hold,kind,-2,nuls,Faux )
+                  if (.not.is_level( kind ))            then
                       if (Message_Heures)                      then
                           write(6,6250) KIND_HOURS
                           Message_Heures = Faux
                       end if
-                      CALL Diag_CONVIP_plus( ip2,heures,KIND_HOURS,
+                      CALL diag_convip_plus( ip2,heures,KIND_HOURS,
      +                                       +2,nulS,Faux )
                   end if
               end if
