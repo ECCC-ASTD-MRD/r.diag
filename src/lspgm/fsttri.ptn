@@ -230,7 +230,7 @@
 ***    ... Le 18 mars 1992, B. Dugas, RPN (V1.10)  -  On ajoute la cle
 ***        HELP (appellant) la routine QQQDOC et le bloc AUTO_DOC.
 
-      use           convert_ip123_int, only: KIND_HOURS
+      use           convert_ip123_int
 
       implicit      none
 
