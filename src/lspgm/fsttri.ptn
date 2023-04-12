@@ -316,7 +316,7 @@ C    +              valnum,kind
      +          ig1b,ig2b,ig3b,ig4b,       deetb,npasb,
      +          ip1b,ip2b,ip3b
 
-      logical,  external ::     is_off, is_on, is_level
+      logical,  external ::     is_off, is_on
 
 ***    Declarations pour les fonctions FST/RMN
 

@@ -295,7 +295,7 @@
 
   external  diag_ccard,  incdatr, getenvc,convpr, quit
 
-  logical, external :: is_off, is_on, is_level
+  logical, external :: is_off, is_on, diag_is_a_level
 
   character nomprg*256
   common   /PROGNAM/ nomprg
@@ -880,7 +880,7 @@
 
           HIVAL = -1.0   ; LOVAL = -1.0   ; RANGE_KIND = -1
 
-          call diag_convip_plus( ip1,vip1,k1,-2,nuls,.false. )
+          call convip_plus( ip1,vip1,k1,-2,nuls,.false. )
 
           vip2 = ip2 ; k2 = KIND_HOURS   ! Aucun codage des
           vip3 = ip3 ; k3 = KIND_SAMPLES ! IP2 et IP3
@@ -917,7 +917,7 @@
           if (k2 == KIND_SAMPLES)                          then
               vip3 = RP2%hi ; k3 = k2 ; ip3 = ip2
           else if (RANGE_KIND == -1)                       then
-              call diag_convip_plus( ip3,vip3,k3,-2,nuls,.false. )
+              call convip_plus( ip3,vip3,k3,-2,nuls,.false. )
           else
               vip3 = -1 ; k3 = -1
           end if
@@ -1601,16 +1601,16 @@
               ! IP2 et le nombre d'echantillons dans IP3.
               if (heuremax <= 1000000._8)                  then
                   ! Coder le nombre maximal d'heures dans IP2
-                  call diag_convip_plus( ip2,sngl( heuremax ),KIND_HOURS,+2,nuls,.false. )
+                  call convip_plus( ip2,sngl( heuremax ),KIND_HOURS,+2,nuls,.false. )
               else if (heuremax-heuremin <= 1000000._8)    then
                   ! Coder l'intervalle d'heures dans IP2
-                  call diag_convip_plus( ip2,sngl( heuremax-heuremin ),KIND_HOURS,+2,nuls,.false. )
+                  call convip_plus( ip2,sngl( heuremax-heuremin ),KIND_HOURS,+2,nuls,.false. )
               end if
               if (ns < 2000000)                            then
               ! 1 999 999 est la limite superieure des valeurs qui pourront
               ! etre codees correctement en mode NEW-STYLE pour KIND_SAMPLES
               ! Coder le nombre d'echantillons dans IP3 ...
-                  call diag_convip_plus( ip3,float( ns ),KIND_SAMPLES,+2,nuls,.false. )
+                  call convip_plus( ip3,float( ns ),KIND_SAMPLES,+2,nuls,.false. )
               else &
               if (ns < 254903968)                          then
               ! Notez que les limites des valeurs codees pour KIND_SAMPLES
@@ -1679,12 +1679,12 @@
 
           if (vip2 <= 1000000._8)                          then
               ! Coder le nombre d'heures dans IP2
-              call diag_convip_plus( ip2,sngl( vip2 ),KIND_HOURS,+2,nuls,.false. )
+              call convip_plus( ip2,sngl( vip2 ),KIND_HOURS,+2,nuls,.false. )
           else if (ns < 2000000)                           then
               ! 1 999 999 est la limite superieure des valeurs qui pourront
               ! etre codees correctement en mode NEW-STYLE pour KIND_SAMPLES
               ! Coder le nombre d'echantillons dans IP3 ...
-              call diag_convip_plus( ip2,float( ns ),KIND_SAMPLES,+2,nuls,.false. )
+              call convip_plus( ip2,float( ns ),KIND_SAMPLES,+2,nuls,.false. )
           else
               write(6,'(/A/)') "   Incapable  de coder le nombre d'echantillons ..."
               call fermer_fichiers( )
@@ -1696,13 +1696,13 @@
       if (RANGE_KIND == KIND_HOURS .or. RANGE_KIND < 0)    then
 
           if (vip2 <= 1000000._8)  &  ! Coder le nombre d'heures dans IP2
-              call diag_convip_plus( ip2,sngl( vip2 ),KIND_HOURS,+2,nuls,.false. )
+              call convip_plus( ip2,sngl( vip2 ),KIND_HOURS,+2,nuls,.false. )
 
           if (ns < 2000000)                                then
               ! 1 999 999 est la limite superieure des valeurs qui pourront
               ! etre codees correctement en mode NEW-STYLE pour KIND_SAMPLES
               ! Coder le nombre d'echantillons dans IP3 ...
-               call diag_convip_plus( ip3,float( ns ),KIND_SAMPLES,+2,nuls,.false. )
+               call convip_plus( ip3,float( ns ),KIND_SAMPLES,+2,nuls,.false. )
           else &
           if (ns < 254903968)                             then
               ! Notez que les limites des valeurs codees pour KIND_SAMPLES
