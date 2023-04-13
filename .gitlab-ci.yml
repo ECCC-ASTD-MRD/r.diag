@@ -3,7 +3,7 @@ variables:
    ORD_SOUMET_W: "10"
    ORD_SOUMET_C: "2"
    ORD_SOUMET_M: "8G"
-   ORD_SOUMET_TMPFS: "1G"
+   ORD_SOUMET_TMPFS: "2G"
 stages:
    - build
    - test
