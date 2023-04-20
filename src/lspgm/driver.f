@@ -979,7 +979,6 @@
       If ('addtext' .EQ. nomprg) Call addtext
       If ('averages' .EQ. nomprg) Call averages
       If ('beta' .EQ. nomprg) Call beta
-      If ('beta' .EQ. nomprg) Call beta
       If ('betao' .EQ. nomprg) Call betao
       If ('binach' .EQ. nomprg) Call binach
       If ('binning' .EQ. nomprg) Call binning
@@ -1005,7 +1004,7 @@
       If ('diftim' .EQ. nomprg) Call diftim
       If ('divf'.EQ.nomprg) Call addf
       If ('div'.EQ.nomprg) Call addf
-      If ('dxdp' .EQ. nomprg) Call diftim
+      If ('dxdp' .EQ. nomprg) Call dxdp
       If ('enleve' .EQ. nomprg) Call enleve
 ***   If ('eof25' .EQ. nomprg) Call eof25
       If ('eofrot' .EQ. nomprg) Call eofrot
@@ -1035,7 +1034,7 @@
       If ('ggdlat' .EQ. nomprg) Call ggdlat
       If ('ggdlon' .EQ. nomprg) Call ggdlon
       If ('gghems' .EQ. nomprg) Call gghems
-      If ('gglob' .EQ. nomprg) Call gghems
+      If ('gglob' .EQ. nomprg) Call gglob
       If ('ggsign' .EQ. nomprg) Call ggsign
       If ('ggstat' .EQ. nomprg) Call ggstat
       If ('ggtrig' .EQ. nomprg) Call ggtrig
