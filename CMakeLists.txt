@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.15)
 
 #----- Append EC specific module path
-list(APPEND CMAKE_MODULE_PATH $ENV{EC_CMAKE_MODULE_PATH} ${CMAKE_SOURCE_DIR}/cmake_rpn/modules)
+list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake_rpn/modules $ENV{EC_CMAKE_MODULE_PATH})
 
 include(ec_init)           # Initialise compilers and ec specific functions
 ec_git_version()           # Get version from git state
@@ -22,6 +22,10 @@ set(CMAKE_Fortran_MODULE_DIRECTORY ${CMAKE_BINARY_DIR}/include)
 
 # Need to extend line length     gfortran            ifort
 set(CMAKE_Fortran_FLAGS "-ffixed-line-length-none -extend-source ${CMAKE_Fortran_FLAGS} ")
+
+#----- Make sure RPATH is set at install step
+set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
+link_libraries("-Wl,--disable-new-dtags")
 
 include(CTest)
 add_custom_target(check COMMAND CTEST_OUTPUT_ON_FAILURE=TRUE ${CMAKE_CTEST_COMMAND})

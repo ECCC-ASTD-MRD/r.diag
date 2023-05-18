@@ -15,11 +15,13 @@ rm -f ${profilePath} ${loginPath}
 mkdir -p ${profileDirPath}
 
 cat > ${profilePath} << EOF
+. r.load.dot /fs/ssm/main/opt/hdf5-netcdf4/serial/shared/inteloneapi-2022.1.2/01
 export DIAGNOSTIQUE='${packageHome}'
 source r.diag_autocomplete.dot
 EOF
 
 cat > ${loginPath} << EOF
+. r.load.dot /fs/ssm/main/opt/hdf5-netcdf4/serial/shared/inteloneapi-2022.1.2/01
 setenv DIAGNOSTIQUE='${packageHome}'
 source r.diag_autocomplete.dot
 EOF
