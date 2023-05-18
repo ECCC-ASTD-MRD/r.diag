@@ -537,7 +537,7 @@
                   READ(VALEUR,'(BN,I10)'  ,ERR=901,IOSTAT=IO)  LV1
                   CALL  CONVPR( LV1, RLV1, VKIND1, -2 )
               ELSE
-                  READ(VALEUR,'(BN,E10.0)',ERR=901,IOSTAT=IO) RLV1
+                  READ(VALEUR,'(BN,E11.0)',ERR=901,IOSTAT=IO) RLV1
                   IF (PKTYP.EQ.'SQ')                           THEN
                       CALL CONVPR( LV1, RLV1, VKIND,  +2 )
                   ELSE
@@ -1009,7 +1009,7 @@
               END IF
 
               DO  L=1,NLEVG
-                  IF (INDEXL(L)) CALL CONVPR( LEV(L), ALEV(L), VK, -1 )
+                IF (INDEXL(L)) CALL CONVPR( LEV(L), ALEV(L), VK, -1 )
               END DO
 
 ***            SAVE APPROPRIATE LEVELS.
@@ -1019,7 +1019,7 @@
                   RSMALL = RSMALL0
                   IF (ABS( ALEV(L) ) > 0.0) RSMALL = RSMALL*ABS( ALEV(L) )
                   IF (LV1 /= -1)                               THEN
-                      RS1 = ALEV(L)-DBLE( RLV1 )
+                    RS1 = ALEV(L)-DBLE( RLV1 )
                       RS2 = ALEV(L)-DBLE( RLV2 )
                   ELSE
                       RS1 = 0.0 ; RS2 = 0.0

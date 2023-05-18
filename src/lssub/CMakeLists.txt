@@ -5,6 +5,7 @@ add_library(diag_sq98
     convsub.f # convsub.ftn
     coord.f # coord.ftn
     ddl.f # ddl.ftn
+    diag_convert_ip123.f90 # diag_convert_ip123.cdk90
     diag_convip_plus.f90 # diag_convip_plus.ftn90
     diag_toc.f90 # diag_toc.cdk90
     dimgt.f # dimgt.ftn
