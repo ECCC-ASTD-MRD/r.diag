@@ -16,12 +16,14 @@ mkdir -p ${profileDirPath}
 
 cat > ${profilePath} << EOF
 . r.load.dot /fs/ssm/main/opt/hdf5-netcdf4/serial/shared/inteloneapi-2022.1.2/01
+export UDUNITS2_XML_PATH=/fs/ssm/eccc/mrd/rpn/libs/masters/udunits2-inteloneapi-2022.1.2_2.2.28_rhel-8-icelake-64/share/udunits/udunits2.xml
 export DIAGNOSTIQUE='${packageHome}'
 source r.diag_autocomplete.dot
 EOF
 
 cat > ${loginPath} << EOF
 . r.load.dot /fs/ssm/main/opt/hdf5-netcdf4/serial/shared/inteloneapi-2022.1.2/01
+export UDUNITS2_XML_PATH=/fs/ssm/eccc/mrd/rpn/libs/masters/udunits2-inteloneapi-2022.1.2_2.2.28_rhel-8-icelake-64/share/udunits/udunits2.xml
 setenv DIAGNOSTIQUE='${packageHome}'
 source r.diag_autocomplete.dot
 EOF

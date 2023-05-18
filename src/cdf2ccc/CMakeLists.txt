@@ -64,9 +64,12 @@ add_executable(stable.cdf2ccc cdf2ccc.F90
     wrlalo.f
 )
 
+#----- Need to deactivate floating point error check
+set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -fpe3")
+
 set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,--warn-unresolved-symbols")
 target_include_directories(stable.cdf2ccc PUBLIC ${CMAKE_BINARY_DIR}/src/extras/udunits-f-2.0)
-target_link_libraries(stable.cdf2ccc PRIVATE rmn::rmn NetCDF::NetCDF_Fortran udunits2f_s diag_sq98 descrip)
+target_link_libraries(stable.cdf2ccc PRIVATE rmn::rmn NetCDF::NetCDF_Fortran udunits2f_s diag_sq98 descrip udunits2)
 target_compile_definitions(stable.cdf2ccc PRIVATE -DCDF_VERSION="2.3.5" -Dtaille_entete=32)
 add_dependencies(stable.cdf2ccc udunits2f_s diag_sq98 descrip)
 install(TARGETS stable.cdf2ccc DESTINATION bin)
