@@ -569,7 +569,7 @@ integer function diag_value_to_string(val,string,maxlen)
     if(before<6) after=min(6-before,maxc-before-2) ! we have at best 6 significant digits
 !    if(before<8) after=max(0,maxc-before-2)
   else   ! value < 1.0
-    after = 5
+    after = 6
     before = 0
     do while(value<1.0)
       value = value * 10.0

@@ -89,6 +89,7 @@ private :: diag_encode_ip_2, diag_encode_ip_3, diag_decode_ip_2, diag_decode_ip_
 !   4  KIND_ABOVE_GND   height (m) above ground         (-20,000 -> 100,000)
 !   5  KIND_HYBRID      hybrid coordinates              (0.0 -> 1.0)
 !   6  KIND_THETA       theta coordinates               (1 -> 200,000)
+!   7  KIND_BELOW_SEA   depth (m) below mean sea level  (0 -> 20,000)
 !  10  KIND_HOURS       time (hours)                    (0.0 -> 1.0e10)
 !  15  KIND_SAMPLES     samples (integer value)         (0 -> 1 999 999)
 !  17  KIND_MTX_IND     conversion matrix x subscript)  (1.0 -> 1.0e10)
@@ -132,6 +133,7 @@ integer, public, parameter :: KIND_ARBITRARY=3
 integer, public, parameter :: KIND_ABOVE_GND=4
 integer, public, parameter :: KIND_HYBRID=5
 integer, public, parameter :: KIND_THETA=6
+integer, public, parameter :: KIND_BELOW_SEA=7
 integer, public, parameter :: KIND_HOURS=10
 integer, public, parameter :: KIND_SAMPLES=15
 integer, public, parameter :: KIND_MTX_IND=17
@@ -162,11 +164,11 @@ integer, public, parameter :: Max_Kind=31
 ! non level coordinates are considered as neutral
 
 integer, private, save, dimension(0:Max_Kind) :: order = &
-  (/  1, -1, -1,  0,  1,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, &
+  (/  1, -1, -1,  0,  1,  0,  0, -1,  0,  0,  0,  0,  0,  0,  0,  0, &
       0,  0,  0,  0,  0,  1,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0  /)
 
 integer, private, save, dimension(0:Max_Kind) :: islevel = &
-  (/  1,  1,  1,  1,  1,  1,  1,  0,  0,  0,  0,  0,  0,  0,  0,  0, &
+  (/  1,  1,  1,  1,  1,  1,  1,  1,  0,  0,  0,  0,  0,  0,  0,  0, &
       0,  0,  0,  0,  0,  1,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0  /)
 
 private :: swap, swapi, ascending, descending
