@@ -16,6 +16,7 @@ ec_build_info()            # Generate build information
 enable_language(C Fortran)
 
 include(ec_compiler_presets)
+set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -fpe3")
 
 set(CMAKE_Fortran_PREPROCESS ON)
 set(CMAKE_Fortran_MODULE_DIRECTORY ${CMAKE_BINARY_DIR}/include)
