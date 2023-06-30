@@ -468,7 +468,7 @@
 ***    all the necessary parameters.
 
       use DIAG_TOC, only: LirTOC
-      use convert_ip123_int
+      use diag_convert_ip123
 
       IMPLICIT    none
 
@@ -510,11 +510,11 @@
       INTEGER     clrlmt
       EXTERNAL    clrlmt,dimgt2,lvcode,xit,leadblk,convpr
 
-      LOGICAL              info,debug,cdate,keepip2
-      INTEGER                                       datval
+      LOGICAL     info,debug,cdate,keepip2
+      INTEGER     datval
       COMMON     /ZZVERBO/ info
-      COMMON     /ZZDEBUG/      debug
-      COMMON     /ZZZDATE/            cdate,keepip2,datval
+      COMMON     /ZZDEBUG/ debug
+      COMMON     /ZZZDATE/ cdate,keepip2,datval
 
       INTEGER,    EXTERNAL :: FSTPRM
       EXTERNAL    SAVZREF,PUTHIGH,PUTHIC,PUTHIR,GETZDES
@@ -602,7 +602,7 @@
 ***    Evaluer RANGE_KIND,HIVAL,LOVAL tout de suite.
 ***    Ils seront saives dans les mots 29,30,31 de IBUF.
 
-      stat = decode_ip( RP1,RP2,RP3,ip1,ip2,ip3 )
+      stat = diag_decode_ip( RP1,RP2,RP3,ip1,ip2,ip3 )
 
       if (debug .and. stat == CONVERT_ERROR)                   then
           write(6,6002) stat,ip1,ip2,ip3
