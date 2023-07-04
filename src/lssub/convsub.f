@@ -1263,7 +1263,7 @@
                   npas  = time
               end if
              
-              if (.not. keepip2 .or. highip2)
+              if (.not. keepip2 .and. highip2)
      +            call convhour( ip2, zero, +2 )
 
           end if
@@ -1276,7 +1276,7 @@
 
 ***        on tente tout de meme de mettre a jour IP2.
 
-          if (.not. keepip2 .or. highip2)                     then
+          if (.not. keepip2 .and. highip2)                     then
               if (deet /= 0)                                   then
                   hold = npas * pphinv
                   call convhour( ip2, hold, +2 )
