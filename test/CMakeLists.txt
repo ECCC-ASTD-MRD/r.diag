@@ -42,6 +42,8 @@ if(BUILD_TESTING)
         COMMAND ${RDIAG_EXEC} makezg ${f2} f2_makezg.rpn -i 400 -j 300)
     add_test(NAME r.diag_zonavg
         COMMAND ${RDIAG_EXEC} zonavg ${f5} f5_zonavg.rpn )
+    add_test(NAME r.diag_llagg
+        COMMAND ${RDIAG_EXEC} llagg ${f5} f5_llagg.rpnl -lon 360 -lat 181 -kind 1 B)
 endif()
 
 # Adding a test
