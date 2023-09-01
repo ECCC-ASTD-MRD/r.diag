@@ -212,7 +212,7 @@ build:ubuntu-22.04-amd64_inteloneapi-2023.2.0:
    script:
       - set +e
       - source ~/ci-env/latest/ubuntu-22.04-amd-64/inteloneapi-2023.2.0.sh
-      - . r.load.dot ${ECCI_PROCESS_SSM}/libs /fs/ssm/hpco/exp/hdf5-netcdf4/serial/alllib/inteloneapi-2023.2.0/01
+      - . r.load.dot ${ECCI_PROCESS_SSM}/libs /fs/ssm/hpco/exp/hdf5-netcdf4/serial/alllib/inteloneapi-2023.2.0/01 /fs/ssm/eccc/mrd/rpn/libs/masters/udunits2-inteloneapi-2023.2.0_2.2.28_ubuntu-22.04-amd64-64
       - set -e
       - mkdir build_ubuntu-22.04-amd64_inteloneapi-2023.2.0
       - cd build_ubuntu-22.04-amd64_inteloneapi-2023.2.0
