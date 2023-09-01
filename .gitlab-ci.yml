@@ -232,13 +232,13 @@ test:ubuntu-22.04-amd64_inteloneapi-2023.2.0:
    only:
       - master
       - dev
-     - tags
+      - tags
    dependencies:
       - build:ubuntu-22.04-amd64_inteloneapi-2023.2.0
    script:
       - set +e
       - source ~/ci-env/latest/ubuntu-22.04-amd-64/inteloneapi-2023.2.0.sh
-     - . r.load.dot ${ECCI_PROCESS_SSM}/libs
+      - . r.load.dot ${ECCI_PROCESS_SSM}/libs
       - set -e
       - cd build_ubuntu-22.04-amd64_inteloneapi-2023.2.0
       - make check
