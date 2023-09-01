@@ -11,7 +11,6 @@ stages:
    - deploy
 
 before_script:
-   - export CLICOLOR_FORCE=true
    - source ~/ci-admin/env/init.sh
 
 #----- rhel-8-icelake-64_inteloneapi-2022.1.2
@@ -134,8 +133,8 @@ package:rhel-8-amd64_inteloneapi-2022.1.2:
 build:ubuntu-18.04-amd64_inteloneapi-2022.1.2:
    variables:
       ORD_SOUMET_MACH    : gpsc5
-      ORD_SOUMET_IMAGE   : eccc/eccc_all_default_ubuntu-18.04-amd64_latest
-      ORD_SOUMET_PROJECT : eccc_mrd
+      ORD_SOUMET_IMAGE   : registry.maze.science.gc.ca/ssc-hpcs/generic-job:ubuntu18.04
+      ORD_SOUMET_PROJECT : ${ECCI_GPSC_PROJECT}
    stage: build
    only:
      - master
@@ -158,8 +157,8 @@ build:ubuntu-18.04-amd64_inteloneapi-2022.1.2:
 test:ubuntu-18.04-amd64_inteloneapi-2022.1.2:
    variables:
       ORD_SOUMET_MACH    : gpsc5
-      ORD_SOUMET_IMAGE   : eccc/eccc_all_default_ubuntu-18.04-amd64_latest
-      ORD_SOUMET_PROJECT : eccc_mrd
+      ORD_SOUMET_IMAGE   : registry.maze.science.gc.ca/ssc-hpcs/generic-job:ubuntu18.04
+      ORD_SOUMET_PROJECT : ${ECCI_GPSC_PROJECT}
    stage: test
    only:
       - master
@@ -178,8 +177,8 @@ test:ubuntu-18.04-amd64_inteloneapi-2022.1.2:
 package:ubuntu-18.04-amd64_inteloneapi-2022.1.2:
    variables:
       ORD_SOUMET_MACH    : gpsc5
-      ORD_SOUMET_IMAGE   : eccc/eccc_all_default_ubuntu-18.04-amd64_latest
-      ORD_SOUMET_PROJECT : eccc_mrd
+      ORD_SOUMET_IMAGE   : registry.maze.science.gc.ca/ssc-hpcs/generic-job:ubuntu18.04
+      ORD_SOUMET_PROJECT : ${ECCI_GPSC_PROJECT}
    stage: package
    only:
       - master
@@ -198,74 +197,74 @@ package:ubuntu-18.04-amd64_inteloneapi-2022.1.2:
       - make package
       - ~/ci-admin-bundle/bin/ci-package-ssm.sh package ${ECCI_PROCESS}
 
-#----- ubuntu-22.04-amd64_inteloneapi-2022.1.2
+#----- ubuntu-22.04-amd64_inteloneapi-2023.2.0
 
-#build:ubuntu-22.04-amd64_inteloneapi-2022.1.2:
-#   variables:
-#      ORD_SOUMET_MACH    : gpsc5
-#      ORD_SOUMET_IMAGE   : eccc/eccc_all_default_ubuntu-22.04-amd64_latest
-#      ORD_SOUMET_PROJECT : eccc_mrd
-#   stage: build
-#   only:
-#     - master
-#     - dev
-#     - tags
-#   script:
-#      - set +e
-#      - source ~/ci-env/latest/ubuntu-22.04-amd-64/inteloneapi-2022.1.2.sh
-#      - . r.load.dot ${ECCI_PROCESS_SSM}/libs /fs/ssm/main/opt/hdf5-netcdf4/serial/shared/inteloneapi-2022.1.2/01
-#      - set -e
-#      - mkdir build_ubuntu-22.04-amd64_inteloneapi-2022.1.2
-#      - cd build_ubuntu-22.04-amd64_inteloneapi-2022.1.2
-#      - cmake ../ -DNetCDF_ROOT=$(dirname $(dirname `which nc-config`))
-#      - time make -j $NCPUS
-#   artifacts:
-#      expire_in: 2 hrs
-#      paths:
-#         - build_ubuntu-22.04-amd64_inteloneapi-2022.1.2
+build:ubuntu-22.04-amd64_inteloneapi-2023.2.0:
+   variables:
+      ORD_SOUMET_MACH    : gpsc5
+      ORD_SOUMET_IMAGE   : registry.maze.science.gc.ca/ssc-hpcs/generic-job:ubuntu22.04
+      ORD_SOUMET_PROJECT : ${ECCI_GPSC_PROJECT}
+   stage: build
+   only:
+     - master
+     - dev
+     - tags
+   script:
+      - set +e
+      - source ~/ci-env/latest/ubuntu-22.04-amd-64/inteloneapi-2023.2.0.sh
+      - . r.load.dot ${ECCI_PROCESS_SSM}/libs /fs/ssm/hpco/exp/hdf5-netcdf4/serial/alllib/inteloneapi-2023.2.0/01
+      - set -e
+      - mkdir build_ubuntu-22.04-amd64_inteloneapi-2023.2.0
+      - cd build_ubuntu-22.04-amd64_inteloneapi-2023.2.0
+      - cmake ../ -DNetCDF_ROOT=$(dirname $(dirname `which nc-config`))
+      - time make -j $NCPUS
+   artifacts:
+      expire_in: 2 hrs
+      paths:
+         - build_ubuntu-22.04-amd64_inteloneapi-2023.2.0
 
-#test:ubuntu-22.04-amd64_inteloneapi-2022.1.2:
-#   variables:
-#      ORD_SOUMET_MACH    : gpsc5
-#      ORD_SOUMET_IMAGE   : eccc/eccc_all_default_ubuntu-22.04-amd64_latest
-#      ORD_SOUMET_PROJECT : eccc_mrd
-#   stage: test
-#   only:
-#      - master
-#      - dev
-#      - tags
-#   dependencies:
-#      - build:ubuntu-22.04-amd64_inteloneapi-2022.1.2
-#   script:
-#      - set +e
-#      - source ~/ci-env/latest/ubuntu-22.04-amd-64/inteloneapi-2022.1.2.sh
-#      - . r.load.dot ${ECCI_PROCESS_SSM}/libs
-#      - set -e
-#      - cd build_ubuntu-22.04-amd64_inteloneapi-2022.1.2
-#      - make check
+test:ubuntu-22.04-amd64_inteloneapi-2023.2.0:
+   variables:
+      ORD_SOUMET_MACH    : gpsc5
+      ORD_SOUMET_IMAGE   : registry.maze.science.gc.ca/ssc-hpcs/generic-job:ubuntu22.04
+      ORD_SOUMET_PROJECT : ${ECCI_GPSC_PROJECT}
+   stage: test
+   only:
+      - master
+      - dev
+     - tags
+   dependencies:
+      - build:ubuntu-22.04-amd64_inteloneapi-2023.2.0
+   script:
+      - set +e
+      - source ~/ci-env/latest/ubuntu-22.04-amd-64/inteloneapi-2023.2.0.sh
+     - . r.load.dot ${ECCI_PROCESS_SSM}/libs
+      - set -e
+      - cd build_ubuntu-22.04-amd64_inteloneapi-2023.2.0
+      - make check
       
-#package:ubuntu-22.04-amd64_inteloneapi-2022.1.2:
-#   variables:
-#      ORD_SOUMET_MACH    : gpsc5
-#      ORD_SOUMET_IMAGE   : eccc/eccc_all_default_ubuntu-22.04-amd64_latest
-#      ORD_SOUMET_PROJECT : eccc_mrd
-#   stage: package
-#   only:
-#      - master
-#      - dev
-#      - tags
-#      - schedules
-#   dependencies:
-#      - build:ubuntu-22.04-amd64_inteloneapi-2022.1.2
-#   environment:
-#      name: testing
-#   script:
-#      - set +e
-#      - source ~/ci-env/latest/ubuntu-22.04-amd-64/inteloneapi-2022.1.2.sh
-#      - set -e
-#      - cd build_ubuntu-22.04-amd64_inteloneapi-2022.1.2
-#      - make package
-#      - ~/ci-admin-bundle/bin/ci-package-ssm.sh package ${ECCI_PROCESS}
+package:ubuntu-22.04-amd64_inteloneapi-2023.2.0:
+   variables:
+      ORD_SOUMET_MACH    : gpsc5
+      ORD_SOUMET_IMAGE   : registry.maze.science.gc.ca/ssc-hpcs/generic-job:ubuntu22.04
+      ORD_SOUMET_PROJECT : ${ECCI_GPSC_PROJECT}
+   stage: package
+   only:
+      - master
+      - dev
+      - tags
+      - schedules
+   dependencies:
+      - build:ubuntu-22.04-amd64_inteloneapi-2023.2.0
+   environment:
+      name: testing
+   script:
+      - set +e
+      - source ~/ci-env/latest/ubuntu-22.04-amd-64/inteloneapi-2023.2.0.sh
+      - set -e
+      - cd build_ubuntu-22.04-amd64_inteloneapi-2023.2.0
+      - make package
+      - ~/ci-admin-bundle/bin/ci-package-ssm.sh package ${ECCI_PROCESS}
 
 deploy:staging:
    stage: deploy
