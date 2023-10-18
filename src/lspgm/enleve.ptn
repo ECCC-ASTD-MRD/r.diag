@@ -662,7 +662,6 @@
           END IF
 
           IF (TYPE.EQ.'ZONL')                                  THEN
-
               IBUF(6) = NBRLEV
 
               IF (MAXW.LT.NWDS*NBRLEV+4)                       THEN
