@@ -350,6 +350,7 @@
       INTEGER     DUM,status,NF,I,J,K,CLE(NbrMaxDeToctoc), &
                   SWA,LNG,DLTF,UBC,EXTRA1,EXTRA2,EXTRA3
       INTEGER     NI0,NJ0,NK0
+      INTEGER,    EXTERNAL :: GETKIND
 
       integer,    dimension(:), pointer :: IPM ! Pour le calcul de PTOP
 
@@ -423,10 +424,12 @@
 
               J = J+1
               
+              kind=getkind()
               status = vgd_new( TOC_GD(J,NF),            &
                                 unit=NF,format=myformat, &
                                 ip1=TOC_IP(1,J,NF),      &
                                 ip2=TOC_IP(2,J,NF) )
+              call setkindi(kind)
 
               if (status /= VGD_OK)                            THEN
                   IF (DEBUG) write(STDERR,6100) TOC_IP(1,J,NF),TOC_IP(2,J,NF)
@@ -578,7 +581,7 @@
                       TOC_RC(2,J,NF) = rvalue8
                       if (INFO) write(stdout,6105) 'RC_2'
                   end if
-
+                
                   if (TOC_VER(J,NF) == 5005  &
                  .or. TOC_VER(J,NF) == 5100  &
                  .or. TOC_VER(J,NF) == 21001 &

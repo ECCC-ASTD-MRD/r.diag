@@ -1081,7 +1081,7 @@
 
       REAL,       EXTERNAL  :: gethir
       CHARACTER(4),EXTERNAL :: gethic
-      INTEGER,    EXTERNAL  :: clrlmt,gethigh,getkind,newdate
+      INTEGER,    EXTERNAL  :: clrlmt,gethigh,newdate
       EXTERNAL    lvdcode,xit,eqvnomt,convhour
       EXTERNAL    dimgt2,difdatr,leadblk,convpr
 
