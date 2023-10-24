@@ -12,32 +12,34 @@ stages:
 
 before_script:
    - source ~/ci-admin/env/init.sh
+   - export PIPELINE_SUBDIR=${ECCI_BUILD_DIR}/precaution/${CI_PROJECT_PATH}/${CI_BUILD_REF_NAME}/${CI_PIPELINE_ID}
 
 #----- rhel-8-icelake-64_inteloneapi-2022.1.2
 
 build:rhel-8-icelake-64_inteloneapi-2022.1.2:
    stage: build
+   tags:
+      - concurrent
    only:
       - master
       - dev
       - tags
    script:
       - set +e
-      - source ~/ci-env/latest/rhel-8-icelake-64/inteloneapi-2022.1.2.sh
+      - source ${ECCI_ENV}/latest/rhel-8-icelake-64/inteloneapi-2022.1.2.sh
       - . r.load.dot ${ECCI_PROCESS_SSM}/libs /fs/ssm/main/opt/hdf5-netcdf4/serial/shared/inteloneapi-2022.1.2/01 /fs/ssm/eccc/mrd/rpn/libs/masters/udunits2-inteloneapi-2022.1.2_2.2.28_rhel-8-icelake-64
       - set -e
-      - mkdir build_rhel-8-icelake-64_inteloneapi-2022.1.2
-      - cd build_rhel-8-icelake-64_inteloneapi-2022.1.2
-      - cmake ../ -DNetCDF_ROOT=$(dirname $(dirname `which nc-config`))
+      - mkdir -pv ${PIPELINE_SUBDIR}/build_rhel-8-icelake-64_inteloneapi-2022.1.2
+      - SRC_DIR=$(pwd)
+      - cd ${PIPELINE_SUBDIR}/build_rhel-8-icelake-64_inteloneapi-2022.1.2
+      - cmake ${SRC_DIR} -DNetCDF_ROOT=$(dirname $(dirname `which nc-config`))
       - time make -j $NCPUS
-   artifacts:
-      expire_in: 2 hrs
-      paths:
-         - build_rhel-8-icelake-64_inteloneapi-2022.1.2
 
 #TODO: this test fails on CI but passes interactively
 #test:rhel-8-icelake-64_inteloneapi-2022.1.2:
 #   stage: test
+#   tags:
+#      - concurrent
 #   only:
 #      - master
 #      - dev
@@ -46,14 +48,16 @@ build:rhel-8-icelake-64_inteloneapi-2022.1.2:
 #      - build:rhel-8-icelake-64_inteloneapi-2022.1.2
 #   script:
 #      - set +e
-#      - source ~/ci-env/latest/rhel-8-icelake-64/inteloneapi-2022.1.2.sh
+#      - source ${ECCI_ENV}/latest/rhel-8-icelake-64/inteloneapi-2022.1.2.sh
 #      - . r.load.dot ${ECCI_PROCESS_SSM}/libs 
 #      - set -e
-#      - cd build_rhel-8-icelake-64_inteloneapi-2022.1.2
-#      - make check#
+#      - cd ${PIPELINE_SUBDIR}/build_rhel-8-icelake-64_inteloneapi-2022.1.2
+#      - make check
 
 package:rhel-8-icelake-64_inteloneapi-2022.1.2:
    stage: package
+   tags:
+      - concurrent
    only:
       - master
       - tags
@@ -65,9 +69,9 @@ package:rhel-8-icelake-64_inteloneapi-2022.1.2:
       name: testing
    script:
       - set +e
-      - source ~/ci-env/latest/rhel-8-icelake-64/inteloneapi-2022.1.2.sh
+      - source ${ECCI_ENV}/latest/rhel-8-icelake-64/inteloneapi-2022.1.2.sh
       - set -e
-      - cd build_rhel-8-icelake-64_inteloneapi-2022.1.2
+      - cd ${PIPELINE_SUBDIR}/build_rhel-8-icelake-64_inteloneapi-2022.1.2
       - make package
       - ~/ci-admin-bundle/bin/ci-package-ssm.sh package ${ECCI_PROCESS}
 
@@ -75,26 +79,27 @@ package:rhel-8-icelake-64_inteloneapi-2022.1.2:
 
 build:rhel-8-amd64_inteloneapi-2022.1.2:
    stage: build
+   tags:
+      - concurrent
    only:
       - master
       - dev
       - tags
    script:
       - set +e
-      - source ~/ci-env/latest/rhel-8-amd-64/inteloneapi-2022.1.2.sh
+      - source ${ECCI_ENV}/latest/rhel-8-amd-64/inteloneapi-2022.1.2.sh
       - . r.load.dot ${ECCI_PROCESS_SSM}/libs /fs/ssm/main/opt/hdf5-netcdf4/serial/shared/inteloneapi-2022.1.2/01 /fs/ssm/eccc/mrd/rpn/libs/masters/udunits2-inteloneapi-2022.1.2_2.2.28_rhel-8-amd64-64
       - set -e
-      - mkdir build_rhel-8-amd64_inteloneapi-2022.1.2
-      - cd build_rhel-8-amd64_inteloneapi-2022.1.2
-      - cmake ../ -DNetCDF_ROOT=$(dirname $(dirname `which nc-config`))
+      - mkdir -pv ${PIPELINE_SUBDIR}/build_rhel-8-amd64_inteloneapi-2022.1.2
+      - SRC_DIR=$(pwd)
+      - cd ${PIPELINE_SUBDIR}/build_rhel-8-amd64_inteloneapi-2022.1.2
+      - cmake ${SRC_DIR} -DNetCDF_ROOT=$(dirname $(dirname `which nc-config`))
       - time make -j $NCPUS
-   artifacts:
-      expire_in: 2 hrs
-      paths:
-         - build_rhel-8-amd64_inteloneapi-2022.1.2
 
 test:rhel-8-amd64_inteloneapi-2022.1.2:
    stage: test
+   tags:
+      - concurrent
    only:
       - master
       - dev
@@ -103,14 +108,16 @@ test:rhel-8-amd64_inteloneapi-2022.1.2:
       - build:rhel-8-amd64_inteloneapi-2022.1.2
    script:
       - set +e
-      - source ~/ci-env/latest/rhel-8-amd-64/inteloneapi-2022.1.2.sh
+      - source ${ECCI_ENV}/latest/rhel-8-amd-64/inteloneapi-2022.1.2.sh
       - . r.load.dot ${ECCI_PROCESS_SSM}/libs
       - set -e
-      - cd build_rhel-8-amd64_inteloneapi-2022.1.2
+      - cd ${PIPELINE_SUBDIR}/build_rhel-8-amd64_inteloneapi-2022.1.2
       - make check
 
 package:rhel-8-amd64_inteloneapi-2022.1.2:
    stage: package
+   tags:
+      - concurrent
    only:
       - master
       - tags
@@ -122,9 +129,9 @@ package:rhel-8-amd64_inteloneapi-2022.1.2:
       name: testing
    script:
       - set +e
-      - source ~/ci-env/latest/rhel-8-amd-64/inteloneapi-2022.1.2.sh
+      - source ${ECCI_ENV}/latest/rhel-8-amd-64/inteloneapi-2022.1.2.sh
       - set -e
-      - cd build_rhel-8-amd64_inteloneapi-2022.1.2
+      - cd ${PIPELINE_SUBDIR}/build_rhel-8-amd64_inteloneapi-2022.1.2
       - make package
       - ~/ci-admin-bundle/bin/ci-package-ssm.sh package ${ECCI_PROCESS}
 
@@ -136,23 +143,22 @@ build:ubuntu-22.04-amd64_inteloneapi-2023.2.0:
       ORD_SOUMET_IMAGE   : registry.maze.science.gc.ca/ssc-hpcs/generic-job:ubuntu22.04
       ORD_SOUMET_PROJECT : eccc_mrd
    stage: build
+   tags:
+      - concurrent
    only:
      - master
      - dev
      - tags
    script:
       - set +e
-      - source ~/ci-env/latest/ubuntu-22.04-amd-64/inteloneapi-2023.2.0.sh
+      - source ${ECCI_ENV}/latest/ubuntu-22.04-amd-64/inteloneapi-2023.2.0.sh
       - . r.load.dot ${ECCI_PROCESS_SSM}/libs /fs/ssm/hpco/exp/hdf5-netcdf4/serial/alllib/inteloneapi-2023.2.0/01 /fs/ssm/eccc/mrd/rpn/libs/masters/udunits2-inteloneapi-2023.2.0_2.2.28_ubuntu-22.04-amd64-64
       - set -e
-      - mkdir build_ubuntu-22.04-amd64_inteloneapi-2023.2.0
-      - cd build_ubuntu-22.04-amd64_inteloneapi-2023.2.0
-      - cmake ../ -DNetCDF_ROOT=$(dirname $(dirname `which nc-config`))
+      - mkdir -pv ${PIPELINE_SUBDIR}/build_ubuntu-22.04-amd64_inteloneapi-2023.2.0
+      - SRC_DIR=$(pwd)
+      - cd ${PIPELINE_SUBDIR}/build_ubuntu-22.04-amd64_inteloneapi-2023.2.0
+      - cmake ${SRC_DIR} -DNetCDF_ROOT=$(dirname $(dirname `which nc-config`))
       - time make -j $NCPUS
-   artifacts:
-      expire_in: 2 hrs
-      paths:
-         - build_ubuntu-22.04-amd64_inteloneapi-2023.2.0
 
 test:ubuntu-22.04-amd64_inteloneapi-2023.2.0:
    variables:
@@ -160,6 +166,8 @@ test:ubuntu-22.04-amd64_inteloneapi-2023.2.0:
       ORD_SOUMET_IMAGE   : registry.maze.science.gc.ca/ssc-hpcs/generic-job:ubuntu22.04
       ORD_SOUMET_PROJECT : eccc_mrd
    stage: test
+   tags:
+      - concurrent
    only:
       - master
       - dev
@@ -168,10 +176,10 @@ test:ubuntu-22.04-amd64_inteloneapi-2023.2.0:
       - build:ubuntu-22.04-amd64_inteloneapi-2023.2.0
    script:
       - set +e
-      - source ~/ci-env/latest/ubuntu-22.04-amd-64/inteloneapi-2023.2.0.sh
+      - source ${ECCI_ENV}/latest/ubuntu-22.04-amd-64/inteloneapi-2023.2.0.sh
       - . r.load.dot ${ECCI_PROCESS_SSM}/libs
       - set -e
-      - cd build_ubuntu-22.04-amd64_inteloneapi-2023.2.0
+      - cd ${PIPELINE_SUBDIR}/build_ubuntu-22.04-amd64_inteloneapi-2023.2.0
       - make check
       
 package:ubuntu-22.04-amd64_inteloneapi-2023.2.0:
@@ -180,6 +188,8 @@ package:ubuntu-22.04-amd64_inteloneapi-2023.2.0:
       ORD_SOUMET_IMAGE   : registry.maze.science.gc.ca/ssc-hpcs/generic-job:ubuntu22.04
       ORD_SOUMET_PROJECT : eccc_mrd
    stage: package
+   tags:
+      - concurrent
    only:
       - master
       - dev
@@ -191,14 +201,16 @@ package:ubuntu-22.04-amd64_inteloneapi-2023.2.0:
       name: testing
    script:
       - set +e
-      - source ~/ci-env/latest/ubuntu-22.04-amd-64/inteloneapi-2023.2.0.sh
+      - source ${ECCI_ENV}/latest/ubuntu-22.04-amd-64/inteloneapi-2023.2.0.sh
       - set -e
-      - cd build_ubuntu-22.04-amd64_inteloneapi-2023.2.0
+      - cd ${PIPELINE_SUBDIR}/build_ubuntu-22.04-amd64_inteloneapi-2023.2.0
       - make package
       - ~/ci-admin-bundle/bin/ci-package-ssm.sh package ${ECCI_PROCESS}
 
 deploy:staging:
    stage: deploy
+   tags:
+      - U2
    only:
       - master
       - tags
