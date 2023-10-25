@@ -7,13 +7,11 @@ include(ec_init)           # Initialise compilers and ec specific functions
 ec_git_version()           # Get version from git state
 ec_parse_manifest()        # Parse MANIFEST file
 
-project(${NAME} DESCRIPTION "${DESCRIPTION}")
+project(${NAME} DESCRIPTION "${DESCRIPTION}" LANGUAGES C Fortran)
 set(PROJECT_VERSION ${VERSION}${STATE} CACHE STRING "Define the version of r.diag that will be baked into the various artifacts of this build" FORCE)
 set(${NAME}_VERSION ${PROJECT_VERSION} CACHE INTERNAL "${NAME} version" FORCE) # Needed for cascaded version identification
 
 ec_build_info()            # Generate build information
-
-enable_language(C Fortran)
 
 include(ec_compiler_presets)
 set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -fpe3")
