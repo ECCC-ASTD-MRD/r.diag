@@ -209,8 +209,6 @@ package:ubuntu-22.04-amd64_inteloneapi-2023.2.0:
 
 deploy:staging:
    stage: deploy
-   tags:
-      - U2
    only:
       - master
       - tags
