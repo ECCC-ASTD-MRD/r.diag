@@ -13,8 +13,8 @@ rm -f ${profilePath} ${loginPath}
 mkdir -p ${profileDirPath}
 
 cat > ${profilePath} << EOF
-if [[ "${ORDENV_PLAT} == "ubuntu-22.04-amd64-64" ]]; then
-   . r.load.dot /fs/ssm/main/opt/hdf5-netcdf4/serial/alllib/inteloneapi-2023.2.0/01
+if [[ \${ORDENV_PLAT} == "ubuntu-22.04-amd64-64" ]]; then
+   . ssmuse-sh -d /fs/ssm/main/opt/hdf5-netcdf4/serial/alllib/inteloneapi-2023.2.0/01
 else
    . r.load.dot /fs/ssm/main/opt/hdf5-netcdf4/serial/shared/inteloneapi-2022.1.2/01
 fi
@@ -24,8 +24,8 @@ source r.diag_autocomplete.dot
 EOF
 
 cat > ${loginPath} << EOF
-if ( ${ORDENV_PLAT} == "ubuntu-22.04-amd64-64" ) then
-   . r.load.dot /fs/ssm/main/opt/hdf5-netcdf4/serial/alllib/inteloneapi-2023.2.0/01
+if ( \${ORDENV_PLAT} == "ubuntu-22.04-amd64-64" ) then
+   . ssmuse-sh -d /fs/ssm/main/opt/hdf5-netcdf4/serial/alllib/inteloneapi-2023.2.0/01
 else
    . r.load.dot /fs/ssm/main/opt/hdf5-netcdf4/serial/shared/inteloneapi-2022.1.2/01
 endif
