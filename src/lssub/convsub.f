@@ -2344,7 +2344,7 @@
           ITYP = 0
       END IF
 
-      IF (ITYP.EQ.33 .OR. RNDF(NF).GT.0 .OR.
+      IF (ITYP.EQ.33 .OR. ITYP.EQ.39 .OR. RNDF(NF).GT.0 .OR.
      +   (STATF(1:3).EQ.'NEW' .AND. .NOT.SEQ))                 THEN
           ATTRIB = 'STD+RND'
           IF (STATF(1:3).EQ.'OLD')                             THEN
@@ -2385,7 +2385,7 @@
 
           ELSE
 
-              IF (ITYP.EQ.33 .OR. RNDF(NF).GT.0 .OR.
+              IF (ITYP.EQ.33 .OR. ITYP.EQ.39 .OR. RNDF(NF).GT.0 .OR.
      +           (STATF(1:3).EQ.'NEW' .AND. .NOT.SEQ))         THEN
 
 ***                Fichier de type 'RND'.

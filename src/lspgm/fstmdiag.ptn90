@@ -559,7 +559,7 @@
 
       end if
 
-      if (ftyp1 /= 1 .and. ftyp1 /= 33)                    then
+      if (ftyp1 /= 1 .and. ftyp1 /= 33 .and. ftyp1 /= 39)  then
 
           ! Ce fichier n'est pas un fichier RND.
 

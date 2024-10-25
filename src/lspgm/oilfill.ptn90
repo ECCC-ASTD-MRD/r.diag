@@ -307,9 +307,9 @@
 
     ! Check file type of input file
     ftyp  = WKOFFIT(ifile)
-    if (ftyp.ne.1.and.ftyp.ne.2.and.ftyp.ne.33.and.ftyp.ne.34) then
+    if (ftyp.ne.1.and.ftyp.ne.2.and.ftyp.ne.33.and.ftyp.ne.34.and.ftyp.ne.39) then
        print *,'Wrong source file type, ABORT!'
-       print *,' expecting one of types 1,2,33,34, found ',ftyp
+       print *,' expecting one of types 1,2,33,34,39, found ',ftyp
        print *,' see the WKOFFIT subroutine documentation for more details'
        nil = exfin( 'OillFill', 'Error 6', 'NON' )
        call quit( 'OillFill', 6 )
@@ -323,9 +323,9 @@
        ier   = fnom(mun, mfile, 'STD+RND+R/O', 0)
        ! Check file type of mask file
        ftyp  = WKOFFIT(mfile)
-       if (ftyp.ne.1.and.ftyp.ne.2.and.ftyp.ne.33.and.ftyp.ne.34) then
+       if (ftyp.ne.1.and.ftyp.ne.2.and.ftyp.ne.33.and.ftyp.ne.34.and.ftyp.ne.39) then
           print *,'Wrong mask file type, ABORT!'
-          print *,' expecting one of types 1,2,33,34, found ',ftyp
+          print *,' expecting one of types 1,2,33,34,39, found ',ftyp
           print *,' see the WKOFFIT documentation for more details'
           nil = exfin( 'OillFill', 'Error 7', 'NON' )
           call quit( 'OillFill', 7 )

@@ -1539,7 +1539,7 @@
 
 ***    On a trouve un fichier standart.
 
-      if (ftyp1.eq.33 .or. ftyp1.eq.34) rpn = Vrai
+      if (ftyp1.eq.33 .or. ftyp1.eq.34 .or. ftyp1.eq.39) rpn = Vrai
       if (ftyp1.eq.1  .or. ftyp1.eq.2)  rpn = Vrai
 
 ***    Chercher le fichier CCRN, s'il le faut.
@@ -1594,7 +1594,7 @@
               inbr1 = fstouv( iu1,'RND' )
           end if
 
-      else if (ftyp1.eq.1 .or. ftyp1.eq.33)                    then
+      else if (ftyp1.eq.1 .or. ftyp1.eq.33 .or. ftyp1.eq.39)   then
 
 ***        Fichier random.
 
@@ -2738,7 +2738,8 @@
 ***            differents des autres...
 
               if (nomvar.eq.'++' .and.
-     +           (ftyp1 .eq. 33  .or. ftyp1.eq.34))            then
+     +           (ftyp1 .eq. 33  .or. ftyp1.eq.34 .or.
+     +            ftyp1.eq.39)) then
 
                   datyp  =   2
                   npak   = -32
@@ -2906,7 +2907,7 @@
 ***           Traitement des valeurs manquantes.
 
               ! Seulement pour les fichiers SQ98.
-              if (ftyp1 == 33 .or. ftyp1 == 34)                then
+              if (ftyp1 == 33 .or. ftyp1 == 34 .or. ftyp1 == 39) then
 
                   if (missing_value_used() == 1)               then
 
@@ -4139,7 +4140,8 @@
                   buffer(i) = max( dble( ip1 ),1.d-10 )
                   buffer(i) = log10( buffer(i) )
               else if (rpntyp.eq.33 .or.
-     +                 rpntyp.eq.34 )                          then
+     +                 rpntyp.eq.34 .or.
+     +                 rpntyp.eq.39 )                          then
                   buffer(i) = ip1
               end if
           else
@@ -4147,7 +4149,8 @@
      +            rpntyp.eq.2 )                                then
                   ip1 = nint( 10**( pr8 ) )
               else if (rpntyp.eq.33 .or.
-     +                 rpntyp.eq.34 )                          then
+     +                 rpntyp.eq.34 .or.
+     +                 rpntyp.eq.39 )                          then
                   ip1 = nint( pr8 )
               end if
               call convpr( ip1, pr, kind, -1 )

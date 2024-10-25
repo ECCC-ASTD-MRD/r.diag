@@ -1798,7 +1798,8 @@ C
                       CALL                         XIT(' Jclpnt ',-5 )
                   ELSE IF (FTYP.EQ.2  .OR.
      +                 FTYP.EQ.33 .OR.
-     +                 FTYP.EQ.34 )                            THEN
+     +                 FTYP.EQ.34 .OR.
+     +                 FTYP.EQ.39 )                            THEN
                       PKTYP(0) = 'SQ98'
 
                       IF (.NOT.MSGLVL)                         THEN

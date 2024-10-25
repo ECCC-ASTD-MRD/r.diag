@@ -577,7 +577,7 @@ C    +              valnum,kind
           if (nbr == 1 .and. def1(2) == def1((NBRARGS+1)+1))
      +        name2 = name1(nbr) ! Re-Definir name2
 
-          if (ftyp1 /= 1 .and. ftyp1 /= 33)                    then
+          if (ftyp1 /= 1 .and. ftyp1 /= 33 .and. ftyp1 /= 39)  then
 
               ! Ce fichier n'est pas un fichier RND.
 
