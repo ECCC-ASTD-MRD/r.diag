@@ -109,31 +109,21 @@ An extensive toolkit available to users wanting to manipulate 2D
 - NetCDF
 - librmn
 
-Note: =cmake_rpn= is included as a submodule.  Please clone with the
-=--recursive= flag or run =git submodule update --init --recursive= in the
-git repo after having cloned.
-
 ** Environment
 
 Source the right file depending on the architecture you need from the env directory.
 This will load the specified compiler and define the ECCI_DATA_DIR variable for the test datasets
 
-- Example for PPP3 and skylake specific architecture:
+- Example for PPP5:
 
 #+begin_src
-. $ECCI_ENV/latest/ubuntu-18.04-skylake-64/intel-19.0.3.199.sh
+. $ECCI_ENV/latest/ppp5/inteloneapi-2022.1.2.sh
 #+end_src
 
-- Example for XC50 on intel-19.0.5
+- Example for CMC network and gnu 11.4.0:
 
 #+begin_src
-. $ECCI_ENV/latest/sles-15-skylake-64/intel-19.0.5.281.sh
-#+end_src
-
-- Example for CMC network and gnu 7.5:
-
-#+begin_src
-. $ECCI_ENVlatest/ubuntu-18.04-amd-64/gnu-7.5.0.sh
+. $ECCI_ENVlatest/ubuntu-22.04-amd-64/gnu.sh
 #+end_src
 
 ** Build and install
