@@ -7,6 +7,7 @@
 *.sw[po]
 *~
 
-#----- buil directory at the root path
-/build/
+#----- build directory at the root path
+/build*
 /.vscode/
+/*.code-workspace
