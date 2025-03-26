@@ -19,8 +19,12 @@ set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -fpe3")
 set(CMAKE_Fortran_PREPROCESS ON)
 set(CMAKE_Fortran_MODULE_DIRECTORY ${CMAKE_BINARY_DIR}/include)
 
-# Need to extend line length     gfortran            ifort
-set(CMAKE_Fortran_FLAGS "-ffixed-line-length-none -extend-source ${CMAKE_Fortran_FLAGS} ")
+# Need to extend line length gfortran ifort
+if ("${CMAKE_Fortran_COMPILER_ID}" STREQUAL "Intel" OR "${CMAKE_Fortran_COMPILER_ID}" STREQUAL "IntelLLVM")
+  set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -extend-source")
+elseif("${CMAKE_Fortran_COMPILER_ID}" STREQUAL "GNU")
+  set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -ffixed-line-length-none")
+endif()
 
 #----- Make sure RPATH is set at install step
 set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
