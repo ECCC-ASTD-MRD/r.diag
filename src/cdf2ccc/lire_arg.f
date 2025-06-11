@@ -920,17 +920,15 @@ CCC     endif
 
       call get_environment_variable('UDUNITS2_XML_PATH',evalue,L_argenv)
 
-      if (L_argenv > 0) then
-         udunits_dat = evalue
+      if(def1(29).eq.'default') then
+         call get_environment_variable('UDUNITS2_XML_PATH',evalue,L_argenv)
+         udunits_dat = udunits2_def
+         if (L_argenv > 0) udunits_dat = evalue
+      else if(def1(29).eq.'?') then
+         write(6,6001) ' Fichier udunits2.xml ?'
+         call                                   xit('lire_arg',  -29)
       else
-         if(def1(29).eq.'?') then
-            write(6,6001) ' Fichier udunits2.xml ?'
-            call                                   xit('lire_arg',  -29)
-         else if(def1(29).eq.'default') then
-            udunits_dat = udunits2_def
-         else
-            udunits_dat = def1(29)
-         endif
+         udunits_dat = def1(29)
       end if
 
       if(cdf2_mode.eq.'cdf2rpn') then
