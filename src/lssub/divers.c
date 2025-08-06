@@ -88,8 +88,10 @@
 
 
 #include <stdlib.h>
-#include <rmn/rpnmacros.h>
 #include <string.h>
+#include <unistd.h>
+#include <rmn.h>
+#include <rmn/swap_buffer.h>
 
 /* 
 
@@ -105,7 +107,6 @@
 #if defined (HP)
 
 #include <sys/times.h>
-#include <unistd.h>
 
 /*
 
@@ -606,6 +607,7 @@ int32_t *index, *size, len ;
    The following routine simply calls
    the rpnmacro swap_buffer_endianness
 */
+
 
 void 
 f77name(swap_endianness) ( buffer,size )
