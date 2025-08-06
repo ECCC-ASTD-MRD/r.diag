@@ -4,6 +4,7 @@ variables:
    ORD_SOUMET_C: "2"
    ORD_SOUMET_M: "8G"
    ORD_SOUMET_TMPFS: "2G"
+
 stages:
    - build
    - test
@@ -13,6 +14,84 @@ stages:
 before_script:
    - source ~/ci-admin/env/init.sh
    - export PIPELINE_SUBDIR=${ECCI_BUILD_DIR}/precaution/${CI_PROJECT_PATH}/${CI_BUILD_REF_NAME}/${CI_PIPELINE_ID}
+
+#----- rhel-9-graniterapids-64_inteloneapi-2025.1.0
+
+build:rhel-9-graniterapids-64_inteloneapi-2025.1.0:
+   variables:
+      ORD_SOUMET_MACH    : ppp5t
+      CI_ARCH : rhel-9-graniterapids-64_inteloneapi-2025.1.0
+   stage: build
+   tags:
+      - concurrent
+   script:
+      - set +e
+      - source ${ECCI_ENV}/latest/rhel-9-graniterapids-64/inteloneapi-2025.1.0.sh
+      - export ORDENV_PLAT=rhel-9-graniterapids-64
+      - export EC_ARCH=rhel-9-graniterapids-64/inteloneapi-2025.1.0
+      - . r.load.dot ${ECCI_PROCESS_SSM}/libs /fs/ssm/hpco/exp/hdf5-netcdf4/parallel/alllib/inteloneapi-2025.1.0/01 /fs/ssm/eccc/mrd/rpn/libs/masters/udunits2-gnu-11.4.1_2.2.28_rhel-9-amd64-64
+      - set -e
+      - export CI_ARCH=rhel-9-graniterapids-64_inteloneapi-2025.1.0
+      - mkdir -pv ${PIPELINE_SUBDIR}/build_${CI_ARCH}
+      - SRC_DIR=$(pwd)
+      - cd ${PIPELINE_SUBDIR}/build_${CI_ARCH}
+      - cmake -DTARGET_PROC=graniterapids -DNetCDF_ROOT=$(dirname $(dirname `which nc-config`)) ${SRC_DIR} 
+      - time make -j $NCPUS
+   rules:
+      - if: $CI_ARCH =~ $ALLOW_FAILURE
+        allow_failure: true
+      - when: always
+
+test:rhel-9-graniterapids-64_inteloneapi-2025.1.0:
+   variables:
+      ORD_SOUMET_MACH    : ppp5t
+      CI_ARCH : rhel-9-graniterapids-64_inteloneapi-2025.1.0
+   stage: test
+   tags:
+      - concurrent
+   needs:
+      - build:rhel-9-graniterapids-64_inteloneapi-2025.1.0
+   script:
+      - set +e
+      - source ${ECCI_ENV}/latest/rhel-9-graniterapids-64/inteloneapi-2025.1.0.sh
+      - export ORDENV_PLAT=rhel-9-graniterapids-64
+      - export EC_ARCH=rhel-9-graniterapids-64/inteloneapi-2025.1.0
+      - . r.load.dot ${ECCI_PROCESS_SSM}/libs /fs/ssm/hpco/exp/hdf5-netcdf4/parallel/alllib/inteloneapi-2025.1.0/01 /fs/ssm/eccc/mrd/rpn/libs/masters/udunits2-gnu-11.4.1_2.2.28_rhel-9-amd64-64
+      - set -e
+      - export CI_ARCH=rhel-9-graniterapids-64_inteloneapi-2025.1.0
+      - cd ${PIPELINE_SUBDIR}/build_${CI_ARCH}
+      - make check
+   allow_failure: true
+   rules:
+      - if: $CI_ARCH =~ $ALLOW_FAILURE
+        allow_failure: true
+      - when: always
+
+package:rhel-9-graniterapids-64_inteloneapi-2025.1.0:
+   variables:
+      ORD_SOUMET_MACH    : ppp5t
+      CI_ARCH : rhel-9-graniterapids-64_inteloneapi-2025.1.0
+   stage: package
+   tags:
+      - concurrent
+   needs:
+     - build:rhel-9-graniterapids-64_inteloneapi-2025.1.0
+   environment:
+      name: testing
+   script:
+      - set +e
+      - source ${ECCI_ENV}/latest/rhel-9-graniterapids-64/inteloneapi-2025.1.0.sh
+      - export ORDENV_PLAT=rhel-9-graniterapids-64
+      - export EC_ARCH=rhel-9-graniterapids-64/inteloneapi-2025.1.0
+      - set -e
+      - export CI_ARCH=rhel-9-graniterapids-64_inteloneapi-2025.1.0
+      - cd ${PIPELINE_SUBDIR}/build_${CI_ARCH}
+      - make package
+      - ~/ci-admin-bundle/bin/ci-package-ssm.sh package ${ECCI_PROCESS}
+   rules:
+      - if: $CI_ARCH =~ $ALLOW_FAILURE
+        allow_failure: true
+      - when: always
 
 #----- rhel-8-icelake-64_inteloneapi-2022.1.2
 
