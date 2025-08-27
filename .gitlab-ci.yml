@@ -26,7 +26,7 @@ build:rhel-9-graniterapids-64_inteloneapi-2025.1.0:
       - concurrent
    script:
       - set +e
-      - source ${ECCI_ENV}/latest/rhel-9-graniterapids-64/inteloneapi-2025.1.0.sh
+      - . r.load.dot ${ECCI_ENV}/rhel-9-graniterapids-64@inteloneapi-2025.1.0
       - export ORDENV_PLAT=rhel-9-graniterapids-64
       - export EC_ARCH=rhel-9-graniterapids-64/inteloneapi-2025.1.0
       - . r.load.dot ${ECCI_PROCESS_SSM}/libs /fs/ssm/hpco/exp/hdf5-netcdf4/parallel/alllib/inteloneapi-2025.1.0/01 /fs/ssm/eccc/mrd/rpn/libs/masters/udunits2-gnu-11.4.1_2.2.28_rhel-9-amd64-64
@@ -53,7 +53,7 @@ test:rhel-9-graniterapids-64_inteloneapi-2025.1.0:
       - build:rhel-9-graniterapids-64_inteloneapi-2025.1.0
    script:
       - set +e
-      - source ${ECCI_ENV}/latest/rhel-9-graniterapids-64/inteloneapi-2025.1.0.sh
+      - . r.load.dot ${ECCI_ENV}/rhel-9-graniterapids-64@inteloneapi-2025.1.0
       - export ORDENV_PLAT=rhel-9-graniterapids-64
       - export EC_ARCH=rhel-9-graniterapids-64/inteloneapi-2025.1.0
       - . r.load.dot ${ECCI_PROCESS_SSM}/libs /fs/ssm/hpco/exp/hdf5-netcdf4/parallel/alllib/inteloneapi-2025.1.0/01 /fs/ssm/eccc/mrd/rpn/libs/masters/udunits2-gnu-11.4.1_2.2.28_rhel-9-amd64-64
@@ -80,7 +80,7 @@ package:rhel-9-graniterapids-64_inteloneapi-2025.1.0:
       name: testing
    script:
       - set +e
-      - source ${ECCI_ENV}/latest/rhel-9-graniterapids-64/inteloneapi-2025.1.0.sh
+      - . r.load.dot ${ECCI_ENV}/rhel-9-graniterapids-64@inteloneapi-2025.1.0
       - export ORDENV_PLAT=rhel-9-graniterapids-64
       - export EC_ARCH=rhel-9-graniterapids-64/inteloneapi-2025.1.0
       - set -e
@@ -105,7 +105,7 @@ build:rhel-8-icelake-64_inteloneapi-2022.1.2:
       - tags
    script:
       - set +e
-      - source ${ECCI_ENV}/latest/rhel-8-icelake-64/inteloneapi-2022.1.2.sh
+      - . r.load.dot ${ECCI_ENV}/rhel-8-icelake-64@inteloneapi-2022.1.2
       - . r.load.dot ${ECCI_PROCESS_SSM}/libs /fs/ssm/main/opt/hdf5-netcdf4/serial/shared/inteloneapi-2022.1.2/01 /fs/ssm/eccc/mrd/rpn/libs/masters/udunits2-inteloneapi-2022.1.2_2.2.28_rhel-8-icelake-64
       - set -e
       - mkdir -pv ${PIPELINE_SUBDIR}/build_rhel-8-icelake-64_inteloneapi-2022.1.2
@@ -114,7 +114,6 @@ build:rhel-8-icelake-64_inteloneapi-2022.1.2:
       - cmake ${SRC_DIR} -DNetCDF_ROOT=$(dirname $(dirname `which nc-config`))
       - time make -j $NCPUS
 
-#TODO: this test fails on CI but passes interactively
 test:rhel-8-icelake-64_inteloneapi-2022.1.2:
    stage: test
    tags:
@@ -127,7 +126,7 @@ test:rhel-8-icelake-64_inteloneapi-2022.1.2:
       - build:rhel-8-icelake-64_inteloneapi-2022.1.2
    script:
       - set +e
-      - source ${ECCI_ENV}/latest/rhel-8-icelake-64/inteloneapi-2022.1.2.sh
+      - . r.load.dot ${ECCI_ENV}/rhel-8-icelake-64@inteloneapi-2022.1.2
       - . r.load.dot ${ECCI_PROCESS_SSM}/libs /fs/ssm/main/opt/hdf5-netcdf4/serial/shared/inteloneapi-2022.1.2/01 /fs/ssm/eccc/mrd/rpn/libs/masters/udunits2-inteloneapi-2022.1.2_2.2.28_rhel-8-icelake-64
       - set -e
       - cd ${PIPELINE_SUBDIR}/build_rhel-8-icelake-64_inteloneapi-2022.1.2
@@ -148,7 +147,7 @@ package:rhel-8-icelake-64_inteloneapi-2022.1.2:
       name: testing
    script:
       - set +e
-      - source ${ECCI_ENV}/latest/rhel-8-icelake-64/inteloneapi-2022.1.2.sh
+      - . r.load.dot ${ECCI_ENV}/rhel-8-icelake-64@inteloneapi-2022.1.2
       - set -e
       - cd ${PIPELINE_SUBDIR}/build_rhel-8-icelake-64_inteloneapi-2022.1.2
       - make package
@@ -166,7 +165,7 @@ build:rhel-8-amd64_inteloneapi-2022.1.2:
       - tags
    script:
       - set +e
-      - source ${ECCI_ENV}/latest/rhel-8-amd-64/inteloneapi-2022.1.2.sh
+      - . r.load.dot ${ECCI_ENV}/rhel-8-amd64-64@inteloneapi-2022.1.2
       - . r.load.dot ${ECCI_PROCESS_SSM}/libs /fs/ssm/main/opt/hdf5-netcdf4/serial/shared/inteloneapi-2022.1.2/01 /fs/ssm/eccc/mrd/rpn/libs/masters/udunits2-inteloneapi-2022.1.2_2.2.28_rhel-8-amd64-64
       - set -e
       - mkdir -pv ${PIPELINE_SUBDIR}/build_rhel-8-amd64_inteloneapi-2022.1.2
@@ -187,7 +186,7 @@ test:rhel-8-amd64_inteloneapi-2022.1.2:
       - build:rhel-8-amd64_inteloneapi-2022.1.2
    script:
       - set +e
-      - source ${ECCI_ENV}/latest/rhel-8-amd-64/inteloneapi-2022.1.2.sh
+      - . r.load.dot ${ECCI_ENV}/rhel-8-amd64-64@inteloneapi-2022.1.2
       - . r.load.dot ${ECCI_PROCESS_SSM}/libs
       - set -e
       - cd ${PIPELINE_SUBDIR}/build_rhel-8-amd64_inteloneapi-2022.1.2
@@ -208,7 +207,7 @@ package:rhel-8-amd64_inteloneapi-2022.1.2:
       name: testing
    script:
       - set +e
-      - source ${ECCI_ENV}/latest/rhel-8-amd-64/inteloneapi-2022.1.2.sh
+      - . r.load.dot ${ECCI_ENV}/rhel-8-amd64-64@inteloneapi-2022.1.2
       - set -e
       - cd ${PIPELINE_SUBDIR}/build_rhel-8-amd64_inteloneapi-2022.1.2
       - make package
@@ -230,7 +229,7 @@ build:ubuntu-22.04-amd64_inteloneapi-2023.2.0:
      - tags
    script:
       - set +e
-      - source ${ECCI_ENV}/latest/ubuntu-22.04-amd-64/inteloneapi-2023.2.0.sh
+      - . r.load.dot ${ECCI_ENV}/ubuntu-22.04-amd64-64@inteloneapi-2023.2.0
       - . r.load.dot ${ECCI_PROCESS_SSM}/libs /fs/ssm/main/opt/hdf5-netcdf4/serial/alllib/inteloneapi-2023.2.0/01 /fs/ssm/eccc/mrd/rpn/libs/masters/udunits2-inteloneapi-2023.2.0_2.2.28_ubuntu-22.04-amd64-64
       - set -e
       - mkdir -pv ${PIPELINE_SUBDIR}/build_ubuntu-22.04-amd64_inteloneapi-2023.2.0
@@ -255,7 +254,7 @@ test:ubuntu-22.04-amd64_inteloneapi-2023.2.0:
       - build:ubuntu-22.04-amd64_inteloneapi-2023.2.0
    script:
       - set +e
-      - source ${ECCI_ENV}/latest/ubuntu-22.04-amd-64/inteloneapi-2023.2.0.sh
+      - . r.load.dot ${ECCI_ENV}/ubuntu-22.04-amd64-64@inteloneapi-2023.2.0
       - . r.load.dot ${ECCI_PROCESS_SSM}/libs
       - set -e
       - cd ${PIPELINE_SUBDIR}/build_ubuntu-22.04-amd64_inteloneapi-2023.2.0
@@ -280,7 +279,7 @@ package:ubuntu-22.04-amd64_inteloneapi-2023.2.0:
       name: testing
    script:
       - set +e
-      - source ${ECCI_ENV}/latest/ubuntu-22.04-amd-64/inteloneapi-2023.2.0.sh
+      - . r.load.dot ${ECCI_ENV}/ubuntu-22.04-amd64-64@inteloneapi-2023.2.0
       - set -e
       - cd ${PIPELINE_SUBDIR}/build_ubuntu-22.04-amd64_inteloneapi-2023.2.0
       - make package
