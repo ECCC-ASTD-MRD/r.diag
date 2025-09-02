@@ -13,7 +13,7 @@ stages:
 
 before_script:
    - source ~/ci-admin/env/init.sh
-   - export PIPELINE_SUBDIR=${ECCI_BUILD_DIR}/precaution/${CI_PROJECT_PATH}/${CI_BUILD_REF_NAME}/${CI_PIPELINE_ID}
+   - export PIPELINE_SUBDIR=${ECCI_SPECIAL_BUILDS_DIR}/precaution/${CI_PROJECT_PATH}/${CI_BUILD_REF_NAME}/${CI_PIPELINE_ID}
 
 #----- rhel-9-graniterapids-64_inteloneapi-2025.1.0
 
