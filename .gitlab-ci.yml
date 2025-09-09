@@ -29,7 +29,7 @@ build:rhel-9-graniterapids-64_inteloneapi-2025.1.0:
       - . r.load.dot ${ECCI_ENV}/rhel-9-graniterapids-64@inteloneapi-2025.1.0
       - export ORDENV_PLAT=rhel-9-graniterapids-64
       - export EC_ARCH=rhel-9-graniterapids-64/inteloneapi-2025.1.0
-      - . r.load.dot ${ECCI_PROCESS_SSM}/libs /fs/ssm/hpco/exp/hdf5-netcdf4/parallel/alllib/inteloneapi-2025.1.0/01 /fs/ssm/eccc/mrd/rpn/libs/masters/udunits2-gnu-11.4.1_2.2.28_rhel-9-amd64-64
+      - . r.load.dot ${ECCI_PROCESS_SSM}/libs /fs/ssm/main/opt/hdf5-netcdf4/parallel/intelmpi-2025.1.0/alllib/inteloneapi-2025.1.0/01 /fs/ssm/eccc/mrd/rpn/libs/masters/udunits2-gnu-11.4.1_2.2.28_rhel-9-amd64-64
       - set -e
       - export CI_ARCH=rhel-9-graniterapids-64_inteloneapi-2025.1.0
       - mkdir -pv ${PIPELINE_SUBDIR}/build_${CI_ARCH}
@@ -56,7 +56,7 @@ test:rhel-9-graniterapids-64_inteloneapi-2025.1.0:
       - . r.load.dot ${ECCI_ENV}/rhel-9-graniterapids-64@inteloneapi-2025.1.0
       - export ORDENV_PLAT=rhel-9-graniterapids-64
       - export EC_ARCH=rhel-9-graniterapids-64/inteloneapi-2025.1.0
-      - . r.load.dot ${ECCI_PROCESS_SSM}/libs /fs/ssm/hpco/exp/hdf5-netcdf4/parallel/alllib/inteloneapi-2025.1.0/01 /fs/ssm/eccc/mrd/rpn/libs/masters/udunits2-gnu-11.4.1_2.2.28_rhel-9-amd64-64
+      - . r.load.dot ${ECCI_PROCESS_SSM}/libs /fs/ssm/main/opt/hdf5-netcdf4/parallel/intelmpi-2025.1.0/alllib/inteloneapi-2025.1.0/01 /fs/ssm/eccc/mrd/rpn/libs/masters/udunits2-gnu-11.4.1_2.2.28_rhel-9-amd64-64
       - set -e
       - export CI_ARCH=rhel-9-graniterapids-64_inteloneapi-2025.1.0
       - cd ${PIPELINE_SUBDIR}/build_${CI_ARCH}
