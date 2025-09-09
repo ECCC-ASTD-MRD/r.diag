@@ -14,13 +14,15 @@ mkdir -p ${profileDirPath}
 
 cat > ${profilePath} << EOF
 if [[ \${ORDENV_PLAT} == "ubuntu-22.04-amd64-64" ]]; then
-   . ssmuse-sh -d /fs/ssm/main/opt/hdf5-netcdf4/serial/alllib/inteloneapi-2023.2.0/01
+   . ssmuse-sh -x /fs/ssm/main/opt/hdf5-netcdf4/serial/alllib/inteloneapi-2023.2.0/01
    export UDUNITS2_XML_PATH=/fs/ssm/eccc/mrd/rpn/libs/masters/udunits2-inteloneapi-2022.1.2_2.2.28_rhel-8-icelake-64/share/udunits/udunits2.xml
 elif [[ \${ORDENV_PLAT} == "rhel-9-graniterapids-64" ]]; then
-     . r.load.dot /fs/ssm/main/opt/intelcomp/inteloneapi-2025.1.0/intelcomp+mpi+mkl /fs/ssm/hpco/exp/hdf5-netcdf4/parallel/alllib/inteloneapi-2025.1.0/01 /fs/ssm/eccc/mrd/rpn/libs/masters/udunits2-gnu-11.4.1_2.2.28_rhel-9-amd64-64
-     export UDUNITS2_XML_PATH=/fs/ssm/eccc/mrd/rpn/libs/masters/udunits2-gnu-11.4.1_2.2.28_rhel-9-amd64-64/share/udunits/udunits2.xml
+   . ssmuse-sh -x /fs/ssm/main/opt/intelcomp/inteloneapi-2025.1.0/intelcomp+mpi+mkl
+   . ssmuse-sh -x /fs/ssm/main/opt/hdf5-netcdf4/parallel/intelmpi-2025.1.0/alllib/inteloneapi-2025.1.0/01
+   . ssmuse-sh -x /fs/ssm/eccc/mrd/rpn/libs/masters/udunits2-gnu-11.4.1_2.2.28_rhel-9-amd64-64
+   export UDUNITS2_XML_PATH=/fs/ssm/eccc/mrd/rpn/libs/masters/udunits2-gnu-11.4.1_2.2.28_rhel-9-amd64-64/share/udunits/udunits2.xml
 else
-   . r.load.dot /fs/ssm/main/opt/hdf5-netcdf4/serial/shared/inteloneapi-2022.1.2/01
+   . ssmuse-sh -x /fs/ssm/main/opt/hdf5-netcdf4/serial/shared/inteloneapi-2022.1.2/01
    export UDUNITS2_XML_PATH=/fs/ssm/eccc/mrd/rpn/libs/masters/udunits2-inteloneapi-2022.1.2_2.2.28_rhel-8-icelake-64/share/udunits/udunits2.xml
 fi
 export DIAGNOSTIQUE='${packageHome}'
@@ -29,13 +31,15 @@ EOF
 
 cat > ${loginPath} << EOF
 if ( \${ORDENV_PLAT} == "ubuntu-22.04-amd64-64" ) then
-   . ssmuse-sh -d /fs/ssm/main/opt/hdf5-netcdf4/serial/alllib/inteloneapi-2023.2.0/01
+   . ssmuse-sh -x /fs/ssm/main/opt/hdf5-netcdf4/serial/alllib/inteloneapi-2023.2.0/01
    setenv UDUNITS2_XML_PATH /fs/ssm/eccc/mrd/rpn/libs/masters/udunits2-inteloneapi-2022.1.2_2.2.28_rhel-8-icelake-64/share/udunits/udunits2.xml
 else if ( \${ORDENV_PLAT} == "rhel-9-graniterapids-64" ) then
-   . r.load.dot /fs/ssm/eccc/mrd/rpn/code-tools/20250826/env/inteloneapi-2025.1.0 /fs/ssm/hpco/exp/hdf5-netcdf4/parallel/alllib/inteloneapi-2025.1.0/01 /fs/ssm/eccc/mrd/rpn/libs/masters/udunits2-gnu-11.4.1_2.2.28_rhel-9-amd64-64
+   . ssmuse-sh -x /fs/ssm/main/opt/intelcomp/inteloneapi-2025.1.0/intelcomp+mpi+mkl 
+   . ssmuse-sh -x /fs/ssm/main/opt/hdf5-netcdf4/parallel/intelmpi-2025.1.0/alllib/inteloneapi-2025.1.0/01
+   . ssmuse-sh -x /fs/ssm/eccc/mrd/rpn/libs/masters/udunits2-gnu-11.4.1_2.2.28_rhel-9-amd64-64
    setenv UDUNITS2_XML_PATH /fs/ssm/eccc/mrd/rpn/libs/masters/udunits2-gnu-11.4.1_2.2.28_rhel-9-amd64-64/share/udunits/udunits2.xml
 else
-   . r.load.dot /fs/ssm/main/opt/hdf5-netcdf4/serial/shared/inteloneapi-2022.1.2/01
+   . ssmuse-sh -x /fs/ssm/main/opt/hdf5-netcdf4/serial/shared/inteloneapi-2022.1.2/01
    setenv UDUNITS2_XML_PATH /fs/ssm/eccc/mrd/rpn/libs/masters/udunits2-inteloneapi-2022.1.2_2.2.28_rhel-8-icelake-64/share/udunits/udunits2.xml
 endif
 setenv DIAGNOSTIQUE '${packageHome}'
