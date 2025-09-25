@@ -114,16 +114,22 @@ An extensive toolkit available to users wanting to manipulate 2D
 Source the right file depending on the architecture you need from the env directory.
 This will load the specified compiler and define the ECCI_DATA_DIR variable for the test datasets
 
-- Example for PPP5:
+- Example for ppp6/sc6 and icelake specific architecture:
 
 #+begin_src
-. $ECCI_ENV/latest/ppp5/inteloneapi-2022.1.2.sh
+. r.load.dot mrd/rpn/code-tools/latest/env/rhel-8-icelake-64@inteloneapi-2025.1.0
 #+end_src
 
-- Example for CMC network and gnu 11.4.0:
+- Example for generic architecture on ppp6/sc6:
 
 #+begin_src
-. $ECCI_ENVlatest/ubuntu-22.04-amd-64/gnu.sh
+. r.load.dot mrd/rpn/code-tools/latest/env/rhel-8-amd64-64@inteloneapi-2025.1.0
+#+end_src
+
+- Example for GNU on any architecture:
+
+#+begin_src
+. r.load.dot mrd/rpn/code-tools/latest/env/gnu
 #+end_src
 
 ** Build and install
