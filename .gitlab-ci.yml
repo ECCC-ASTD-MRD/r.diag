@@ -19,7 +19,7 @@ before_script:
 
 build:rhel-9-graniterapids-64_inteloneapi-2025.1.0:
    variables:
-      ORD_SOUMET_MACH    : ppp5t
+      ORD_SOUMET_MACH    : ppp6t
       CI_ARCH : rhel-9-graniterapids-64_inteloneapi-2025.1.0
    stage: build
    tags:
@@ -44,7 +44,7 @@ build:rhel-9-graniterapids-64_inteloneapi-2025.1.0:
 
 test:rhel-9-graniterapids-64_inteloneapi-2025.1.0:
    variables:
-      ORD_SOUMET_MACH    : ppp5t
+      ORD_SOUMET_MACH    : ppp6t
       CI_ARCH : rhel-9-graniterapids-64_inteloneapi-2025.1.0
    stage: test
    tags:
@@ -69,7 +69,7 @@ test:rhel-9-graniterapids-64_inteloneapi-2025.1.0:
 
 package:rhel-9-graniterapids-64_inteloneapi-2025.1.0:
    variables:
-      ORD_SOUMET_MACH    : ppp5t
+      ORD_SOUMET_MACH    : ppp6t
       CI_ARCH : rhel-9-graniterapids-64_inteloneapi-2025.1.0
    stage: package
    tags:
