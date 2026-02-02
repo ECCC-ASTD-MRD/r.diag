@@ -213,77 +213,77 @@ package:rhel-8-amd64_inteloneapi-2022.1.2:
       - make package
       - ~/ci-admin-bundle/bin/ci-package-ssm.sh package ${ECCI_PROCESS}
 
-#----- ubuntu-22.04-amd64_inteloneapi-2023.2.0
+# #----- ubuntu-22.04-amd64_inteloneapi-2023.2.0
 
-build:ubuntu-22.04-amd64_inteloneapi-2023.2.0:
-   variables:
-      ORD_SOUMET_MACH    : gpsc7
-      ORD_SOUMET_IMAGE   : registry.maze.science.gc.ca/ssc-hpcs/generic-job:ubuntu22.04
-      ORD_SOUMET_PROJECT : eccc_mrd
-   stage: build
-   tags:
-      - concurrent
-   only:
-     - master
-     - dev
-     - tags
-   script:
-      - set +e
-      - . r.load.dot ${ECCI_ENV}/ubuntu-22.04-amd64-64@inteloneapi-2023.2.0
-      - . r.load.dot ${ECCI_PROCESS_SSM}/libs /fs/ssm/main/opt/hdf5-netcdf4/serial/alllib/inteloneapi-2023.2.0/01 /fs/ssm/eccc/mrd/rpn/libs/masters/udunits2-inteloneapi-2023.2.0_2.2.28_ubuntu-22.04-amd64-64
-      - set -e
-      - mkdir -pv ${PIPELINE_SUBDIR}/build_ubuntu-22.04-amd64_inteloneapi-2023.2.0
-      - SRC_DIR=$(pwd)
-      - cd ${PIPELINE_SUBDIR}/build_ubuntu-22.04-amd64_inteloneapi-2023.2.0
-      - cmake ${SRC_DIR} -DNetCDF_ROOT=$(dirname $(dirname `which nc-config`))
-      - time make -j $NCPUS
+# build:ubuntu-22.04-amd64_inteloneapi-2023.2.0:
+#    variables:
+#       ORD_SOUMET_MACH    : gpsc7
+#       ORD_SOUMET_IMAGE   : registry.maze.science.gc.ca/ssc-hpcs/generic-job:ubuntu22.04
+#       ORD_SOUMET_PROJECT : eccc_mrd
+#    stage: build
+#    tags:
+#       - concurrent
+#    only:
+#      - master
+#      - dev
+#      - tags
+#    script:
+#       - set +e
+#       - . r.load.dot ${ECCI_ENV}/ubuntu-22.04-amd64-64@inteloneapi-2023.2.0
+#       - . r.load.dot ${ECCI_PROCESS_SSM}/libs /fs/ssm/main/opt/hdf5-netcdf4/serial/alllib/inteloneapi-2023.2.0/01 /fs/ssm/eccc/mrd/rpn/libs/masters/udunits2-inteloneapi-2023.2.0_2.2.28_ubuntu-22.04-amd64-64
+#       - set -e
+#       - mkdir -pv ${PIPELINE_SUBDIR}/build_ubuntu-22.04-amd64_inteloneapi-2023.2.0
+#       - SRC_DIR=$(pwd)
+#       - cd ${PIPELINE_SUBDIR}/build_ubuntu-22.04-amd64_inteloneapi-2023.2.0
+#       - cmake ${SRC_DIR} -DNetCDF_ROOT=$(dirname $(dirname `which nc-config`))
+#       - time make -j $NCPUS
 
-test:ubuntu-22.04-amd64_inteloneapi-2023.2.0:
-   variables:
-      ORD_SOUMET_MACH    : gpsc7
-      ORD_SOUMET_IMAGE   : registry.maze.science.gc.ca/ssc-hpcs/generic-job:ubuntu22.04
-      ORD_SOUMET_PROJECT : eccc_mrd
-   stage: test
-   tags:
-      - concurrent
-   only:
-      - master
-      - dev
-      - tags
-   dependencies:
-      - build:ubuntu-22.04-amd64_inteloneapi-2023.2.0
-   script:
-      - set +e
-      - . r.load.dot ${ECCI_ENV}/ubuntu-22.04-amd64-64@inteloneapi-2023.2.0
-      - . r.load.dot ${ECCI_PROCESS_SSM}/libs
-      - set -e
-      - cd ${PIPELINE_SUBDIR}/build_ubuntu-22.04-amd64_inteloneapi-2023.2.0
-      - make check
+# test:ubuntu-22.04-amd64_inteloneapi-2023.2.0:
+#    variables:
+#       ORD_SOUMET_MACH    : gpsc7
+#       ORD_SOUMET_IMAGE   : registry.maze.science.gc.ca/ssc-hpcs/generic-job:ubuntu22.04
+#       ORD_SOUMET_PROJECT : eccc_mrd
+#    stage: test
+#    tags:
+#       - concurrent
+#    only:
+#       - master
+#       - dev
+#       - tags
+#    dependencies:
+#       - build:ubuntu-22.04-amd64_inteloneapi-2023.2.0
+#    script:
+#       - set +e
+#       - . r.load.dot ${ECCI_ENV}/ubuntu-22.04-amd64-64@inteloneapi-2023.2.0
+#       - . r.load.dot ${ECCI_PROCESS_SSM}/libs
+#       - set -e
+#       - cd ${PIPELINE_SUBDIR}/build_ubuntu-22.04-amd64_inteloneapi-2023.2.0
+#       - make check
       
-package:ubuntu-22.04-amd64_inteloneapi-2023.2.0:
-   variables:
-      ORD_SOUMET_MACH    : gpsc7
-      ORD_SOUMET_IMAGE   : registry.maze.science.gc.ca/ssc-hpcs/generic-job:ubuntu22.04
-      ORD_SOUMET_PROJECT : eccc_mrd
-   stage: package
-   tags:
-      - concurrent
-   only:
-      - master
-      - dev
-      - tags
-      - schedules
-   dependencies:
-      - build:ubuntu-22.04-amd64_inteloneapi-2023.2.0
-   environment:
-      name: testing
-   script:
-      - set +e
-      - . r.load.dot ${ECCI_ENV}/ubuntu-22.04-amd64-64@inteloneapi-2023.2.0
-      - set -e
-      - cd ${PIPELINE_SUBDIR}/build_ubuntu-22.04-amd64_inteloneapi-2023.2.0
-      - make package
-      - ~/ci-admin-bundle/bin/ci-package-ssm.sh package ${ECCI_PROCESS}
+# package:ubuntu-22.04-amd64_inteloneapi-2023.2.0:
+#    variables:
+#       ORD_SOUMET_MACH    : gpsc7
+#       ORD_SOUMET_IMAGE   : registry.maze.science.gc.ca/ssc-hpcs/generic-job:ubuntu22.04
+#       ORD_SOUMET_PROJECT : eccc_mrd
+#    stage: package
+#    tags:
+#       - concurrent
+#    only:
+#       - master
+#       - dev
+#       - tags
+#       - schedules
+#    dependencies:
+#       - build:ubuntu-22.04-amd64_inteloneapi-2023.2.0
+#    environment:
+#       name: testing
+#    script:
+#       - set +e
+#       - . r.load.dot ${ECCI_ENV}/ubuntu-22.04-amd64-64@inteloneapi-2023.2.0
+#       - set -e
+#       - cd ${PIPELINE_SUBDIR}/build_ubuntu-22.04-amd64_inteloneapi-2023.2.0
+#       - make package
+#       - ~/ci-admin-bundle/bin/ci-package-ssm.sh package ${ECCI_PROCESS}
 
 deploy:staging:
    stage: deploy
