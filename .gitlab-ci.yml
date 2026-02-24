@@ -19,33 +19,24 @@ before_script:
 
 build:rhel-9-graniterapids-64_inteloneapi-2025.1.0:
    variables:
-      ORD_SOUMET_MACH    : ppp6t
-      CI_ARCH : rhel-9-graniterapids-64_inteloneapi-2025.1.0
+      ECCI_ARCH : rhel-9-graniterapids-64_inteloneapi-2025.1.0
    stage: build
    tags:
       - concurrent
    script:
       - set +e
       - . r.load.dot ${ECCI_ENV}/rhel-9-graniterapids-64@inteloneapi-2025.1.0
-      - export ORDENV_PLAT=rhel-9-graniterapids-64
-      - export EC_ARCH=rhel-9-graniterapids-64/inteloneapi-2025.1.0
       - . r.load.dot ${ECCI_PROCESS_SSM}/libs /fs/ssm/main/opt/hdf5-netcdf4/parallel/intelmpi-2025.1.0/alllib/inteloneapi-2025.1.0/01 /fs/ssm/eccc/mrd/rpn/libs/masters/udunits2-gnu-11.4.1_2.2.28_rhel-9-amd64-64
       - set -e
-      - export CI_ARCH=rhel-9-graniterapids-64_inteloneapi-2025.1.0
-      - mkdir -pv ${PIPELINE_SUBDIR}/build_${CI_ARCH}
+      - mkdir -pv ${PIPELINE_SUBDIR}/build_${ECCI_ARCH}
       - SRC_DIR=$(pwd)
-      - cd ${PIPELINE_SUBDIR}/build_${CI_ARCH}
+      - cd ${PIPELINE_SUBDIR}/build_${ECCI_ARCH}
       - cmake -DTARGET_PROC=graniterapids -DNetCDF_ROOT=$(dirname $(dirname `which nc-config`)) ${SRC_DIR} 
       - time make -j $NCPUS
-   rules:
-      - if: $CI_ARCH =~ $ALLOW_FAILURE
-        allow_failure: true
-      - when: always
 
 test:rhel-9-graniterapids-64_inteloneapi-2025.1.0:
    variables:
-      ORD_SOUMET_MACH    : ppp6t
-      CI_ARCH : rhel-9-graniterapids-64_inteloneapi-2025.1.0
+      ECCI_ARCH : rhel-9-graniterapids-64_inteloneapi-2025.1.0
    stage: test
    tags:
       - concurrent
@@ -54,23 +45,15 @@ test:rhel-9-graniterapids-64_inteloneapi-2025.1.0:
    script:
       - set +e
       - . r.load.dot ${ECCI_ENV}/rhel-9-graniterapids-64@inteloneapi-2025.1.0
-      - export ORDENV_PLAT=rhel-9-graniterapids-64
-      - export EC_ARCH=rhel-9-graniterapids-64/inteloneapi-2025.1.0
       - . r.load.dot ${ECCI_PROCESS_SSM}/libs /fs/ssm/main/opt/hdf5-netcdf4/parallel/intelmpi-2025.1.0/alllib/inteloneapi-2025.1.0/01 /fs/ssm/eccc/mrd/rpn/libs/masters/udunits2-gnu-11.4.1_2.2.28_rhel-9-amd64-64
       - set -e
-      - export CI_ARCH=rhel-9-graniterapids-64_inteloneapi-2025.1.0
-      - cd ${PIPELINE_SUBDIR}/build_${CI_ARCH}
+      - cd ${PIPELINE_SUBDIR}/build_${ECCI_ARCH}
       - make check
    allow_failure: true
-   rules:
-      - if: $CI_ARCH =~ $ALLOW_FAILURE
-        allow_failure: true
-      - when: always
 
 package:rhel-9-graniterapids-64_inteloneapi-2025.1.0:
    variables:
-      ORD_SOUMET_MACH    : ppp6t
-      CI_ARCH : rhel-9-graniterapids-64_inteloneapi-2025.1.0
+      ECCI_ARCH : rhel-9-graniterapids-64_inteloneapi-2025.1.0
    stage: package
    tags:
       - concurrent
@@ -81,135 +64,8 @@ package:rhel-9-graniterapids-64_inteloneapi-2025.1.0:
    script:
       - set +e
       - . r.load.dot ${ECCI_ENV}/rhel-9-graniterapids-64@inteloneapi-2025.1.0
-      - export ORDENV_PLAT=rhel-9-graniterapids-64
-      - export EC_ARCH=rhel-9-graniterapids-64/inteloneapi-2025.1.0
       - set -e
-      - export CI_ARCH=rhel-9-graniterapids-64_inteloneapi-2025.1.0
-      - cd ${PIPELINE_SUBDIR}/build_${CI_ARCH}
-      - make package
-      - ~/ci-admin-bundle/bin/ci-package-ssm.sh package ${ECCI_PROCESS}
-   rules:
-      - if: $CI_ARCH =~ $ALLOW_FAILURE
-        allow_failure: true
-      - when: always
-
-#----- rhel-8-icelake-64_inteloneapi-2022.1.2
-
-build:rhel-8-icelake-64_inteloneapi-2022.1.2:
-   stage: build
-   tags:
-      - concurrent
-   only:
-      - master
-      - dev
-      - tags
-   script:
-      - set +e
-      - . r.load.dot ${ECCI_ENV}/rhel-8-icelake-64@inteloneapi-2022.1.2
-      - . r.load.dot ${ECCI_PROCESS_SSM}/libs /fs/ssm/main/opt/hdf5-netcdf4/serial/shared/inteloneapi-2022.1.2/01 /fs/ssm/eccc/mrd/rpn/libs/masters/udunits2-inteloneapi-2022.1.2_2.2.28_rhel-8-icelake-64
-      - set -e
-      - mkdir -pv ${PIPELINE_SUBDIR}/build_rhel-8-icelake-64_inteloneapi-2022.1.2
-      - SRC_DIR=$(pwd)
-      - cd ${PIPELINE_SUBDIR}/build_rhel-8-icelake-64_inteloneapi-2022.1.2
-      - cmake ${SRC_DIR} -DNetCDF_ROOT=$(dirname $(dirname `which nc-config`))
-      - time make -j $NCPUS
-
-test:rhel-8-icelake-64_inteloneapi-2022.1.2:
-   stage: test
-   tags:
-      - concurrent
-   only:
-      - master
-      - dev
-      - tags
-   dependencies:
-      - build:rhel-8-icelake-64_inteloneapi-2022.1.2
-   script:
-      - set +e
-      - . r.load.dot ${ECCI_ENV}/rhel-8-icelake-64@inteloneapi-2022.1.2
-      - . r.load.dot ${ECCI_PROCESS_SSM}/libs /fs/ssm/main/opt/hdf5-netcdf4/serial/shared/inteloneapi-2022.1.2/01 /fs/ssm/eccc/mrd/rpn/libs/masters/udunits2-inteloneapi-2022.1.2_2.2.28_rhel-8-icelake-64
-      - set -e
-      - cd ${PIPELINE_SUBDIR}/build_rhel-8-icelake-64_inteloneapi-2022.1.2
-      - make check
-
-package:rhel-8-icelake-64_inteloneapi-2022.1.2:
-   stage: package
-   tags:
-      - concurrent
-   only:
-      - master
-      - tags
-      - dev
-      - schedules
-   dependencies:
-      - build:rhel-8-icelake-64_inteloneapi-2022.1.2
-   environment:
-      name: testing
-   script:
-      - set +e
-      - . r.load.dot ${ECCI_ENV}/rhel-8-icelake-64@inteloneapi-2022.1.2
-      - set -e
-      - cd ${PIPELINE_SUBDIR}/build_rhel-8-icelake-64_inteloneapi-2022.1.2
-      - make package
-      - ~/ci-admin-bundle/bin/ci-package-ssm.sh package ${ECCI_PROCESS}
-
-#----- rhel-8-amd64_inteloneapi-2022.1.2
-
-build:rhel-8-amd64_inteloneapi-2022.1.2:
-   stage: build
-   tags:
-      - concurrent
-   only:
-      - master
-      - dev
-      - tags
-   script:
-      - set +e
-      - . r.load.dot ${ECCI_ENV}/rhel-8-amd64-64@inteloneapi-2022.1.2
-      - . r.load.dot ${ECCI_PROCESS_SSM}/libs /fs/ssm/main/opt/hdf5-netcdf4/serial/shared/inteloneapi-2022.1.2/01 /fs/ssm/eccc/mrd/rpn/libs/masters/udunits2-inteloneapi-2022.1.2_2.2.28_rhel-8-amd64-64
-      - set -e
-      - mkdir -pv ${PIPELINE_SUBDIR}/build_rhel-8-amd64_inteloneapi-2022.1.2
-      - SRC_DIR=$(pwd)
-      - cd ${PIPELINE_SUBDIR}/build_rhel-8-amd64_inteloneapi-2022.1.2
-      - cmake ${SRC_DIR} -DNetCDF_ROOT=$(dirname $(dirname `which nc-config`))
-      - time make -j $NCPUS
-
-test:rhel-8-amd64_inteloneapi-2022.1.2:
-   stage: test
-   tags:
-      - concurrent
-   only:
-      - master
-      - dev
-      - tags
-   dependencies:
-      - build:rhel-8-amd64_inteloneapi-2022.1.2
-   script:
-      - set +e
-      - . r.load.dot ${ECCI_ENV}/rhel-8-amd64-64@inteloneapi-2022.1.2
-      - . r.load.dot ${ECCI_PROCESS_SSM}/libs
-      - set -e
-      - cd ${PIPELINE_SUBDIR}/build_rhel-8-amd64_inteloneapi-2022.1.2
-      - make check
-
-package:rhel-8-amd64_inteloneapi-2022.1.2:
-   stage: package
-   tags:
-      - concurrent
-   only:
-      - master
-      - tags
-      - dev
-      - schedules
-   dependencies:
-      - build:rhel-8-amd64_inteloneapi-2022.1.2
-   environment:
-      name: testing
-   script:
-      - set +e
-      - . r.load.dot ${ECCI_ENV}/rhel-8-amd64-64@inteloneapi-2022.1.2
-      - set -e
-      - cd ${PIPELINE_SUBDIR}/build_rhel-8-amd64_inteloneapi-2022.1.2
+      - cd ${PIPELINE_SUBDIR}/build_${ECCI_ARCH}
       - make package
       - ~/ci-admin-bundle/bin/ci-package-ssm.sh package ${ECCI_PROCESS}
 
