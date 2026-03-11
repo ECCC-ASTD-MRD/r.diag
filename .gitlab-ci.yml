@@ -15,55 +15,55 @@ before_script:
    - source ~/ci-admin/env/init.sh
    - export PIPELINE_SUBDIR=${ECCI_SPECIAL_BUILDS_DIR}/precaution/${CI_PROJECT_PATH}/${CI_COMMIT_REF_NAME}/${CI_PIPELINE_ID}
 
-#----- rhel-9-graniterapids-64_inteloneapi-2025.1.0
+#----- rhel-9-amd64-64_inteloneapi-2025.1.0
 
-build:rhel-9-graniterapids-64_inteloneapi-2025.1.0:
+build:rhel-9-amd64-64_inteloneapi-2025.1.0:
    variables:
-      ECCI_ARCH : rhel-9-graniterapids-64_inteloneapi-2025.1.0
+      ECCI_ARCH : rhel-9-amd64-64_inteloneapi-2025.1.0
    stage: build
    tags:
       - concurrent
    script:
       - set +e
-      - . r.load.dot ${ECCI_ENV}/rhel-9-graniterapids-64@inteloneapi-2025.1.0
+      - . r.load.dot ${ECCI_ENV}/rhel-9-amd64-64@inteloneapi-2025.1.0
       - . r.load.dot ${ECCI_PROCESS_SSM}/libs /fs/ssm/main/opt/hdf5-netcdf4/parallel/intelmpi-2025.1.0/alllib/inteloneapi-2025.1.0/01 /fs/ssm/eccc/mrd/rpn/libs/masters/udunits2-gnu-11.4.1_2.2.28_rhel-9-amd64-64
       - set -e
       - mkdir -pv ${PIPELINE_SUBDIR}/build_${ECCI_ARCH}
       - SRC_DIR=$(pwd)
       - cd ${PIPELINE_SUBDIR}/build_${ECCI_ARCH}
-      - cmake -DTARGET_PROC=graniterapids -DNetCDF_ROOT=$(dirname $(dirname `which nc-config`)) ${SRC_DIR} 
+      - cmake -DNetCDF_ROOT=$(dirname $(dirname `which nc-config`)) ${SRC_DIR} 
       - time make -j $NCPUS
 
-test:rhel-9-graniterapids-64_inteloneapi-2025.1.0:
+test:rhel-9-amd64-64_inteloneapi-2025.1.0:
    variables:
-      ECCI_ARCH : rhel-9-graniterapids-64_inteloneapi-2025.1.0
+      ECCI_ARCH : rhel-9-amd64-64_inteloneapi-2025.1.0
    stage: test
    tags:
       - concurrent
    needs:
-      - build:rhel-9-graniterapids-64_inteloneapi-2025.1.0
+      - build:rhel-9-amd64-64_inteloneapi-2025.1.0
    script:
       - set +e
-      - . r.load.dot ${ECCI_ENV}/rhel-9-graniterapids-64@inteloneapi-2025.1.0
+      - . r.load.dot ${ECCI_ENV}/rhel-9-amd64-64@inteloneapi-2025.1.0
       - . r.load.dot ${ECCI_PROCESS_SSM}/libs /fs/ssm/main/opt/hdf5-netcdf4/parallel/intelmpi-2025.1.0/alllib/inteloneapi-2025.1.0/01 /fs/ssm/eccc/mrd/rpn/libs/masters/udunits2-gnu-11.4.1_2.2.28_rhel-9-amd64-64
       - set -e
       - cd ${PIPELINE_SUBDIR}/build_${ECCI_ARCH}
       - make check
    allow_failure: true
 
-package:rhel-9-graniterapids-64_inteloneapi-2025.1.0:
+package:rhel-9-amd64-64_inteloneapi-2025.1.0:
    variables:
-      ECCI_ARCH : rhel-9-graniterapids-64_inteloneapi-2025.1.0
+      ECCI_ARCH : rhel-9-amd64-64_inteloneapi-2025.1.0
    stage: package
    tags:
       - concurrent
    needs:
-     - build:rhel-9-graniterapids-64_inteloneapi-2025.1.0
+     - build:rhel-9-amd64-64_inteloneapi-2025.1.0
    environment:
       name: testing
    script:
       - set +e
-      - . r.load.dot ${ECCI_ENV}/rhel-9-graniterapids-64@inteloneapi-2025.1.0
+      - . r.load.dot ${ECCI_ENV}/rhel-9-amd64-64@inteloneapi-2025.1.0
       - set -e
       - cd ${PIPELINE_SUBDIR}/build_${ECCI_ARCH}
       - make package
