@@ -522,6 +522,9 @@
 #     include    "fstparm.cdk"
 *------------------------------------------------------------------------------
 
+      RANGE_KIND = -1
+      HIVAL = -1.0
+      LOVAL = -1.0
       spec = .false.
       four = .false.
       data = .false.
